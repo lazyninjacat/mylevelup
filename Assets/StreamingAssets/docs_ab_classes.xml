@@ -1,0 +1,115 @@
+<docs>
+
+    <!--
+    <FuncName>
+    <summary></summary>
+    <returns></returns>
+    <example>
+    <code></code>
+    </example>
+    <remarks></remarks>
+    <exception cref="System.ZivideByZero"></exception>
+    <seealso cref="Class.Function(x,y)" />
+    <param name="Parameter"> <paramref name"param name"> </param>
+    </FuncName>
+    -->
+
+    <members name="master">
+
+     <AB_MasterClass>
+        <summary>
+        This abstract class represents the Master in the MVC design pattern.
+        It is responsible for handling managing the models and controllers (view management not yet enabled).
+        </summary>
+        <remarks>
+        Functionality such as Creation and Deletion of workers, Adding MVC components, accessing them, removing
+        them, and getting a status check on whether or not the master has generated any MVC components.
+        </remarks>
+        <param name="models"> A dictionary to hold references to the models being managed. </param>
+        <param name="controllers"> A dictionary to hold references to the controllers being managed. </param>
+        <param name="views"> A dictionary to hold references to the controllers being managed. ***Not currently enabled*** </param>
+    </AB_MasterClass>
+
+    <AddModel>
+        <summary>
+        Adds a model and a key representing the class name to the <paramref name="models"> dictionary.
+        </summary>
+        <param name="key"> A string representing the class name of the model </param>
+        <param name="value"> An AB_Model object. </param>
+        See <see cref="AB_MasterClass.AddController(string, AB_Controller)"/> to add controllers.
+        See <see cref="AB_MasterClass.AddView(string, AB_View)"/> to add views.
+    </AddModel>
+
+    <AddController>
+        <summary>
+        Adds a controller and a key representing the class name to the <paramref name="controllers"> dictionary.
+        </summary>
+        <param name="key"> A string representing the class name of the controller </param>
+        <param name="value"> An AB_Controller object. </param>
+        See <see cref="AB_MasterClass.AddModel(string, AB_Model)"/> to add models.
+        See <see cref="AB_MasterClass.AddView(string, AB_View)"/> to add views.
+    </AddController>
+
+    <AddView>
+        <summary>
+        Adds a view and a key representing the class name to the <paramref name="views"> dictionary.
+        </summary>
+        <param name="key"> A string representing the class name of the view </param>
+        <param name="value"> An AB_View object. </param>
+        See <see cref="AB_MasterClass.AddModel(string, AB_Model)"/> to add models.
+        See <see cref="AB_MasterClass.AddController(string, AB_Controller)"/> to add controllers.
+    </AddView>
+
+    <GetModel>
+        <summary>
+        Returns the model in the dictionary based on the key passed.
+        </summary>
+        <param name="key"> A string representing the key of the model you want to retrieve.</param>
+        <returns> The model object belonging to the key passed from the models dictionary.</returns>
+    </GetModel>
+
+    <GetController>
+        <summary>
+        Returns the controller in the dictionary based on the key passed.
+        </summary>
+        <param name="key"> A string representing the key of the controller you want to retrieve.</param>
+        <returns> The controller object belonging to the key passed from the controllers dictionary.</returns>
+    </GetController>
+
+    <GetView>
+        <summary>
+        Returns the view in the dictionary based on the key passed.
+        </summary>
+        <param name="key"> A string representing the key of the view you want to retrieve.</param>
+        <returns> The view object belonging to the key passed from the views dictionary.</returns>
+    </GetView>
+
+    <KillWorkers>
+        <summary>
+        Removes all entries in all the dictionaries by calling .Clear()
+        </summary>
+    </KillWorkers>
+
+    <CreateAndAssignWorkers>
+        <summary>
+        Calls to the Master to create the models and controllers, then calls on the Model and Controllers to create references to each other.
+        </summary>
+        <remarks>
+        Calls the abstract CreateWorkers() function provided by a Master implementation, then for each model and controller it
+        calls the AB_Model.GetCoworkers(MasterClass master) abstract method provided by a Model implementation.
+        </remarks>
+    </CreateAndAssignWorkers>
+
+    <RequestSceneChange>
+        <summary>
+        Sends a request to the director to change the scene.
+        </summary>
+        <param name="scene"> A string representing the name of the scene you are requesting to change to.</param>
+    </RequestSceneChange>
+
+    </members>
+
+    <members name="controller">
+
+    </members>
+</docs>

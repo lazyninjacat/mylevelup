@@ -1,0 +1,126 @@
+﻿using System.Collections;
+using UnityEngine.UI;
+using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
+
+public class VW_Settings : MonoBehaviour
+{    
+    //Child's Name Input Field
+    public InputField childnameField;
+        
+    //Child's Name Text
+    public Text childnameText;
+
+    //Child Name string
+    private string childName;
+
+    [SerializeField] Toggle onOffToggle;
+    [SerializeField] Dropdown fromTimeDropdown;
+    [SerializeField] Dropdown toTimeDropdown;
+
+    private int fromTime;
+    private int toTime;
+
+
+    void Start()
+    {
+        //Display ChildName Key saved to PlayerPrefs in console
+        Debug.Log("Child name set to : " + PlayerPrefs.GetString("ChildNameKey").ToString());
+
+        if ((PlayerPrefs.GetString("ChildNameKey") == "") || (PlayerPrefs.GetString("ChildNameKey") == null))
+        {
+            childnameText.text = "Name not set yet";
+        }
+        else
+        {
+            //Display ChildName Key saved to PlayerPrefs on screen in the ChildNameText game object in scene
+            childnameText.text = (PlayerPrefs.GetString("ChildNameKey"));
+        } 
+   
+        SetupToggles();        
+    }
+
+
+    private void Update()
+    {
+        if (onOffToggle.isOn)
+        {
+            fromTimeDropdown.interactable = true;
+            toTimeDropdown.interactable = true;
+        }
+        else
+        {
+            fromTimeDropdown.interactable = false;
+            toTimeDropdown.interactable = false;
+        }
+    }
+
+
+    public void OnSubmitName()
+    {
+        //Set childName string to text in childnameField
+        childName = childnameField.text;
+
+        //Display Child name in console
+        Debug.Log("Child name set to : " + childName);
+
+        //Save Child Name to PlayerPrefs
+        PlayerPrefs.SetString("ChildNameKey", childName);
+
+        //Display ChildName Key saved to PlayerPrefs in scene in ChildNameText game object when user presses submitbutton and changes current Child Name
+        childnameText.text = (PlayerPrefs.GetString("ChildNameKey"));
+
+        childnameText.gameObject.GetComponent<Animation>().Play();
+
+    }
+
+
+    public void ChangeScene(string scene)
+    {
+        SetLockoutPrefs();
+        SceneManager.LoadScene(scene);
+    }
+
+
+    public void SetLockoutPrefs()
+    {
+        fromTime = fromTimeDropdown.value;
+        toTime = toTimeDropdown.value;
+
+        if (onOffToggle.isOn)
+        {
+            PlayerPrefs.SetInt("lockOnOff", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("lockOnOff", 0);
+        }
+        PlayerPrefs.SetInt("LockoutFromTimeInt", fromTime);
+        PlayerPrefs.SetString("LockoutFromTimeString", fromTimeDropdown.captionText.text);
+        PlayerPrefs.SetInt("LockoutToTimeInt", toTime);
+        PlayerPrefs.SetString("LockoutToTimeString", toTimeDropdown.captionText.text);
+        PlayerPrefs.Save();
+
+        Debug.Log("Playerprefs saved. lockOnOff = " + (PlayerPrefs.GetInt("lockOnOff")) + ", FromTime = " + (PlayerPrefs.GetInt("LockoutFromTimeInt")) + ", ToTime = " + (PlayerPrefs.GetInt("LockoutToTimeInt")));
+    }
+
+    
+    private void SetupToggles()
+    {
+        if (PlayerPrefs.GetInt("lockOnOff") == 1)
+        {
+            onOffToggle.isOn = true;       
+            fromTimeDropdown.value = (PlayerPrefs.GetInt("LockoutFromTimeInt"));
+            toTimeDropdown.value = (PlayerPrefs.GetInt("LockoutToTimeInt"));
+        }
+        else
+        {
+            onOffToggle.isOn = false;
+            fromTimeDropdown.value = (PlayerPrefs.GetInt("LockoutFromTimeInt"));
+            toTimeDropdown.value = (PlayerPrefs.GetInt("LockoutToTimeInt"));
+        }
+    }
+
+}
