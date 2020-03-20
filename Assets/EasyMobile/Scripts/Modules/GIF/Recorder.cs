@@ -7,11 +7,11 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Moments;
+using EM_Moments;
 
 namespace EasyMobile
 {
-    using Min = Moments.MinAttribute;
+    using Min = EM_Moments.MinAttribute;
 
     [AddComponentMenu("Easy Mobile/Recorder"), RequireComponent(typeof(Camera)), DisallowMultipleComponent]
     public sealed class Recorder : MonoBehaviour

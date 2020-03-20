@@ -262,12 +262,12 @@ namespace EasyMobile.Internal.Notifications.iOS
 
         protected override void AttachHandle(HandleRef selfPointer)
         {
-            iOSNotificationNative._iOSNotificationRequest_Ref(selfPointer);
+            iOSNotificationNative.EM_iOSNotificationRequest_Ref(selfPointer);
         }
 
         protected override void ReleaseHandle(HandleRef selfPointer)
         {
-            iOSNotificationNative._iOSNotificationRequest_Unref(selfPointer);
+            iOSNotificationNative.EM_iOSNotificationRequest_Unref(selfPointer);
         }
 
         internal static iOSNotificationRequest FromPointer(IntPtr pointer)
@@ -280,15 +280,15 @@ namespace EasyMobile.Internal.Notifications.iOS
         }
 
         internal string Id
-        { 
+        {
             get
-            { 
+            {
                 if (mId == null)
-                    mId = PInvokeUtil.GetNativeString((strBuffer, strLen) => 
-                        iOSNotificationNative._iOSNotificationRequest_Id(SelfPtr(), strBuffer, strLen));
+                    mId = PInvokeUtil.GetNativeString((strBuffer, strLen) =>
+                        iOSNotificationNative.EM_iOSNotificationRequest_Id(SelfPtr(), strBuffer, strLen));
 
-                return mId; 
-            } 
+                return mId;
+            }
         }
 
         internal iOSNotificationContent Content
@@ -317,7 +317,7 @@ namespace EasyMobile.Internal.Notifications.iOS
             get
             {
                 return Util.FromMillisSinceUnixEpoch(
-                    iOSNotificationNative._iOSNotificationRequest_NextTriggerDateMillis(SelfPtr())).ToLocalTime();
+                    iOSNotificationNative.EM_iOSNotificationRequest_NextTriggerDateMillis(SelfPtr())).ToLocalTime();
             }
         }
 
@@ -325,44 +325,44 @@ namespace EasyMobile.Internal.Notifications.iOS
         {
             get
             {
-                return (NotificationRepeat)iOSNotificationNative._iOSNotificationRequest_RepeatType(SelfPtr());
+                return (NotificationRepeat)iOSNotificationNative.EM_iOSNotificationRequest_RepeatType(SelfPtr());
             }
         }
 
         private string Title
-        { 
+        {
             get
-            { 
+            {
                 if (mTitle == null)
-                    mTitle = PInvokeUtil.GetNativeString((strBuffer, strLen) => 
-                        iOSNotificationNative._iOSNotificationRequest_Title(SelfPtr(), strBuffer, strLen));
+                    mTitle = PInvokeUtil.GetNativeString((strBuffer, strLen) =>
+                        iOSNotificationNative.EM_iOSNotificationRequest_Title(SelfPtr(), strBuffer, strLen));
 
                 return mTitle;
-            } 
+            }
         }
 
         private string Subtitle
-        { 
+        {
             get
-            { 
+            {
                 if (mSubtitle == null)
-                    mSubtitle = PInvokeUtil.GetNativeString((strBuffer, strLen) => 
-                        iOSNotificationNative._iOSNotificationRequest_Subtitle(SelfPtr(), strBuffer, strLen));
+                    mSubtitle = PInvokeUtil.GetNativeString((strBuffer, strLen) =>
+                        iOSNotificationNative.EM_iOSNotificationRequest_Subtitle(SelfPtr(), strBuffer, strLen));
 
                 return mSubtitle;
-            } 
+            }
         }
 
         private string Body
-        { 
+        {
             get
             {
                 if (mBody == null)
-                    mBody = PInvokeUtil.GetNativeString((strBuffer, strLen) => 
-                        iOSNotificationNative._iOSNotificationRequest_Body(SelfPtr(), strBuffer, strLen));
+                    mBody = PInvokeUtil.GetNativeString((strBuffer, strLen) =>
+                        iOSNotificationNative.EM_iOSNotificationRequest_Body(SelfPtr(), strBuffer, strLen));
 
                 return mBody;
-            } 
+            }
         }
 
         private int Badge
@@ -370,7 +370,7 @@ namespace EasyMobile.Internal.Notifications.iOS
             get
             {
                 if (mBadge == null)
-                    mBadge = iOSNotificationNative._iOSNotificationRequest_Badge(SelfPtr());
+                    mBadge = iOSNotificationNative.EM_iOSNotificationRequest_Badge(SelfPtr());
 
                 return mBadge.Value;
             }
@@ -381,8 +381,8 @@ namespace EasyMobile.Internal.Notifications.iOS
             get
             {
                 if (mUserInfoJson == null)
-                    mUserInfoJson = PInvokeUtil.GetNativeString((strBuffer, strLen) => 
-                        iOSNotificationNative._iOSNotificationRequest_UserInfoJson(SelfPtr(), strBuffer, strLen));
+                    mUserInfoJson = PInvokeUtil.GetNativeString((strBuffer, strLen) =>
+                        iOSNotificationNative.EM_iOSNotificationRequest_UserInfoJson(SelfPtr(), strBuffer, strLen));
 
                 return mUserInfoJson;
             }
@@ -393,8 +393,8 @@ namespace EasyMobile.Internal.Notifications.iOS
             get
             {
                 if (mCategoryId == null)
-                    mCategoryId = PInvokeUtil.GetNativeString((strBuffer, strLen) => 
-                        iOSNotificationNative._iOSNotificationRequest_CategoryId(SelfPtr(), strBuffer, strLen));
+                    mCategoryId = PInvokeUtil.GetNativeString((strBuffer, strLen) =>
+                        iOSNotificationNative.EM_iOSNotificationRequest_CategoryId(SelfPtr(), strBuffer, strLen));
 
                 return mCategoryId;
             }
@@ -415,12 +415,12 @@ namespace EasyMobile.Internal.Notifications.iOS
 
         protected override void AttachHandle(HandleRef selfPointer)
         {
-            iOSNotificationNative._iOSNotificationResponse_Ref(selfPointer);
+            iOSNotificationNative.EM_iOSNotificationResponse_Ref(selfPointer);
         }
 
         protected override void ReleaseHandle(HandleRef selfPointer)
         {
-            iOSNotificationNative._iOSNotificationResponse_Unref(selfPointer);
+            iOSNotificationNative.EM_iOSNotificationResponse_Unref(selfPointer);
         }
 
         internal static iOSNotificationResponse FromPointer(IntPtr pointer)
@@ -433,12 +433,12 @@ namespace EasyMobile.Internal.Notifications.iOS
         }
 
         internal string ActionIdentifier
-        { 
+        {
             get
-            { 
-                return PInvokeUtil.GetNativeString((strBuffer, strLen) => 
-                    iOSNotificationNative._iOSNotificationResponse_ActionIdentifier(SelfPtr(), strBuffer, strLen));
-            } 
+            {
+                return PInvokeUtil.GetNativeString((strBuffer, strLen) =>
+                    iOSNotificationNative.EM_iOSNotificationResponse_ActionIdentifier(SelfPtr(), strBuffer, strLen));
+            }
         }
 
         internal DateTime DeliveryDate
@@ -446,16 +446,16 @@ namespace EasyMobile.Internal.Notifications.iOS
             get
             {
                 return Util.FromMillisSinceUnixEpoch(
-                    iOSNotificationNative._iOSNotificationResponse_DeliveryDateMillis(SelfPtr())
+                    iOSNotificationNative.EM_iOSNotificationResponse_DeliveryDateMillis(SelfPtr())
                 ).ToLocalTime();
             }
         }
 
         internal iOSNotificationRequest GetRequest()
-        { 
+        {
             return iOSNotificationRequest.FromPointer(
-                iOSNotificationNative._iOSNotificationResponse_Request(SelfPtr())
-            ); 
+                iOSNotificationNative.EM_iOSNotificationResponse_Request(SelfPtr())
+            );
         }
     }
 
@@ -472,12 +472,12 @@ namespace EasyMobile.Internal.Notifications.iOS
 
         protected override void AttachHandle(HandleRef selfPointer)
         {
-            iOSNotificationNative._GetPendingNotificationRequestsResponse_Ref(selfPointer);
+            iOSNotificationNative.EM_GetPendingNotificationRequestsResponse_Ref(selfPointer);
         }
 
         protected override void ReleaseHandle(HandleRef selfPointer)
         {
-            iOSNotificationNative._GetPendingNotificationRequestsResponse_Unref(selfPointer);
+            iOSNotificationNative.EM_GetPendingNotificationRequestsResponse_Unref(selfPointer);
         }
 
         internal static GetPendingNotificationRequestsResponse FromPointer(IntPtr pointer)
@@ -492,10 +492,10 @@ namespace EasyMobile.Internal.Notifications.iOS
         internal iOSNotificationRequest[] GetNotificationRequests()
         {
             return PInvokeUtil.ToEnumerable<iOSNotificationRequest>(
-                iOSNotificationNative._GetPendingNotificationRequestsResponse_GetData_Length(SelfPtr()),
-                index => 
+                iOSNotificationNative.EM_GetPendingNotificationRequestsResponse_GetData_Length(SelfPtr()),
+                index =>
                 iOSNotificationRequest.FromPointer(
-                    iOSNotificationNative._GetPendingNotificationRequestsResponse_GetData_GetElement(SelfPtr(), index))
+                    iOSNotificationNative.EM_GetPendingNotificationRequestsResponse_GetData_GetElement(SelfPtr(), index))
             ).Cast<iOSNotificationRequest>().ToArray();
         }
     }
@@ -506,103 +506,103 @@ namespace EasyMobile.Internal.Notifications.iOS
 
     internal static class iOSNotificationNative
     {
-        internal delegate void GetPendingNotificationRequestsCallback(IntPtr response,IntPtr callbackPtr);
+        internal delegate void GetPendingNotificationRequestsCallback(IntPtr response, IntPtr callbackPtr);
 
-        internal delegate void GetNotificationResponseCallback(IntPtr response,IntPtr callbackPtr);
+        internal delegate void GetNotificationResponseCallback(IntPtr response, IntPtr callbackPtr);
 
         // Local Notification API ==========================================================
 
         [DllImport("__Internal")]
-        internal static extern void _InitNotifications(ref iOSNotificationAuthOptions authOptions, ref iOSNotificationListenerInfo listener, string jsonCategories);
+        internal static extern void EM_InitNotifications(ref iOSNotificationAuthOptions authOptions, ref iOSNotificationListenerInfo listener, string jsonCategories);
 
         [DllImport("__Internal")]
-        internal static extern void _ScheduleLocalNotification(string identifier, ref iOSNotificationContent content, long delaySeconds);
+        internal static extern void EM_ScheduleLocalNotification(string identifier, ref iOSNotificationContent content, long delaySeconds);
 
         [DllImport("__Internal")]
-        internal static extern void _ScheduleRepeatLocalNotification(string identifier, ref iOSNotificationContent content, ref iOSDateComponents dateComponents, NotificationRepeat repeat);
+        internal static extern void EM_ScheduleRepeatLocalNotification(string identifier, ref iOSNotificationContent content, ref iOSDateComponents dateComponents, NotificationRepeat repeat);
 
         [DllImport("__Internal")]
-        internal static extern void _GetPendingNotificationRequests(GetPendingNotificationRequestsCallback callback, IntPtr secondaryCallback);
+        internal static extern void EM_GetPendingNotificationRequests(GetPendingNotificationRequestsCallback callback, IntPtr secondaryCallback);
 
         [DllImport("__Internal")]
-        internal static extern void _GetNotificationResponse(string identifier, GetNotificationResponseCallback callback, IntPtr secondaryCallback);
+        internal static extern void EM_GetNotificationResponse(string identifier, GetNotificationResponseCallback callback, IntPtr secondaryCallback);
 
         [DllImport("__Internal")]
-        internal static extern void _RemovePendingNotificationRequestWithId(string identifier);
+        internal static extern void EM_RemovePendingNotificationRequestWithId(string identifier);
 
         [DllImport("__Internal")]
-        internal static extern void _RemoveAllPendingNotificationRequests();
+        internal static extern void EM_RemoveAllPendingNotificationRequests();
 
         [DllImport("__Internal")]
-        internal static extern void _RemoveDeliveredNotificationWithId(string identifier);
+        internal static extern void EM_RemoveDeliveredNotificationWithId(string identifier);
 
         [DllImport("__Internal")]
-        internal static extern void _RemoveAllDeliveredNotifications();
+        internal static extern void EM_RemoveAllDeliveredNotifications();
 
         // iOSNotificationRequest ===========================================================
 
         [DllImport("__Internal")]
-        internal static extern void _iOSNotificationRequest_Ref(HandleRef self);
+        internal static extern void EM_iOSNotificationRequest_Ref(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern void _iOSNotificationRequest_Unref(HandleRef self);
+        internal static extern void EM_iOSNotificationRequest_Unref(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationRequest_Id(HandleRef self, [In,Out] byte[] strBuffer, int strLen);
+        internal static extern int EM_iOSNotificationRequest_Id(HandleRef self, [In, Out] byte[] strBuffer, int strLen);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationRequest_Title(HandleRef self, [In,Out] byte[] strBuffer, int strLen);
+        internal static extern int EM_iOSNotificationRequest_Title(HandleRef self, [In, Out] byte[] strBuffer, int strLen);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationRequest_Subtitle(HandleRef self, [In,Out] byte[] strBuffer, int strLen);
+        internal static extern int EM_iOSNotificationRequest_Subtitle(HandleRef self, [In, Out] byte[] strBuffer, int strLen);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationRequest_Body(HandleRef self, [In,Out] byte[] strBuffer, int strLen);
+        internal static extern int EM_iOSNotificationRequest_Body(HandleRef self, [In, Out] byte[] strBuffer, int strLen);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationRequest_Badge(HandleRef self);
+        internal static extern int EM_iOSNotificationRequest_Badge(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationRequest_UserInfoJson(HandleRef self, [In,Out] byte[] strBuffer, int strLen);
+        internal static extern int EM_iOSNotificationRequest_UserInfoJson(HandleRef self, [In, Out] byte[] strBuffer, int strLen);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationRequest_CategoryId(HandleRef self, [In,Out] byte[] strBuffer, int strLen);
+        internal static extern int EM_iOSNotificationRequest_CategoryId(HandleRef self, [In, Out] byte[] strBuffer, int strLen);
 
         [DllImport("__Internal")]
-        internal static extern long _iOSNotificationRequest_NextTriggerDateMillis(HandleRef self);
+        internal static extern long EM_iOSNotificationRequest_NextTriggerDateMillis(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationRequest_RepeatType(HandleRef self);
+        internal static extern int EM_iOSNotificationRequest_RepeatType(HandleRef self);
 
         // iOSNotificationResponse ===========================================================
         [DllImport("__Internal")]
-        internal static extern void _iOSNotificationResponse_Ref(HandleRef self);
+        internal static extern void EM_iOSNotificationResponse_Ref(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern void _iOSNotificationResponse_Unref(HandleRef self);
+        internal static extern void EM_iOSNotificationResponse_Unref(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern int _iOSNotificationResponse_ActionIdentifier(HandleRef self, [In,Out] byte[] strBuffer, int strLen);
+        internal static extern int EM_iOSNotificationResponse_ActionIdentifier(HandleRef self, [In, Out] byte[] strBuffer, int strLen);
 
         [DllImport("__Internal")]
-        internal static extern IntPtr _iOSNotificationResponse_Request(HandleRef self);
+        internal static extern IntPtr EM_iOSNotificationResponse_Request(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern long _iOSNotificationResponse_DeliveryDateMillis(HandleRef self);
+        internal static extern long EM_iOSNotificationResponse_DeliveryDateMillis(HandleRef self);
 
         // GetPendingNotificationRequestsResponse ===========================================
 
         [DllImport("__Internal")]
-        internal static extern void _GetPendingNotificationRequestsResponse_Ref(HandleRef self);
+        internal static extern void EM_GetPendingNotificationRequestsResponse_Ref(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern void _GetPendingNotificationRequestsResponse_Unref(HandleRef self);
+        internal static extern void EM_GetPendingNotificationRequestsResponse_Unref(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern int _GetPendingNotificationRequestsResponse_GetData_Length(HandleRef self);
+        internal static extern int EM_GetPendingNotificationRequestsResponse_GetData_Length(HandleRef self);
 
         [DllImport("__Internal")]
-        internal static extern IntPtr _GetPendingNotificationRequestsResponse_GetData_GetElement(HandleRef self, int index);
+        internal static extern IntPtr EM_GetPendingNotificationRequestsResponse_GetData_GetElement(HandleRef self, int index);
     }
 
     #endregion // iOSNotificationNative

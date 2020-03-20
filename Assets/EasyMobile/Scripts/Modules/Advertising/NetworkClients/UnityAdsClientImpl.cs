@@ -9,16 +9,16 @@ namespace EasyMobile
     using UnityEngine.Advertisements;
 #endif
 
-	public class UnityAdsClientImpl : AdClientImpl
-	{
-		private const string NO_SDK_MESSAGE = "SDK missing. Please enable UnityAds service.";
-		private const string BANNER_UNSUPPORTED_MESSAGE = "UnityAds does not support banner ad format.";
+    public class UnityAdsClientImpl : AdClientImpl
+    {
+        private const string NO_SDK_MESSAGE = "SDK missing. Please enable UnityAds service.";
+        private const string BANNER_UNSUPPORTED_MESSAGE = "This version of UnityAds package does not support banner ad format.";
 
 #if UNITY_ADS || UNITY_MONETIZATION
         private UnityAdsSettings mAdSettings;
 #endif
 
-		#region UnityAds Events
+        #region UnityAds Events
 
 #if UNITY_ADS || UNITY_MONETIZATION
         /// <summary>
@@ -43,104 +43,103 @@ namespace EasyMobile
 
 #endif
 
-		#endregion
+        #endregion
 
-		#region Singleton
+        #region Singleton
 
-		private static UnityAdsClientImpl sInstance;
+        private static UnityAdsClientImpl sInstance;
 
-		private UnityAdsClientImpl()
-		{
-		}
+        private UnityAdsClientImpl()
+        {
+        }
 
-		/// <summary>
-		/// Returns the singleton client.
-		/// </summary>
-		/// <returns>The client.</returns>
-		public static UnityAdsClientImpl CreateClient()
-		{
-			if (sInstance == null)
-			{
-				sInstance = new UnityAdsClientImpl();
-			}
-			return sInstance;
-		}
+        /// <summary>
+        /// Returns the singleton client.
+        /// </summary>
+        /// <returns>The client.</returns>
+        public static UnityAdsClientImpl CreateClient()
+        {
+            if (sInstance == null)
+            {
+                sInstance = new UnityAdsClientImpl();
+            }
+            return sInstance;
+        }
 
-		#endregion  // Object Creators
+        #endregion  // Object Creators
 
-		#region AdClient Overrides
+        #region AdClient Overrides
 
-		public override AdNetwork Network { get { return AdNetwork.UnityAds; } }
+        public override AdNetwork Network { get { return AdNetwork.UnityAds; } }
 
-		public override bool IsBannerAdSupported
-		{
-			get
-			{
+        public override bool IsBannerAdSupported
+        {
+            get
+            {
 #if UNITY_MONETIZATION
                 return true;
 #else
-				return false;
+                return false;
 #endif
-			}
-		}
+            }
+        }
 
+        public override bool IsInterstitialAdSupported { get { return true; } }
 
-		public override bool IsInterstitialAdSupported { get { return true; } }
+        public override bool IsRewardedAdSupported { get { return true; } }
 
-		public override bool IsRewardedAdSupported { get { return true; } }
-
-		public override bool IsInitialized
-		{
-			get
-			{
+        public override bool IsInitialized
+        {
+            get
+            {
 #if UNITY_ADS || UNITY_MONETIZATION
                 return mIsInitialized && Advertisement.isInitialized;
 #else
 				return mIsInitialized;
 #endif
-			}
-		}
+            }
+        }
 
-		protected override Dictionary<AdPlacement, AdId> CustomInterstitialAdsDict
-		{
-			get
-			{
+        protected override Dictionary<AdPlacement, AdId> CustomInterstitialAdsDict
+        {
+            get
+            {
 #if UNITY_ADS || UNITY_MONETIZATION
                 return mAdSettings == null ? null : mAdSettings.CustomInterstitialAdIds;
 #else
 				return null;
 #endif
-			}
-		}
+            }
+        }
 
-		protected override Dictionary<AdPlacement, AdId> CustomRewardedAdsDict
-		{
-			get
-			{
+        protected override Dictionary<AdPlacement, AdId> CustomRewardedAdsDict
+        {
+            get
+            {
 #if UNITY_ADS || UNITY_MONETIZATION
                 return mAdSettings == null ? null : mAdSettings.CustomRewardedAdIds;
 #else
 				return null;
 #endif
-			}
-		}
+            }
+        }
 
-		protected override string NoSdkMessage { get { return NO_SDK_MESSAGE; } }
+        protected override string NoSdkMessage { get { return NO_SDK_MESSAGE; } }
 
-		public override bool IsSdkAvail
-		{
-			get
-			{
+        public override bool IsSdkAvail
+        {
+            get
+            {
 #if UNITY_ADS || UNITY_MONETIZATION
                 return true;
 #else
 				return false;
 #endif
-			}
-		}
+            }
+        }
 
-		public override bool IsValidPlacement(AdPlacement placement, AdType type)
-		{
+        public override bool IsValidPlacement(AdPlacement placement, AdType type)
+        {
 #if UNITY_ADS
             string id;
             if (placement == AdPlacement.Default)
@@ -179,10 +178,10 @@ namespace EasyMobile
 #else
 			return false;
 #endif
-		}
+        }
 
-		protected override void InternalInit()
-		{
+        protected override void InternalInit()
+        {
 #if UNITY_ADS || UNITY_MONETIZATION
             if (!mIsInitialized)
             {
@@ -205,15 +204,15 @@ namespace EasyMobile
                 Debug.Log("UnityAds client has been initialized.");
             }
 #endif
-		}
+        }
 
-		//------------------------------------------------------------
-		// Banner Ads.
-		//------------------------------------------------------------
+        //------------------------------------------------------------
+        // Banner Ads.
+        //------------------------------------------------------------
 
 
-		protected override void InternalShowBannerAd(AdPlacement placement, BannerAdPosition postition, BannerAdSize size)
-		{
+        protected override void InternalShowBannerAd(AdPlacement placement, BannerAdPosition position, BannerAdSize size)
+        {
 #if UNITY_MONETIZATION
             string id = placement == AdPlacement.Default ?
                 mAdSettings.DefaultBannerAdId.Id :
@@ -231,40 +230,30 @@ namespace EasyMobile
 
                 options.errorCallback += ((string message) =>
                 {
-                    Debug.Log("Error: " + message);
+                    Debug.Log("Error loading Unity banner ad: " + message);
                 });
 
                 options.loadCallback += (() =>
                 {
-                    Debug.Log("Ad Loaded");
+                    DoShowBannerAd(id, placement);
                 });
 
-                Debug.Log("Loading banner ad");
+                Advertisement.Banner.SetPosition(ToUnityAdsBannerPosition(position));
                 Advertisement.Banner.Load(id, options);
             }
             else
             {
-                var showOptions = new BannerOptions
-                {
-                    showCallback = () =>
-                    {
-                        InternalShowBannerAdCallback(placement);
-                    }
-                };
-
-
-                Advertisement.Banner.Show(id, showOptions);
+                DoShowBannerAd(id, placement);
             }
 
 #else
-			Debug.LogWarning(BANNER_UNSUPPORTED_MESSAGE);
+            Debug.LogWarning(BANNER_UNSUPPORTED_MESSAGE);
 #endif
-		}
+        }
 
-		protected override void InternalHideBannerAd(AdPlacement placement)
-		{
+        protected override void InternalHideBannerAd(AdPlacement placement)
+        {
 #if UNITY_MONETIZATION
-            // hideCallback is not implemented yet by Unity
             var hideOptions = new BannerOptions
             {
                 hideCallback = () =>
@@ -274,14 +263,13 @@ namespace EasyMobile
             };
             Advertisement.Banner.Hide(false);
 #else
-			Debug.LogWarning(BANNER_UNSUPPORTED_MESSAGE);
+            Debug.LogWarning(BANNER_UNSUPPORTED_MESSAGE);
 #endif
-		}
+        }
 
-		protected override void InternalDestroyBannerAd(AdPlacement placement)
-		{
+        protected override void InternalDestroyBannerAd(AdPlacement placement)
+        {
 #if UNITY_MONETIZATION
-            // hideCallback is not implemented yet by Unity
             var hideOptions = new BannerOptions
             {
                 hideCallback = () =>
@@ -291,21 +279,21 @@ namespace EasyMobile
             };
             Advertisement.Banner.Hide(true);
 #else
-			Debug.LogWarning(BANNER_UNSUPPORTED_MESSAGE);
+            Debug.LogWarning(BANNER_UNSUPPORTED_MESSAGE);
 #endif
-		}
+        }
 
-		//------------------------------------------------------------
-		// Interstitial Ads.
-		//------------------------------------------------------------
+        //------------------------------------------------------------
+        // Interstitial Ads.
+        //------------------------------------------------------------
 
-		protected override void InternalLoadInterstitialAd(AdPlacement _)
-		{
-			// Unity Ads handles loading automatically.
-		}
+        protected override void InternalLoadInterstitialAd(AdPlacement _)
+        {
+            // Unity Ads handles loading automatically.
+        }
 
-		protected override bool InternalIsInterstitialAdReady(AdPlacement placement)
-		{
+        protected override bool InternalIsInterstitialAdReady(AdPlacement placement)
+        {
 #if UNITY_ADS || UNITY_MONETIZATION
             string placementId = placement == AdPlacement.Default ?
                 mAdSettings.DefaultInterstitialAdId.Id : FindIdForPlacement(mAdSettings.CustomInterstitialAdIds, placement);
@@ -317,10 +305,10 @@ namespace EasyMobile
 #else
 			return false;
 #endif
-		}
+        }
 
-		protected override void InternalShowInterstitialAd(AdPlacement placement)
-		{
+        protected override void InternalShowInterstitialAd(AdPlacement placement)
+        {
 #if UNITY_ADS || UNITY_MONETIZATION
             string id = placement == AdPlacement.Default ?
                 mAdSettings.DefaultInterstitialAdId.Id : FindIdForPlacement(mAdSettings.CustomInterstitialAdIds, placement);
@@ -346,19 +334,19 @@ namespace EasyMobile
             Advertisement.Show(id);
 #endif
 #endif
-		}
+        }
 
-		//------------------------------------------------------------
-		// Rewarded Ads.
-		//------------------------------------------------------------
+        //------------------------------------------------------------
+        // Rewarded Ads.
+        //------------------------------------------------------------
 
-		protected override void InternalLoadRewardedAd(AdPlacement _)
-		{
-			// Unity Ads handles loading automatically.
-		}
+        protected override void InternalLoadRewardedAd(AdPlacement _)
+        {
+            // Unity Ads handles loading automatically.
+        }
 
-		protected override bool InternalIsRewardedAdReady(AdPlacement placement)
-		{
+        protected override bool InternalIsRewardedAdReady(AdPlacement placement)
+        {
 #if UNITY_ADS || UNITY_MONETIZATION
             string placementId = placement == AdPlacement.Default ?
                 mAdSettings.DefaultRewardedAdId.Id : FindIdForPlacement(mAdSettings.CustomRewardedAdIds, placement);
@@ -370,10 +358,10 @@ namespace EasyMobile
 #else
 			return false;
 #endif
-		}
+        }
 
-		protected override void InternalShowRewardedAd(AdPlacement placement)
-		{
+        protected override void InternalShowRewardedAd(AdPlacement placement)
+        {
 #if UNITY_ADS || UNITY_MONETIZATION
             string id = placement == AdPlacement.Default ?
                 mAdSettings.DefaultRewardedAdId.Id : FindIdForPlacement(mAdSettings.CustomRewardedAdIds, placement);
@@ -398,18 +386,18 @@ namespace EasyMobile
             Advertisement.Show(id);
 #endif
 #endif
-		}
+        }
 
-		#endregion  // AdClient Overrides
+        #endregion  // AdClient Overrides
 
-		#region IConsentRequirable Overrides
+        #region IConsentRequirable Overrides
 
-		private const string DATA_PRIVACY_CONSENT_KEY = "EM_Ads_UnityAds_DataPrivacyConsent";
+        private const string DATA_PRIVACY_CONSENT_KEY = "EM_Ads_UnityAds_DataPrivacyConsent";
 
-		protected override string DataPrivacyConsentSaveKey { get { return DATA_PRIVACY_CONSENT_KEY; } }
+        protected override string DataPrivacyConsentSaveKey { get { return DATA_PRIVACY_CONSENT_KEY; } }
 
-		protected override void ApplyDataPrivacyConsent(ConsentStatus consent)
-		{
+        protected override void ApplyDataPrivacyConsent(ConsentStatus consent)
+        {
 #if UNITY_ADS || UNITY_MONETIZATION
             // https://unityads.unity3d.com/help/legal/gdpr
             switch (consent)
@@ -425,11 +413,11 @@ namespace EasyMobile
                     break;
             }
 #endif
-		}
+        }
 
-		#endregion
+        #endregion
 
-		#region GDPR Stuff
+        #region GDPR Stuff
 
 #if UNITY_ADS || UNITY_MONETIZATION
 
@@ -447,9 +435,9 @@ namespace EasyMobile
 
 #endif
 
-		#endregion
+        #endregion
 
-		#region Ad Event Handlers
+        #region Ad Event Handlers
 
 #if UNITY_ADS || UNITY_MONETIZATION
 
@@ -501,9 +489,9 @@ namespace EasyMobile
                 RewardedAdCallback(result, placement);
         }
 #endif
-		#endregion  // Ad Event Handlers
+        #endregion  // Ad Event Handlers
 
-		#region IUnityAdsListener implementation
+        #region IUnityAdsListener implementation & UnityAds banner helpers
 
 #if UNITY_MONETIZATION
 
@@ -554,114 +542,148 @@ namespace EasyMobile
                 Debug.Log("OnUnityAdsReady: " + placementId);
             }
         }
+
+        private void DoShowBannerAd(string id, AdPlacement placement)
+        {
+            var showOptions = new BannerOptions
+            {
+                showCallback = () =>
+                {
+                    InternalShowBannerAdCallback(placement);
+                }
+            };
+            Advertisement.Banner.Show(id, showOptions);
+        }
+
+        private BannerPosition ToUnityAdsBannerPosition(BannerAdPosition position)
+        {
+            switch (position)
+            {
+                case BannerAdPosition.Bottom:
+                    return BannerPosition.BOTTOM_CENTER;
+                case BannerAdPosition.BottomLeft:
+                    return BannerPosition.BOTTOM_LEFT;
+                case BannerAdPosition.BottomRight:
+                    return BannerPosition.BOTTOM_RIGHT;
+                case BannerAdPosition.Top:
+                    return BannerPosition.TOP_CENTER;
+                case BannerAdPosition.TopLeft:
+                    return BannerPosition.TOP_LEFT;
+                case BannerAdPosition.TopRight:
+                    return BannerPosition.TOP_RIGHT;
+                default:
+                    return BannerPosition.CENTER;
+            }
+        }
+
 #endif
-		#endregion
+        #endregion
 
 
-		#region Private stuff
+        #region Private stuff
 
 #if UNITY_ADS || UNITY_MONETIZATION
 
-		private AdPlacement FindBannerPlacementWithId(string placementId)
-		{
-			if (string.IsNullOrEmpty(placementId))
-			{
-				return null;
-			}
-			else if (mAdSettings.DefaultBannerAdId.Id.Equals(placementId))
-			{
-				return AdPlacement.Default;
-			}
-			else
-			{
-				foreach (var pair in mAdSettings.CustomBannerAdIds)
-				{
-					if (pair.Value.Id.Equals(placementId))
-						return pair.Key;
-				}
-			}
+        private AdPlacement FindBannerPlacementWithId(string placementId)
+        {
+            if (string.IsNullOrEmpty(placementId))
+            {
+                return null;
+            }
+            else if (mAdSettings.DefaultBannerAdId.Id.Equals(placementId))
+            {
+                return AdPlacement.Default;
+            }
+            else
+            {
+                foreach (var pair in mAdSettings.CustomBannerAdIds)
+                {
+                    if (pair.Value.Id.Equals(placementId))
+                        return pair.Key;
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		private AdPlacement FindInterstitialPlacementWithId(string placementId)
-		{
-			if (string.IsNullOrEmpty(placementId))
-			{
-				return null;
-			}
-			else if (mAdSettings.DefaultInterstitialAdId.Id.Equals(placementId))
-			{
-				return AdPlacement.Default;
-			}
-			else
-			{
-				foreach (var pair in mAdSettings.CustomInterstitialAdIds)
-				{
-					if (pair.Value.Id.Equals(placementId))
-						return pair.Key;
-				}
-			}
+        private AdPlacement FindInterstitialPlacementWithId(string placementId)
+        {
+            if (string.IsNullOrEmpty(placementId))
+            {
+                return null;
+            }
+            else if (mAdSettings.DefaultInterstitialAdId.Id.Equals(placementId))
+            {
+                return AdPlacement.Default;
+            }
+            else
+            {
+                foreach (var pair in mAdSettings.CustomInterstitialAdIds)
+                {
+                    if (pair.Value.Id.Equals(placementId))
+                        return pair.Key;
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		private AdPlacement FindRewardedPlacementWithId(string placementId)
-		{
-			if (string.IsNullOrEmpty(placementId))
-			{
-				return null;
-			}
-			else if (mAdSettings.DefaultRewardedAdId.Id.Equals(placementId))
-			{
-				return AdPlacement.Default;
-			}
-			else
-			{
-				foreach (var pair in mAdSettings.CustomRewardedAdIds)
-				{
-					if (pair.Value.Id.Equals(placementId))
-						return pair.Key;
-				}
-			}
+        private AdPlacement FindRewardedPlacementWithId(string placementId)
+        {
+            if (string.IsNullOrEmpty(placementId))
+            {
+                return null;
+            }
+            else if (mAdSettings.DefaultRewardedAdId.Id.Equals(placementId))
+            {
+                return AdPlacement.Default;
+            }
+            else
+            {
+                foreach (var pair in mAdSettings.CustomRewardedAdIds)
+                {
+                    if (pair.Value.Id.Equals(placementId))
+                        return pair.Key;
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		private AdPlacement FindAdPlacementWithId(string placementId, out AdType adType)
-		{
-			// Is this a banner placement?
-			var placement = FindBannerPlacementWithId(placementId);
+        private AdPlacement FindAdPlacementWithId(string placementId, out AdType adType)
+        {
+            // Is this a banner placement?
+            var placement = FindBannerPlacementWithId(placementId);
 
-			if (placement != null)
-			{
-				adType = AdType.Banner;
-				return placement;
-			}
+            if (placement != null)
+            {
+                adType = AdType.Banner;
+                return placement;
+            }
 
-			// or an interstitial placement?
-			placement = FindInterstitialPlacementWithId(placementId);
+            // or an interstitial placement?
+            placement = FindInterstitialPlacementWithId(placementId);
 
-			if (placement != null)
-			{
-				adType = AdType.Interstitial;
-				return placement;
-			}
+            if (placement != null)
+            {
+                adType = AdType.Interstitial;
+                return placement;
+            }
 
-			// or a rewarded placement?
-			placement = FindRewardedPlacementWithId(placementId);
+            // or a rewarded placement?
+            placement = FindRewardedPlacementWithId(placementId);
 
-			if (placement != null)
-			{
-				adType = AdType.Rewarded;
-				return placement;
-			}
+            if (placement != null)
+            {
+                adType = AdType.Rewarded;
+                return placement;
+            }
 
-			adType = AdType.Banner;
-			return null;
-		}
+            adType = AdType.Banner;
+            return null;
+        }
 
 #endif
-		#endregion
-	}
+        #endregion
+    }
 }

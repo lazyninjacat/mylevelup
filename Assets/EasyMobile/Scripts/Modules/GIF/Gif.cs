@@ -13,8 +13,8 @@ using EasyMobile.Internal.Gif.Android;
 #endif
 
 #if UNITY_EDITOR || (!UNITY_IOS && !UNITY_ANDROID)
-using Moments;
-using Moments.Encoder;
+using EM_Moments;
+using EM_Moments.Encoder;
 #endif
 
 namespace EasyMobile

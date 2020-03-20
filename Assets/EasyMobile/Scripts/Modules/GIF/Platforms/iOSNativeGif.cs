@@ -11,7 +11,7 @@ namespace EasyMobile.Internal.Gif.iOS
 {
     internal static class iOSNativeGif
     {
-#region Gif Encoding
+        #region Gif Encoding
 
         internal static event Action<int, float> GifExportProgress;
         internal static event Action<int, string> GifExportCompleted;
@@ -68,7 +68,7 @@ namespace EasyMobile.Internal.Gif.iOS
 
             gcHandles.Add(taskId, gcHandleArray);
 
-            C._ExportGif(taskId,
+            C.EM_ExportGif(taskId,
                 filepath,
                 width,
                 height,
@@ -82,9 +82,9 @@ namespace EasyMobile.Internal.Gif.iOS
                 GifExportCompletedCallback);
         }
 
-#endregion
+        #endregion
 
-#region Gif Decoding
+        #region Gif Decoding
 
         // Store the GCHandles of all buffers created for each decoding task
         private static Dictionary<int, GifDecodeResources> sDecodeTasks;
@@ -118,7 +118,7 @@ namespace EasyMobile.Internal.Gif.iOS
             }
 
             // Copy pointers to unmanaged holder.
-            C._CopyPointerArray(pointerHolder, ptrArray, frameCount);
+            C.EM_CopyPointerArray(pointerHolder, ptrArray, frameCount);
 
             // Cache GCHandles.
             DecodeTasks[taskId].frameMetadataHandles = gcHandleArray;
@@ -150,7 +150,7 @@ namespace EasyMobile.Internal.Gif.iOS
             }
 
             // Copy pointers to unmanaged holder.
-            C._CopyPointerArray(pointerHolder, ptrArray, frameCount);
+            C.EM_CopyPointerArray(pointerHolder, ptrArray, frameCount);
 
             // Cache GCHandles.
             DecodeTasks[taskId].imageDataHandles = gcHandleArray;
@@ -232,7 +232,7 @@ namespace EasyMobile.Internal.Gif.iOS
                 completeCallback = completeCallback
             };
 
-            C._DecodeGif(taskId,
+            C.EM_DecodeGif(taskId,
             filepath,
             framesToRead,
             EncodeThreadPriority(workerPriority),
@@ -242,9 +242,9 @@ namespace EasyMobile.Internal.Gif.iOS
             GifDecodingCompleteCallback);
         }
 
-#endregion
+        #endregion
 
-#region Helpers
+        #region Helpers
 
         private static int EncodeThreadPriority(System.Threading.ThreadPriority priority)
         {
@@ -265,9 +265,9 @@ namespace EasyMobile.Internal.Gif.iOS
             }
         }
 
-#endregion
+        #endregion
 
-#region C Wrapper
+        #region C Wrapper
 
         private static class C
         {
@@ -278,7 +278,7 @@ namespace EasyMobile.Internal.Gif.iOS
             internal delegate void NativeGifDecodingCompletedDelegate(int taskId);
 
             [DllImport("__Internal")]
-            internal static extern void _ExportGif(int taskId,
+            internal static extern void EM_ExportGif(int taskId,
                                               string filepath,
                                               int width,
                                               int height,
@@ -292,7 +292,7 @@ namespace EasyMobile.Internal.Gif.iOS
                                               NativeExportCompletedDelegate exportCompletedCallback);
 
             [DllImport("__Internal")]
-            internal static extern void _DecodeGif(int taskId,
+            internal static extern void EM_DecodeGif(int taskId,
                string filepath,
                int framesToRead,    // <= 0: read whole GIF
                int queuePriority,
@@ -302,10 +302,10 @@ namespace EasyMobile.Internal.Gif.iOS
                NativeGifDecodingCompletedDelegate completeCallback);
 
             [DllImport("__Internal")]
-            internal static extern void _CopyPointerArray(IntPtr destPtrArray, IntPtr[] srcPtrArray, int length);
+            internal static extern void EM_CopyPointerArray(IntPtr destPtrArray, IntPtr[] srcPtrArray, int length);
         }
 
-#endregion
+        #endregion
     }
 }
 #endif

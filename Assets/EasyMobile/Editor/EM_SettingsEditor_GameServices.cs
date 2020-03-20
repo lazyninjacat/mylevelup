@@ -83,6 +83,16 @@ namespace EasyMobile.Editor
                     // GPGS popup gravity.
                     EditorGUILayout.PropertyField(GameServiceProperties.gpgsPopupGravity.property, GameServiceProperties.gpgsPopupGravity.content);
 
+                    // GPGS request ServerAuthCode config.
+                    EditorGUILayout.PropertyField(GameServiceProperties.gpgsShouldRequestServerAuthCode.property, GameServiceProperties.gpgsShouldRequestServerAuthCode.content);
+                    EditorGUI.BeginDisabledGroup(!GameServiceProperties.gpgsShouldRequestServerAuthCode.property.boolValue);
+                    EditorGUILayout.PropertyField(GameServiceProperties.gpgsForceRefreshServerAuthCode.property, GameServiceProperties.gpgsForceRefreshServerAuthCode.content);
+                    EditorGUI.EndDisabledGroup();
+
+
+                    // GPGS OAuth scopes.
+                    EditorGUILayout.PropertyField(GameServiceProperties.gpgsOauthScopes.property, GameServiceProperties.gpgsOauthScopes.content, true);
+
                     // GPGS (optional) Web App Client ID.
                     EditorGUILayout.Space();
                     EditorGUILayout.LabelField("Web App Client ID (Optional)", EditorStyles.boldLabel);
@@ -211,7 +221,7 @@ namespace EasyMobile.Editor
 
         // Replicate the "DoSetup" method of the GPGSAndroidSetupUI class.
         void SetupAndroidGPGS(string webClientId, string folder, string className, string resourceXmlData, string nearbySvcId, bool requiresGooglePlus)
-        {           
+        {
             // Create the folder to store the generated cs file if it doesn't exist.
             FileIO.EnsureFolderExists(folder);
 
@@ -224,9 +234,9 @@ namespace EasyMobile.Editor
             bool isSetupSucceeded = false;
 
             // GPGS 0.9.37 and newer: PerformSetup has no trailing bool parameter
-            MethodInfo newPerformSetup = gpgsAndroidSetupClass.GetMethod(methodName, 
-                                             BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, 
-                                             Type.DefaultBinder, 
+            MethodInfo newPerformSetup = gpgsAndroidSetupClass.GetMethod(methodName,
+                                             BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
+                                             Type.DefaultBinder,
                                              new Type[] { typeof(string), typeof(string), typeof(string), typeof(string), typeof(string) },
                                              new ParameterModifier[0]);
 
@@ -237,9 +247,9 @@ namespace EasyMobile.Editor
             else
             {
                 // GPGS 0.9.36 and older: PerformSetup has a trailing bool parameter
-                MethodInfo oldPerformSetup = gpgsAndroidSetupClass.GetMethod(methodName, 
-                                                 BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, 
-                                                 Type.DefaultBinder, 
+                MethodInfo oldPerformSetup = gpgsAndroidSetupClass.GetMethod(methodName,
+                                                 BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
+                                                 Type.DefaultBinder,
                                                  new Type[] { typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(bool) },
                                                  new ParameterModifier[0]);
 
@@ -248,7 +258,7 @@ namespace EasyMobile.Editor
                     isSetupSucceeded = (bool)oldPerformSetup.Invoke(null, new object[] { webClientId, folder, className, resourceXmlData, nearbySvcId, requiresGooglePlus });
                 }
             }
-                
+
             if (isSetupSucceeded)
             {
                 GPGSAndroidSetupUI.CheckBundleId();

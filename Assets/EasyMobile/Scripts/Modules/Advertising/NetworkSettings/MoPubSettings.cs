@@ -305,19 +305,19 @@ namespace EasyMobile
     public static class MoPubSettingsExtension
     {
 #if EM_MOPUB
-        public static MoPubBase.LogLevel ToMoPubLogLevel(this MoPubSettings.LogLevel logLevel)
+        public static MoPub.LogLevel ToMoPubLogLevel(this MoPubSettings.LogLevel logLevel)
         {
             switch (logLevel)
             {
                 case MoPubSettings.LogLevel.Debug:
-                    return MoPubBase.LogLevel.Debug;
+                    return MoPub.LogLevel.Debug;
 
                 case MoPubSettings.LogLevel.Info:
-                    return MoPubBase.LogLevel.Info;
+                    return MoPub.LogLevel.Info;
 
                 case MoPubSettings.LogLevel.None:
                 default:
-                    return MoPubBase.LogLevel.None;
+                    return MoPub.LogLevel.None;
             }
         }
 
@@ -348,25 +348,25 @@ namespace EasyMobile
             switch (mediatedNetwork.SupportedNetworkName)
             {
                 case MoPubSettings.SupportedNetwork.AdColony:
-                    return new MoPubBase.SupportedNetwork.AdColony().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.AdColony().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.AdMob:
-                    return new MoPubBase.SupportedNetwork.AdMob().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.AdMob().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.AppLovin:
-                    return new MoPubBase.SupportedNetwork.AppLovin().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.AppLovin().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.Chartboost:
-                    return new MoPubBase.SupportedNetwork.Chartboost().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.Chartboost().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.Facebook:
-                    return new MoPubBase.SupportedNetwork.Facebook().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.Facebook().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.IronSource:
-                    return new MoPubBase.SupportedNetwork.IronSource().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.IronSource().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.OnebyAOL:
-                    return new MoPubBase.SupportedNetwork.OnebyAOL().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.OnebyAOL().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.TapJoy:
-                    return new MoPubBase.SupportedNetwork.Tapjoy().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.Tapjoy().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.UnityAds:
-                    return new MoPubBase.SupportedNetwork.Unity().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.Unity().AdapterConfigurationClassName;
                 case MoPubSettings.SupportedNetwork.Vungle:
-                    return new MoPubBase.SupportedNetwork.Vungle().AdapterConfigurationClassName;
+                    return new MoPub.SupportedNetwork.Vungle().AdapterConfigurationClassName;
                 default:
                     return null;
             }
@@ -383,25 +383,25 @@ namespace EasyMobile
             switch (mediatedNetwork.SupportedNetworkName)
             {
                 case MoPubSettings.SupportedNetwork.AdColony:
-                    return new MoPubBase.SupportedNetwork.AdColony().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.AdColony().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.AdMob:
-                    return new MoPubBase.SupportedNetwork.AdMob().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.AdMob().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.AppLovin:
-                    return new MoPubBase.SupportedNetwork.AppLovin().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.AppLovin().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.Chartboost:
-                    return new MoPubBase.SupportedNetwork.Chartboost().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.Chartboost().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.Facebook:
-                    return new MoPubBase.SupportedNetwork.Facebook().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.Facebook().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.IronSource:
-                    return new MoPubBase.SupportedNetwork.IronSource().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.IronSource().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.OnebyAOL:
-                    return new MoPubBase.SupportedNetwork.OnebyAOL().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.OnebyAOL().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.TapJoy:
-                    return new MoPubBase.SupportedNetwork.Tapjoy().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.Tapjoy().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.UnityAds:
-                    return new MoPubBase.SupportedNetwork.Unity().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.Unity().MediationSettingsClassName;
                 case MoPubSettings.SupportedNetwork.Vungle:
-                    return new MoPubBase.SupportedNetwork.Vungle().MediationSettingsClassName;
+                    return new MoPub.SupportedNetwork.Vungle().MediationSettingsClassName;
                 default:
                     return null;
             }

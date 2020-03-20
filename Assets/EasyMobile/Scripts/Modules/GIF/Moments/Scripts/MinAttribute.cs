@@ -23,15 +23,15 @@
 
 using UnityEngine;
 
-namespace Moments
+namespace EM_Moments
 {
-	public sealed class MinAttribute : PropertyAttribute
-	{
-		public readonly float min;
+    public sealed class MinAttribute : PropertyAttribute
+    {
+        public readonly float min;
 
-		public MinAttribute(float min)
-		{
-			this.min = min;
-		}
-	}
+        public MinAttribute(float min)
+        {
+            this.min = min;
+        }
+    }
 }

@@ -155,9 +155,8 @@ namespace EasyMobile
 #endif
 
 #elif UNITY_ANDROID && EM_GPGS
-#if EASY_MOBILE_PRO
             PlayGamesClientConfiguration.Builder gpgsConfigBuilder = new PlayGamesClientConfiguration.Builder();
-
+#if EASY_MOBILE_PRO
             // Enable Saved Games.
             if (EM_Settings.GameServices.IsSavedGamesEnabled)
             {
@@ -170,13 +169,23 @@ namespace EasyMobile
                 gpgsConfigBuilder.WithInvitationDelegate(OnGPGSInvitationReceived);
                 gpgsConfigBuilder.WithMatchDelegate(OnGPGSTBMatchReceived);
             }
+#endif
+            // Add the OAuth scopes if any.
+            if (EM_Settings.GameServices.GpgsOauthScopes != null && EM_Settings.GameServices.GpgsOauthScopes.Length > 0)
+            {
+                foreach (string scope in EM_Settings.GameServices.GpgsOauthScopes)
+                    gpgsConfigBuilder.AddOauthScope(scope);
+            }
+
+            // Request ServerAuthCode if needed.
+            if (EM_Settings.GameServices.GpgsShouldRequestServerAuthCode)
+                gpgsConfigBuilder.RequestServerAuthCode(EM_Settings.GameServices.GpgsForceRefreshServerAuthCode);
 
             // Build the config
             PlayGamesClientConfiguration gpgsConfig = gpgsConfigBuilder.Build();
 
             // Initialize PlayGamesPlatform
             PlayGamesPlatform.InitializeInstance(gpgsConfig);
-#endif
 
             // Enable logging if required
             PlayGamesPlatform.DebugLogEnabled = EM_Settings.GameServices.GgpsDebugLogEnabled;
@@ -595,7 +604,50 @@ namespace EasyMobile
         }
 
         /// <summary>
-        /// Signs the user out. Available on Android only.
+        /// [Google Play Games] Gets the server auth code.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetServerAuthCode()
+        {
+            if (!IsInitialized())
+            {
+                return string.Empty;
+            }
+
+#if UNITY_ANDROID && EM_GPGS
+            return PlayGamesPlatform.Instance.GetServerAuthCode();
+#elif UNITY_ANDROID && !EM_GPGS
+            Debug.LogError("SDK missing. Please import Google Play Games plugin for Unity.");
+            return string.Empty;
+#else
+            Debug.Log("GetServerAuthCode is only available on Google Play Games platform.");
+            return string.Empty;
+#endif
+        }
+
+        /// <summary>
+        /// [Google Play Games] Gets another server auth code.
+        /// </summary>
+        /// <param name="reAuthenticateIfNeeded"></param>
+        /// <param name="callback"></param>
+        public static void GetAnotherServerAuthCode(bool reAuthenticateIfNeeded, Action<string> callback)
+        {
+            if (!IsInitialized())
+            {
+                return;
+            }
+
+#if UNITY_ANDROID && EM_GPGS
+            PlayGamesPlatform.Instance.GetAnotherServerAuthCode(reAuthenticateIfNeeded, callback);
+#elif UNITY_ANDROID && !EM_GPGS
+            Debug.LogError("SDK missing. Please import Google Play Games plugin for Unity.");
+#else
+            Debug.Log("GetAnotherServerAuthCode is only available on Google Play Games platform.");
+#endif
+        }
+
+        /// <summary>
+        /// [Google Play Games] Signs the user out.
         /// </summary>
         public static void SignOut()
         {

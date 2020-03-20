@@ -9,20 +9,20 @@ namespace EasyMobile.Internal.StoreReview.iOS
     internal static class iOSNativeUtility
     {
         [DllImport("__Internal")]
-        [return:MarshalAs(UnmanagedType.Bool)]
-        private static extern bool _IsBuiltinRequestReviewAvail();
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool EM_IsBuiltinRequestReviewAvail();
 
         [DllImport("__Internal")]
-        private static extern void _RequestReview();
+        private static extern void EM_RequestReview();
 
         internal static bool CanUseBuiltinRequestReview()
         {
-            return _IsBuiltinRequestReviewAvail();
+            return EM_IsBuiltinRequestReviewAvail();
         }
 
         internal static void RequestReview()
         {
-            _RequestReview();
+            EM_RequestReview();
         }
     }
 }

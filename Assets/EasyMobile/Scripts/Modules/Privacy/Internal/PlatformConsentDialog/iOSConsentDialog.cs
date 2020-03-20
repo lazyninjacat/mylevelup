@@ -15,25 +15,25 @@ namespace EasyMobile.Internal.Privacy
         private const string JSON_RESULTS_TOGGLES_KEY = "toggles";
 
         [DllImport("__Internal")]
-        private static extern void _ConsentDialog_Show(string title, 
-                                                       string contentElements, 
+        private static extern void EM_ConsentDialog_Show(string title,
+                                                       string contentElements,
                                                        bool isDismissible,
                                                        ref iOSConsentDialogListenerInfo listenerInfo);
 
         [DllImport("__Internal")]
-        private static extern bool _ConsentDialog_IsShowing();
+        private static extern bool EM_ConsentDialog_IsShowing();
 
         [DllImport("__Internal")]
-        private static extern void _ConsentDialog_SetButtonEnabled(string buttonId, bool enabled);
+        private static extern void EM_ConsentDialog_SetButtonEnabled(string buttonId, bool enabled);
 
         [DllImport("__Internal")]
-        private static extern void _ConsentDialog_SetToggleEnabled(string toggleId, bool enabled);
+        private static extern void EM_ConsentDialog_SetToggleEnabled(string toggleId, bool enabled);
 
         [DllImport("__Internal")]
-        private static extern void _ConsentDialog_SetToggleIsOn(string toggleId, bool isOn, bool animated);
+        private static extern void EM_ConsentDialog_SetToggleIsOn(string toggleId, bool isOn, bool animated);
 
         internal static iOSConsentDialog Instance
-        { 
+        {
             get
             {
                 if (sInstance == null)
@@ -67,28 +67,28 @@ namespace EasyMobile.Internal.Privacy
 
         public bool IsShowing()
         {
-            return _ConsentDialog_IsShowing();
+            return EM_ConsentDialog_IsShowing();
         }
 
         public void Show(string title, string content, bool isDimissible)
         {
             var listenerInfo = GetListenerInfo(mListener);
-            _ConsentDialog_Show(title, content, isDimissible, ref listenerInfo);
+            EM_ConsentDialog_Show(title, content, isDimissible, ref listenerInfo);
         }
 
         public void SetButtonInteractable(string buttonId, bool interactable)
         {
-            _ConsentDialog_SetButtonEnabled(buttonId, interactable);
+            EM_ConsentDialog_SetButtonEnabled(buttonId, interactable);
         }
 
         public void SetToggleInteractable(string toggleId, bool interactable)
         {
-            _ConsentDialog_SetToggleEnabled(toggleId, interactable);
+            EM_ConsentDialog_SetToggleEnabled(toggleId, interactable);
         }
 
         public void SetToggleIsOn(string toggleId, bool isOn, bool animated)
         {
-            _ConsentDialog_SetToggleIsOn(toggleId, isOn, animated);   
+            EM_ConsentDialog_SetToggleIsOn(toggleId, isOn, animated);
         }
 
         private void OnNativeToggleStateUpdated(string toogleId, bool isOn)

@@ -886,9 +886,9 @@ namespace EasyMobile
         ///<summary>
         /// Gets SDK Configuration for advanced initialization.
         /// </summary>
-        protected MoPubBase.SdkConfiguration GetSdkConfiguration()
+        protected MoPub.SdkConfiguration GetSdkConfiguration()
         {
-            return new MoPubBase.SdkConfiguration
+            return new MoPub.SdkConfiguration
             {
                 AdUnitId = GetInitializeId(),
                 AllowLegitimateInterest = mAdSettings.AllowLegitimateInterest,
@@ -978,55 +978,55 @@ namespace EasyMobile
 
         #region Other methods
 
-        protected MoPubBase.AdPosition ToMoPubAdPosition(BannerAdPosition adPosition)
+        protected MoPub.AdPosition ToMoPubAdPosition(BannerAdPosition adPosition)
         {
             switch (adPosition)
             {
                 case BannerAdPosition.Top:
-                    return MoPubBase.AdPosition.TopCenter;
+                    return MoPub.AdPosition.TopCenter;
 
                 case BannerAdPosition.Bottom:
-                    return MoPubBase.AdPosition.BottomCenter;
+                    return MoPub.AdPosition.BottomCenter;
 
                 case BannerAdPosition.TopLeft:
-                    return MoPubBase.AdPosition.TopLeft;
+                    return MoPub.AdPosition.TopLeft;
 
                 case BannerAdPosition.TopRight:
-                    return MoPubBase.AdPosition.TopRight;
+                    return MoPub.AdPosition.TopRight;
 
                 case BannerAdPosition.BottomLeft:
-                    return MoPubBase.AdPosition.BottomLeft;
+                    return MoPub.AdPosition.BottomLeft;
 
                 case BannerAdPosition.BottomRight:
-                    return MoPubBase.AdPosition.BottomRight;
+                    return MoPub.AdPosition.BottomRight;
 
                 default:
-                    return MoPubBase.AdPosition.Centered;
+                    return MoPub.AdPosition.Centered;
             }
         }
 
-        protected MoPubBase.BannerType ToNearestMoPubBannerType(BannerAdSize adSize)
+        protected MoPub.MaxAdSize ToNearestMoPubBannerType(BannerAdSize adSize)
         {
             if (adSize.IsSmartBanner)
-                return MoPubBase.BannerType.Size320x50;
+                return MoPub.MaxAdSize.Width320Height50;
             else if (adSize.Height < 70) // (50+90)/2
-                return MoPubBase.BannerType.Size320x50;
+                return MoPub.MaxAdSize.Width320Height50;
             else if (adSize.Height < 170)   // (90 + 250)/2
-                return MoPubBase.BannerType.Size728x90;
+                return MoPub.MaxAdSize.Width728Height90;
             else
-                return MoPubBase.BannerType.Size300x250;
+                return MoPub.MaxAdSize.Width300Height250;
         }
 
         protected void CreateBannerAd(string id, BannerAdPosition position, BannerAdSize size)
         {
 #if UNITY_ANDROID
             // MoPub doesn't allow setting banner type on Android, so we'll ignore 'size'.
-            MoPub.CreateBanner(id, ToMoPubAdPosition(position));
+            MoPub.RequestBanner(id, ToMoPubAdPosition(position));
 #else
             if (size == BannerAdSize.SmartBanner)
-                MoPub.CreateBanner(id, ToMoPubAdPosition(position));
+                MoPub.RequestBanner(id, ToMoPubAdPosition(position));
             else
-                MoPub.CreateBanner(id, ToMoPubAdPosition(position), ToNearestMoPubBannerType(size));
+                MoPub.RequestBanner(id, ToMoPubAdPosition(position), ToNearestMoPubBannerType(size));
 #endif
         }
 
@@ -1176,7 +1176,7 @@ namespace EasyMobile
         /// <summary>
         /// Fired when the SDK has been notified of a change in the user's consent status for data tracking.
         /// </summary>
-        public event Action<MoPubBase.Consent.Status, MoPubBase.Consent.Status, bool> OnConsentStatusChangedEvent
+        public event Action<MoPub.Consent.Status, MoPub.Consent.Status, bool> OnConsentStatusChangedEvent
         {
             add { MoPubManager.OnConsentStatusChangedEvent += value; }
             remove { MoPubManager.OnConsentStatusChangedEvent -= value; }

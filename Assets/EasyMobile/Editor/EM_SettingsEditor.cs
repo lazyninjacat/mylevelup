@@ -193,8 +193,8 @@ namespace EasyMobile.Editor
         private static class GameServiceProperties
         {
             public static SerializedProperty mainProperty;
-            public static EMProperty gpgsDebugLog = new EMProperty(null, new GUIContent("GPGS Debug Log", "Show debug log from Google Play Games plugin"));
-            public static EMProperty gpgsPopupGravity = new EMProperty(null, new GUIContent("GPGS Popup Gravity", "Sets the gravity for popups on Google Play Games platform"));
+            public static EMProperty gpgsDebugLog = new EMProperty(null, new GUIContent("Debug Log", "Show debug log from Google Play Games plugin"));
+            public static EMProperty gpgsPopupGravity = new EMProperty(null, new GUIContent("Popup Gravity", "Sets the gravity for popups on Google Play Games platform"));
             public static EMProperty gpgsXmlResources = new EMProperty(null, new GUIContent("Android XML Resources", "The XML resources exported from Google Play Console"));
             public static EMProperty autoInit = new EMProperty(null, new GUIContent("Auto Init", "Whether the module should automatically initialize itself"));
             public static EMProperty autoInitDelay = new EMProperty(null, new GUIContent("Auto Init Delay", "Delay time (seconds) after Start() that the service is automatically initialized"));
@@ -205,6 +205,10 @@ namespace EasyMobile.Editor
                         "When this value is reached, the init process will stop thus not showing the login popup anymore (avoid annoying the user). " +
                         "Set to 0 to ignore this limit."));
 
+            public static EMProperty gpgsShouldRequestServerAuthCode = new EMProperty(null, new GUIContent("Request ServerAuthCode", "Whether to request a server authentication code during initialization on Google Play Games platform."));
+            public static EMProperty gpgsForceRefreshServerAuthCode = new EMProperty(null, new GUIContent("Force Refresh", "Whether to force refresh while requesting a server authentication code " +
+                "during initialization on Google Play Games platform."));
+            public static EMProperty gpgsOauthScopes = new EMProperty(null, new GUIContent("OAuth Scopes", "The OAuth scopes to be added during initialization on Google Play Games platform."));
             public static EMProperty leaderboards = new EMProperty(null, new GUIContent("Leaderboards"));
             public static EMProperty achievements = new EMProperty(null, new GUIContent("Achievements"));
 
@@ -459,6 +463,9 @@ namespace EasyMobile.Editor
             GameServiceProperties.autoInit.property = GameServiceProperties.mainProperty.FindPropertyRelative("mAutoInit");
             GameServiceProperties.autoInitDelay.property = GameServiceProperties.mainProperty.FindPropertyRelative("mAutoInitDelay");
             GameServiceProperties.androidMaxLoginRequest.property = GameServiceProperties.mainProperty.FindPropertyRelative("mAndroidMaxLoginRequests");
+            GameServiceProperties.gpgsShouldRequestServerAuthCode.property = GameServiceProperties.mainProperty.FindPropertyRelative("mGpgsShouldRequestServerAuthCode");
+            GameServiceProperties.gpgsForceRefreshServerAuthCode.property = GameServiceProperties.mainProperty.FindPropertyRelative("mGpgsForceRefreshServerAuthCode");
+            GameServiceProperties.gpgsOauthScopes.property = GameServiceProperties.mainProperty.FindPropertyRelative("mGpgsOauthScopes");
             GameServiceProperties.leaderboards.property = GameServiceProperties.mainProperty.FindPropertyRelative("mLeaderboards");
             GameServiceProperties.achievements.property = GameServiceProperties.mainProperty.FindPropertyRelative("mAchievements");
 

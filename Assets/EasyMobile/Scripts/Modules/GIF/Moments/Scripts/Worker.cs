@@ -28,10 +28,10 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Moments.Encoder;
+using EM_Moments.Encoder;
 using ThreadPriority = System.Threading.ThreadPriority;
 
-namespace Moments
+namespace EM_Moments
 {
     internal sealed class Worker
     {

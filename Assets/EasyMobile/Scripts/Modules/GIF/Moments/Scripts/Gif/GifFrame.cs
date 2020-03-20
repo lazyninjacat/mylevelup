@@ -23,7 +23,7 @@
 
 using UnityEngine;
 
-namespace Moments.Encoder
+namespace EM_Moments.Encoder
 {
 	public class GifFrame
 	{

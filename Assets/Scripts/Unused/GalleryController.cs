@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿// TODO masrk as possible obsolete script
+
+using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Experimental.UIElements;
+//using UnityEngine.Experimental.UIElements;
 using System.Collections.Generic;
 
 public class GalleryController : MonoBehaviour {
@@ -8,7 +10,7 @@ public class GalleryController : MonoBehaviour {
     public UnityEngine.UI.Button applyButton;
     public UnityEngine.UI.Button refreshButton;
     public UnityEngine.UI.Button cancelButton;
-    public ScrollView fileView;
+    //public ScrollView fileView;
     public InputField nameInput;
 
 	// Use this for initialization

@@ -14,7 +14,7 @@ namespace EasyMobile.Internal.Notifications
     {
         private bool mIsInitialized;
 
-        #region ILocalNotificationClient implementation
+#region ILocalNotificationClient implementation
 
         public void Init(NotificationsSettings settings, INotificationListener listener)
         {
@@ -34,7 +34,7 @@ namespace EasyMobile.Internal.Notifications
             var iOSCategories = iOSNotificationHelper.ToIOSNotificationCategories(categories.ToArray());
             string iOSCategoriesJson = iOSNotificationHelper.ToIOSNotificationCategoriesJson(iOSCategories);
 
-            iOSNotificationNative._InitNotifications(ref iOSAuthOptions, ref iOSListenerInfo, iOSCategoriesJson);
+            iOSNotificationNative.EM_InitNotifications(ref iOSAuthOptions, ref iOSListenerInfo, iOSCategoriesJson);
             mIsInitialized = true;
         }
 
@@ -61,7 +61,7 @@ namespace EasyMobile.Internal.Notifications
             // Prepare iOSNotificationContent
             var iOSContent = iOSNotificationHelper.ToIOSNotificationContent(content);
 
-            iOSNotificationNative._ScheduleLocalNotification(id, ref iOSContent, (long)delay.TotalSeconds);
+            iOSNotificationNative.EM_ScheduleLocalNotification(id, ref iOSContent, (long)delay.TotalSeconds);
         }
 
         public void ScheduleLocalNotification(string id, TimeSpan delay, NotificationContent content, NotificationRepeat repeat)
@@ -91,7 +91,7 @@ namespace EasyMobile.Internal.Notifications
             dateComponents.minute = fireDate.Minute;
             dateComponents.second = fireDate.Second;
 
-            iOSNotificationNative._ScheduleRepeatLocalNotification(id, ref iOSContent, ref dateComponents, repeat);
+            iOSNotificationNative.EM_ScheduleRepeatLocalNotification(id, ref iOSContent, ref dateComponents, repeat);
         }
 
         public void GetPendingLocalNotifications(Action<NotificationRequest[]> callback)
@@ -121,28 +121,28 @@ namespace EasyMobile.Internal.Notifications
 
         public void CancelPendingLocalNotification(string id)
         {
-            iOSNotificationNative._RemovePendingNotificationRequestWithId(id);
+            iOSNotificationNative.EM_RemovePendingNotificationRequestWithId(id);
         }
 
         public void CancelAllPendingLocalNotifications()
         {
-            iOSNotificationNative._RemoveAllPendingNotificationRequests();
+            iOSNotificationNative.EM_RemoveAllPendingNotificationRequests();
         }
 
         public void RemoveAllDeliveredNotifications()
         {
-            iOSNotificationNative._RemoveAllDeliveredNotifications();
+            iOSNotificationNative.EM_RemoveAllDeliveredNotifications();
         }
 
-        #endregion
+#endregion
 
-        #region Internal methods
+#region Internal methods
 
         private static void InternalGetPendingNotificationRequests(Action<iOSNotificationRequest[]> callback)
         {
             Util.NullArgumentTest(callback);
 
-            iOSNotificationNative._GetPendingNotificationRequests(
+            iOSNotificationNative.EM_GetPendingNotificationRequests(
                 InternalGetPendingNotificationRequestsCallback,
                 PInvokeCallbackUtil.ToIntPtr<GetPendingNotificationRequestsResponse>(
                     response =>
@@ -165,6 +165,6 @@ namespace EasyMobile.Internal.Notifications
         }
     }
 
-    #endregion
+#endregion
 }
 #endif

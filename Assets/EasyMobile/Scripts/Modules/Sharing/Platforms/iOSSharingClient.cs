@@ -16,7 +16,7 @@ namespace EasyMobile.Internal.Sharing
                 subject = subject
             };
 
-            C.Sharing_Share(ref data);
+            C.EM_Sharing_Share(ref data);
         }
 
         public void ShareText(string text, string subject = "")
@@ -29,7 +29,7 @@ namespace EasyMobile.Internal.Sharing
                 subject = subject
             };
 
-            C.Sharing_Share(ref data);
+            C.EM_Sharing_Share(ref data);
         }
 
         public void ShareURL(string url, string subject = "")
@@ -42,7 +42,7 @@ namespace EasyMobile.Internal.Sharing
                 subject = subject
             };
 
-            C.Sharing_Share(ref data);
+            C.EM_Sharing_Share(ref data);
         }
 
         #region C wrapper
@@ -58,7 +58,7 @@ namespace EasyMobile.Internal.Sharing
             }
 
             [DllImport("__Internal")]
-            internal static extern void Sharing_Share(ref ShareData data);
+            internal static extern void EM_Sharing_Share(ref ShareData data);
         }
 
         #endregion

@@ -31,6 +31,7 @@ namespace EasyMobile
 
         public static bool IsUsingAPI { get { return _apiUseCount > 0; } }
 
+        [Obsolete("This public beta key is now obsolete. Now you can register your app on the Giply developers dashboard and get a specific key for it.")]
         public const string GIPHY_PUBLIC_BETA_KEY = "dc6zaTOxFJmzC";
         public const string GIPHY_UPLOAD_PATH = "https://upload.giphy.com/v1/gifs";
         public const string GIPHY_BASE_URL = "http://giphy.com/gifs/";
@@ -63,17 +64,18 @@ namespace EasyMobile
         /// <param name="uploadProgressCallback">Upload progress callback: the parameter indicates upload progress from 0 to 1.</param>
         /// <param name="uploadCompletedCallback">Upload completed callback: the parameter is the URL of the uploaded image.</param>
         /// <param name="uploadFailedCallback">Upload failed callback: the parameter is the error message.</param>
+        [Obsolete("This method was deprecated. Now you must upload with a Giphy API key specific to your app.")]
         public static void Upload(GiphyUploadParams content, Action<float> uploadProgressCallback, Action<string> uploadCompletedCallback, Action<string> uploadFailedCallback)
         {
             Upload("", GIPHY_PUBLIC_BETA_KEY, content, uploadProgressCallback, uploadCompletedCallback, uploadFailedCallback);
         }
 
         /// <summary>
-        /// Uploads a GIF image to your Giphy channel. Requires a username and a production API key.
+        /// Uploads a GIF image to your channel using your Giphy username and your app's API key.
         /// The GIF file can be stored on the local storage or at a provided URL.
         /// </summary>
         /// <param name="username">Your Giphy username.</param>
-        /// <param name="apiKey">Production API key.</param>
+        /// <param name="apiKey">The API key for your app.</param>
         /// <param name="content">Content to upload.</param>
         /// <param name="uploadProgressCallback">Upload progress callback: the parameter indicates upload progress from 0 to 1.</param>
         /// <param name="uploadCompletedCallback">Upload completed callback: the parameter is the URL of the uploaded image.</param>

@@ -968,6 +968,79 @@ namespace EasyMobile
             return userId;
         }
 
+        /// <summary>
+        /// Confirms a pending purchase. Use this if you register a <see cref="PrePurchaseProcessing"/>
+        /// delegate and return a <see cref="PrePurchaseProcessResult.Suspend"/> in it so that UnityIAP
+        /// won't inform the app of the purchase again. After confirming the purchase, either <see cref="PurchaseCompleted"/>
+        /// or <see cref="PurchaseFailed"/> event will be called according to the input given by the caller.
+        /// </summary>
+        /// <param name="product">The pending product to confirm.</param>
+        /// <param name="purchaseSuccess">If true, <see cref="PurchaseCompleted"/> event will be called, otherwise <see cref="PurchaseFailed"/> event will be called.</param>
+        public static void ConfirmPendingPurchase(Product product, bool purchaseSuccess)
+        {
+            if (sStoreController != null)
+                sStoreController.ConfirmPendingPurchase(product);
+
+            if (purchaseSuccess)
+            {
+                if (PurchaseCompleted != null)
+                    PurchaseCompleted(GetIAPProductById(product.definition.id));
+            }
+            else
+            {
+                if (PurchaseFailed != null)
+                    PurchaseFailed(GetIAPProductById(product.definition.id));
+            }
+        }
+
+#endif
+
+        #endregion
+
+        #region PrePurchaseProcessing
+
+#if EM_UIAP
+
+        /// <summary>
+        /// Available results for the <see cref="PrePurchaseProcessing"/> delegate.
+        /// </summary>
+        public enum PrePurchaseProcessResult
+        {
+            /// <summary>
+            /// Continue the normal purchase processing.
+            /// </summary>
+            Proceed,
+            /// <summary>
+            /// Suspend the purchase, PurchaseProcessingResult.Pending will be returned to UnityIAP.
+            /// </summary>
+            Suspend,
+            /// <summary>
+            /// Abort the purchase, PurchaseFailed event will be called.
+            /// </summary>
+            Abort
+        }
+
+        /// <summary>
+        /// Once registered, this delegate will be invoked before the normal purchase processing method.
+        /// The return value of this delegate determines how the purchase processing will be done.
+        /// If you want to intervene in the purchase processing step, e.g. adding custom receipt validation,
+        /// this delegate is the place to go.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public delegate PrePurchaseProcessResult PrePurchaseProcessing(PurchaseEventArgs args);
+
+        private static PrePurchaseProcessing sPrePurchaseProcessDel;
+
+        /// <summary>
+        /// Registers a <see cref="PrePurchaseProcessing"/> delegate.
+        /// </summary>
+        /// <param name="del"></param>
+        public static void RegisterPrePurchaseProcessDelegate(PrePurchaseProcessing del)
+        {
+            sPrePurchaseProcessDel = del;
+        }
+
 #endif
 
         #endregion
@@ -1041,6 +1114,34 @@ namespace EasyMobile
             {
                 Debug.Log("Processing purchase of product: " + args.purchasedProduct.transactionID);
 
+                IAPProduct pd = GetIAPProductById(args.purchasedProduct.definition.id);
+
+                if (sPrePurchaseProcessDel != null)
+                {
+                    var nextStep = sPrePurchaseProcessDel(args);
+
+                    if (nextStep == PrePurchaseProcessResult.Abort)
+                    {
+                        Debug.Log("Purchase aborted.");
+
+                        // Fire purchase failure event
+                        if (PurchaseFailed != null)
+                            PurchaseFailed(pd);
+
+                        return PurchaseProcessingResult.Complete;
+                    }
+                    else if (nextStep == PrePurchaseProcessResult.Suspend)
+                    {
+                        Debug.Log("Purchase suspended.");
+                        return PurchaseProcessingResult.Pending;
+                    }
+                    else
+                    {
+                        // Proceed.
+                        Debug.Log("Proceeding with purchase processing.");
+                    }
+                }
+
                 bool validPurchase = true;  // presume validity if not validate receipt
 
                 if (IsReceiptValidationEnabled())
@@ -1048,8 +1149,6 @@ namespace EasyMobile
                     IPurchaseReceipt[] purchaseReceipts;
                     validPurchase = ValidateReceipt(args.purchasedProduct.receipt, out purchaseReceipts);
                 }
-
-                IAPProduct pd = GetIAPProductById(args.purchasedProduct.definition.id);
 
                 if (validPurchase)
                 {

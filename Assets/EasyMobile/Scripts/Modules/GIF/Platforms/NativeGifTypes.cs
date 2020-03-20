@@ -7,6 +7,7 @@ namespace EasyMobile.Internal.Gif
 {
     internal delegate void DecodeCompleteCallback(int taskId, GifMetadata gifMetadata, GifFrameMetadata[] gifFrameMetadata, Color32[][] imageData);
 
+#pragma warning disable CS0649
     internal struct GifMetadata
     {
         public int width;
@@ -30,4 +31,5 @@ namespace EasyMobile.Internal.Gif
         // Callbacks
         public DecodeCompleteCallback completeCallback;
     }
+#pragma warning restore CS0649
 }

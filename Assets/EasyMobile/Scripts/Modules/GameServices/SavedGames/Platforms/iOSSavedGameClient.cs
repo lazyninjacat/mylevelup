@@ -24,7 +24,7 @@ namespace EasyMobile.Internal.GameServices
 
     internal class iOSSavedGameClient : ISavedGameClient
     {
-        #region ISavedGameClient Implementation
+#region ISavedGameClient Implementation
 
         public void OpenWithAutomaticConflictResolution(string name, Action<SavedGame, string> callback)
         {
@@ -174,9 +174,9 @@ namespace EasyMobile.Internal.GameServices
                 Debug.Log(error);
         }
 
-        #endregion
+#endregion
 
-        #region Internal Saved Game Client Implementation
+#region Internal Saved Game Client Implementation
 
         internal static void InternalOpenWithAutomaticConflictResolution(string name, iOSConflictResolutionStrategy resolutionStrategy,
                                                                          Action<iOSGKSavedGame, string> callback)
@@ -239,7 +239,7 @@ namespace EasyMobile.Internal.GameServices
 
         private static void InternalOpenSavedGame(string name, Action<iOSGKSavedGame[]> callback)
         {
-            iOSSavedGameNative._OpenSavedGame(
+            iOSSavedGameNative.EM_OpenSavedGame(
                 name,
                 InternalOpenSavedGameCallback,
                 PInvokeCallbackUtil.ToIntPtr<OpenSavedGameResponse>(
@@ -314,7 +314,7 @@ namespace EasyMobile.Internal.GameServices
             Util.NullArgumentTest(data);
             Util.NullArgumentTest(callback);
 
-            iOSSavedGameNative._SaveGameData(
+            iOSSavedGameNative.EM_SaveGameData(
                 savedGame.ToPointer(), 
                 data,
                 data.Length,
@@ -352,7 +352,7 @@ namespace EasyMobile.Internal.GameServices
             Util.NullArgumentTest(savedGame);
             Util.NullArgumentTest(callback);
 
-            iOSSavedGameNative._LoadSavedGameData(
+            iOSSavedGameNative.EM_LoadSavedGameData(
                 savedGame.ToPointer(),
                 InternalLoadSavedGameDataCallback,
                 PInvokeCallbackUtil.ToIntPtr<LoadSavedGameDataResponse>(
@@ -381,7 +381,7 @@ namespace EasyMobile.Internal.GameServices
         {
             Util.NullArgumentTest(callback);
 
-            iOSSavedGameNative._FetchSavedGames(
+            iOSSavedGameNative.EM_FetchSavedGames(
                 InternalFetchSavedGamesCallback,
                 PInvokeCallbackUtil.ToIntPtr<FetchSavedGamesResponse>(
                     response =>
@@ -420,7 +420,7 @@ namespace EasyMobile.Internal.GameServices
                 savedGamePtrs[i] = conflictingSavedGames[i].ToPointer();
             }
 
-            iOSSavedGameNative._ResolveConflictingSavedGames(
+            iOSSavedGameNative.EM_ResolveConflictingSavedGames(
                 savedGamePtrs,
                 savedGamePtrs.Length,
                 data,
@@ -451,7 +451,7 @@ namespace EasyMobile.Internal.GameServices
             Util.NullArgumentTest(savedGame);
             Util.NullArgumentTest(callback);
 
-            iOSSavedGameNative._DeleteSavedGame(
+            iOSSavedGameNative.EM_DeleteSavedGame(
                 savedGame.Name, 
                 InternalDeleteSavedGameCallback, 
                 PInvokeCallbackUtil.ToIntPtr<DeleteSavedGameResponse>(
@@ -487,9 +487,9 @@ namespace EasyMobile.Internal.GameServices
             }
         }
 
-        #endregion
+#endregion
 
-        #region IIOSConflictResolver implementation
+#region IIOSConflictResolver implementation
 
         private class NativeConflictResolver : IIOSConflictResolver
         {
@@ -560,9 +560,9 @@ namespace EasyMobile.Internal.GameServices
             }
         }
 
-        #endregion  // IIOSConflictResolver implementation
+#endregion  // IIOSConflictResolver implementation
 
-        #region Saved Game Data Prefetcher
+#region Saved Game Data Prefetcher
 
         private class Prefetcher
         {
@@ -644,7 +644,7 @@ namespace EasyMobile.Internal.GameServices
             }
         }
 
-        #endregion  // Saved Game Data Prefetcher
+#endregion  // Saved Game Data Prefetcher
     }
 }
 #endif

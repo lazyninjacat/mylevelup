@@ -23,33 +23,33 @@
 
 using UnityEngine;
 using UnityEditor;
-using Moments;
+using EM_Moments;
 
-namespace MomentsEditor
+namespace EM_MomentsEditor
 {
-    using MinAttribute = Moments.MinAttribute;
+	using MinAttribute = EM_Moments.MinAttribute;
 
-    [CustomPropertyDrawer(typeof(MinAttribute))]
-    internal sealed class MinDrawer : PropertyDrawer
-    {
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            MinAttribute att = (MinAttribute)base.attribute;
+	[CustomPropertyDrawer(typeof(MinAttribute))]
+	internal sealed class MinDrawer : PropertyDrawer
+	{
+		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+		{
+			MinAttribute att = (MinAttribute)base.attribute;
 
-            if (property.propertyType == SerializedPropertyType.Integer)
-            {
-                int v = EditorGUI.IntField(position, label, property.intValue);
-                property.intValue = (int)Mathf.Max(v, att.min);
-            }
-            else if (property.propertyType == SerializedPropertyType.Float)
-            {
-                float v = EditorGUI.FloatField(position, label, property.floatValue);
-                property.floatValue = Mathf.Max(v, att.min);
-            }
-            else
-            {
-                EditorGUI.LabelField(position, label.text, "Use Min with float or int.");
-            }
-        }
-    }
+			if (property.propertyType == SerializedPropertyType.Integer)
+			{
+				int v = EditorGUI.IntField(position, label, property.intValue);
+				property.intValue = (int)Mathf.Max(v, att.min);
+			}
+			else if (property.propertyType == SerializedPropertyType.Float)
+			{
+				float v = EditorGUI.FloatField(position, label, property.floatValue);
+				property.floatValue = Mathf.Max(v, att.min);
+			}
+			else
+			{
+				EditorGUI.LabelField(position, label.text, "Use Min with float or int.");
+			}
+		}
+	}
 }

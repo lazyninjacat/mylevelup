@@ -100,8 +100,12 @@ namespace EasyMobile.Editor
                 PBXProject project = new PBXProject();
                 project.ReadFromFile(pbxPath);
 
+#if UNITY_2019_3_OR_NEWER
+                string targetGUID = project.GetUnityMainTargetGuid();
+#else
                 string targetName = PBXProject.GetUnityTargetName();
                 string targetGUID = project.TargetGuidByName(targetName);
+#endif
 
                 // Add frameworks here if needed.
 

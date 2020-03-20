@@ -28,7 +28,7 @@ namespace EasyMobile
         private BannerView mDefaultBanner = null;
         private BannerAdSize mCurrentDefaultBannerSize = new BannerAdSize(-1, -1);
         private InterstitialAd mDefaultInterstitialAd = null;
-        private RewardBasedVideoAd mRewardedAd = null;
+        private RewardedAd mDefaultRewardedAd = null;
         private ConsentStatus mCurrentConsent = ConsentStatus.Unknown;
         private string testDeviceID = null;
 
@@ -43,26 +43,16 @@ namespace EasyMobile
         private Dictionary<AdPlacement, InterstitialAd> mCustomInterstitialAds;
 
         /// <summary>
+        /// We will store all the rewarded ads loaded with custom key here.
+        /// </summary>
+        private Dictionary<AdPlacement, RewardedAd> mCustomRewardedAd;
+
+        /// <summary>
         /// Check if there is any rewarded video is currently running.
         /// </summary>
         /// Note that we can't have more than 1 rewarded video ad loaded at the same time,
         /// since it's gonna override old one's events.
         private bool mIsRewardedAdPlaying = false;
-
-        /// <summary>
-        /// Check if a default rewarded video ad is being loaded.
-        /// </summary>
-        private bool mIsLoadingDefaultRewardedAd = false;
-
-        /// <summary>
-        /// Check if a custom rewarded video ad is being loaded.
-        /// </summary>
-        private bool mIsLoadingCustomRewardedAd = false;
-
-        /// <summary>
-        /// The AdPlacement used to load custom rewarded ad, null if a default rewarded ad is loaded.
-        /// </summary>
-        private AdPlacement mLoadingCustomRewardedAdPlacement = null;
 
         /// <summary>
         /// Check if a rewarded ad is completed.
@@ -134,7 +124,12 @@ namespace EasyMobile
         /// <summary>
         /// Called when a rewarded video ad request failed to load.
         /// </summary>
-        public event EventHandler<AdFailedToLoadEventArgs> OnRewardedAdFailedToLoad;
+        public event EventHandler<AdErrorEventArgs> OnRewardedAdFailedToLoad;
+
+          /// <summary>
+        /// Called when a rewarded video ad request failed to show.
+        /// </summary>
+        public event EventHandler<AdErrorEventArgs> OnRewardedAdFailedToShow;
 
         /// <summary>
         /// Called when a rewared video ad is shown.
@@ -293,7 +288,7 @@ namespace EasyMobile
 
             mCustomBannerAds = new Dictionary<AdPlacement, KeyValuePair<BannerAdSize, BannerView>>();
             mCustomInterstitialAds = new Dictionary<AdPlacement, InterstitialAd>();
-
+            mCustomRewardedAd = new Dictionary<AdPlacement, RewardedAd>();
             if (mAdSettings.EnableTestMode)
             {
 #if UNITY_ANDROID
@@ -481,9 +476,6 @@ namespace EasyMobile
 
         /// <summary>
         /// Instructs the underlaying SDK to load a rewarded ad. Only invoked if the client is initialized.
-        /// AdMob doesn't really support loading multiple rewarded ads at the same time, so we restrict that
-        /// only one ad at any placement can be loaded at a time. The user must consume that ad, or it fails
-        /// to load, before another rewarded ad can be loaded.
         /// </summary>
         /// <param name="placement">Placement.</param>
         protected override void InternalLoadRewardedAd(AdPlacement placement)
@@ -505,48 +497,18 @@ namespace EasyMobile
             }
 
             if (placement == AdPlacement.Default) // Default rewarded ad...
-            {
-                if (mIsLoadingCustomRewardedAd)
-                {
-                    Debug.LogFormat("An AdMob rewarded ad at placement {0} is being loaded. " +
-                        "Please consume it before loading a new one at placement {1}",
-                        AdPlacement.GetPrintableName(mLoadingCustomRewardedAdPlacement),
-                        AdPlacement.GetPrintableName(AdPlacement.Default));
-                    return;
-                }
-                SetLoadingDefaultRewardedAd();
+            {       
+                if (mDefaultRewardedAd == null)
+                    mDefaultRewardedAd = CreateNewRewardedAd(id, placement);
+                mDefaultRewardedAd.LoadAd(CreateAdMobAdRequest());
             }
             else // Custom rewarded ad...
-            {
-                bool isLoadingAnotherOne = false;
-                AdPlacement otherPlacement = null;
-
-                if (mIsLoadingDefaultRewardedAd)
-                {
-                    isLoadingAnotherOne = true;
-                    otherPlacement = AdPlacement.Default;
-                }
-                else if (mIsLoadingCustomRewardedAd && mLoadingCustomRewardedAdPlacement != placement)
-                {
-                    isLoadingAnotherOne = true;
-                    otherPlacement = mLoadingCustomRewardedAdPlacement;
-                }
-
-                if (isLoadingAnotherOne)
-                {
-                    Debug.LogFormat("An AdMob rewarded ad at placement {0} is being loaded. " +
-                        "Please consume it before loading a new one at placement {1}",
-                        AdPlacement.GetPrintableName(otherPlacement),
-                        AdPlacement.GetPrintableName(placement));
-                    return;
-                }
-                SetLoadingCustomRewardedAd(placement);
+            {         
+                   /// Create a new custom reward ad and load it.
+                if (!mCustomRewardedAd.ContainsKey(placement) || mCustomRewardedAd[placement] == null)
+                    mCustomRewardedAd[placement] = CreateNewRewardedAd(id,placement);
+                mCustomRewardedAd[placement].LoadAd(CreateAdMobAdRequest());
             }
-
-            if (mRewardedAd == null)
-                mRewardedAd = CreateNewRewardedAd();
-
-            mRewardedAd.LoadAd(CreateAdMobAdRequest(), id);
 #endif
         }
 
@@ -555,17 +517,16 @@ namespace EasyMobile
 #if EM_ADMOB
             if (placement == AdPlacement.Default) // Default rewarded ad...
             {
-                return mIsLoadingDefaultRewardedAd &&
-                mRewardedAd != null &&
-                mRewardedAd.IsLoaded();
+                return 
+                mDefaultRewardedAd != null &&
+                mDefaultRewardedAd.IsLoaded();
             }
             else // Custom rewarded ad...
             {
-                return mIsLoadingCustomRewardedAd &&
-                mLoadingCustomRewardedAdPlacement != null &&
-                mLoadingCustomRewardedAdPlacement.Equals(placement) &&
-                mRewardedAd != null &&
-                mRewardedAd.IsLoaded();
+                return 
+                mCustomRewardedAd.ContainsKey(placement) &&
+                mCustomRewardedAd[placement] != null&&
+                mCustomRewardedAd[placement].IsLoaded();
             }
 #else
             return false;
@@ -576,7 +537,18 @@ namespace EasyMobile
         {
 #if EM_ADMOB
             mIsRewardedAdPlaying = true;
-            mRewardedAd.Show();
+            if (placement == AdPlacement.Default) // Default rewarded ad...
+            {
+                if (mDefaultRewardedAd != null)
+                    mDefaultRewardedAd.Show();
+            }
+            else
+            {
+                if (mCustomRewardedAd.ContainsKey(placement) && mCustomRewardedAd[placement] != null)
+                    mCustomRewardedAd[placement].Show();
+            }
+
+
 #endif
         }
 
@@ -604,6 +576,8 @@ namespace EasyMobile
 
         private static string CreateMD5(string input)
         {
+            if (string.IsNullOrEmpty(input)) return string.Empty;
+
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {
                 byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
@@ -735,18 +709,17 @@ namespace EasyMobile
         /// <summary>
         /// Create new rewarded video ad and register all the events.
         /// </summary>
-        private RewardBasedVideoAd CreateNewRewardedAd()
+        private RewardedAd CreateNewRewardedAd(string interstitialAdId, AdPlacement placement)
         {
-            RewardBasedVideoAd newRewardedAd = RewardBasedVideoAd.Instance;
+            RewardedAd newRewardedAd = new RewardedAd(interstitialAdId);
 
             // RewardBasedVideoAd is a singleton, so handlers should only be registered once.
             newRewardedAd.OnAdLoaded += HandleAdMobRewardBasedVideoLoaded;
             newRewardedAd.OnAdFailedToLoad += HandleAdMobRewardBasedVideoFailedToLoad;
+            newRewardedAd.OnAdFailedToShow += HandleAdMobRewardBasedVideoFailedToShow;
             newRewardedAd.OnAdOpening += HandleAdMobRewardBasedVideoOpening;
-            newRewardedAd.OnAdStarted += HandleAdMobRewardBasedVideoStarted;
-            newRewardedAd.OnAdRewarded += HandleAdMobRewardBasedVideoRewarded;
-            newRewardedAd.OnAdClosed += HandleAdMobRewardBasedVideoClosed;
-            newRewardedAd.OnAdLeavingApplication += HandleAdMobRewardBasedVideoLeftApplication;
+            newRewardedAd.OnUserEarnedReward += HandleAdMobRewardBasedVideoRewarded;
+            newRewardedAd.OnAdClosed += (sender, param) => HandleAdMobRewardBasedVideoClosed(sender, param, placement);
 
             return newRewardedAd;
         }
@@ -780,96 +753,59 @@ namespace EasyMobile
             OnInterstitialAdCompleted(placement);
         }
 
-        /// <summary>
-        /// Call this method when the default rewarded ad is loaded.
-        /// </summary>
-        private void SetLoadingDefaultRewardedAd()
-        {
-            /// In AdMob, we can't load more than 1 rewarded video ad at the same time,
-            /// so when we load a default ad, we need to disable the custom one.
-            mIsLoadingCustomRewardedAd = false;
-            mIsLoadingDefaultRewardedAd = true;
 
-            mLoadingCustomRewardedAdPlacement = null;
-        }
-
-        /// <summary>
-        /// Call this method when a custom rewarded ad is loaded.
-        /// </summary>
-        /// <param name="placement">AdPlacement used to load the custom rewarded ad.</param>
-        private void SetLoadingCustomRewardedAd(AdPlacement placement)
-        {
-            /// In AdMob, we can't load more than 1 rewarded video ad at the same time,
-            /// so when we load a custom ad, we need to disable the default one.
-            mIsLoadingDefaultRewardedAd = false;
-            mIsLoadingCustomRewardedAd = true;
-
-            /// We also need to save the AdPlacement of the loaded ad,
-            /// so we can know which one is loaded.
-            mLoadingCustomRewardedAdPlacement = placement;
-        }
 
         /// <summary>
         /// Get the right action to invoke when a rewarded ad is skipped.
         /// </summary>
-        private Action GetRewardedAdSkippedAction()
+        private Action GetRewardedAdSkippedAction(AdPlacement placement)
         {
-            /// If the skipped rewarded ad is a default ad.
-            if (mIsLoadingDefaultRewardedAd)
+            return () =>
             {
-                mIsLoadingDefaultRewardedAd = false;
-                return () =>
-                {
-                    OnRewardedAdSkipped(AdPlacement.Default);
-                };
-            }
-
-            /// If the skipped rewarded ad is a custom one.
-            if (mIsLoadingCustomRewardedAd)
-            {
-                mIsLoadingCustomRewardedAd = false;
-                return () =>
-                {
-                    OnRewardedAdSkipped(mLoadingCustomRewardedAdPlacement);
-                    mLoadingCustomRewardedAdPlacement = null;
-                };
-            }
-
-            /// Otherwise...
-            return () => Debug.Log("An unexpected rewarded ad is skipped.");
+                OnRewardedAdSkipped(placement);
+            };
+    
         }
 
         /// <summary>
         /// Get the right action to invoke when a rewarded ad is completed.
         /// </summary>
-        private Action GetRewardedAdCompletedAction()
+        private Action GetRewardedAdCompletedAction(AdPlacement placement)
         {
-            /// If the completed rewarded ad is a default ad.
-            if (mIsLoadingDefaultRewardedAd)
-            {
-                mIsLoadingDefaultRewardedAd = false;
-                return () =>
+            return () =>
                 {
-                    OnRewardedAdCompleted(AdPlacement.Default);
+                    OnRewardedAdCompleted(placement);
                 };
-            }
-
-            /// If the completed rewarded ad is a custom one.
-            if (mIsLoadingCustomRewardedAd)
-            {
-                mIsLoadingCustomRewardedAd = false;
-                return () =>
-                {
-                    OnRewardedAdCompleted(mLoadingCustomRewardedAdPlacement);
-                    mLoadingCustomRewardedAdPlacement = null;
-                };
-            }
-
-            /// Otherwise...
-            return () => Debug.Log("An unexpected rewarded ad is completed");
         }
 
+        /// <summary>
+        /// Destroy an rewarded ad.
+        /// </summary>
+        /// Called in RewardedBasedVideoClosedDelayCoroutine event handler.
+        private void DestroyRewardedAds(AdPlacement placement)
+        {
+            if (placement == AdPlacement.Default) // Default rewarded ad...
+            {
+                // Note: RewardedAd objects are one time use objects. 
+                // ==> Destroy the used rewarded ad object; also reset
+                // the reference to force new objects to be created when loading ads.
+                if (mDefaultRewardedAd != null)
+                {
+                    mDefaultRewardedAd = null;
+                }
+            }
+            else // Custom rewarded ad...
+            {
+                if (mCustomRewardedAd != null && mCustomRewardedAd.ContainsKey(placement) && mCustomRewardedAd[placement] != null)
+                {
+                    mCustomRewardedAd[placement] = null;
+                }
+            }
+        }
+
+
 #endif
+
 
         #endregion // Private Methods
 
@@ -967,17 +903,20 @@ namespace EasyMobile
                 OnRewardedAdLoaded.Invoke(sender, args);
         }
 
-        private void HandleAdMobRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+        private void HandleAdMobRewardBasedVideoFailedToLoad(object sender, AdErrorEventArgs args)
         {
             Debug.Log("AdMob rewarded video ad failed to load. Message: " + args.Message);
 
-            // Reset all loading flags.
-            mIsLoadingDefaultRewardedAd = false;
-            mIsLoadingCustomRewardedAd = false;
-            mLoadingCustomRewardedAdPlacement = null;
-
             if (OnRewardedAdFailedToLoad != null)
                 OnRewardedAdFailedToLoad.Invoke(sender, args);
+        }
+
+        private void HandleAdMobRewardBasedVideoFailedToShow(object sender, AdErrorEventArgs args)
+        {
+            Debug.Log("AdMob rewarded video ad failed to show. Message: " + args.Message);
+
+            if (OnRewardedAdFailedToShow != null)
+                OnRewardedAdFailedToShow.Invoke(sender, args);
         }
 
         private void HandleAdMobRewardBasedVideoOpening(object sender, EventArgs args)
@@ -992,14 +931,14 @@ namespace EasyMobile
                 OnRewardedAdStarted.Invoke(sender, args);
         }
 
-        private void HandleAdMobRewardBasedVideoClosed(object sender, EventArgs args)
+        private void HandleAdMobRewardBasedVideoClosed(object sender, EventArgs args, AdPlacement placement)
         {
             // Make sure this method always be called after the OnAdRewarded event.
             RuntimeHelper.RunOnMainThread(() =>
-                RuntimeHelper.RunCoroutine(RewardedBasedVideoClosedDelayCoroutine(sender, args)));
+                RuntimeHelper.RunCoroutine(RewardedBasedVideoClosedDelayCoroutine(sender, args,placement)));
         }
 
-        private IEnumerator RewardedBasedVideoClosedDelayCoroutine(object sender, EventArgs args)
+        private IEnumerator RewardedBasedVideoClosedDelayCoroutine(object sender, EventArgs args, AdPlacement placement)
         {
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
@@ -1010,11 +949,14 @@ namespace EasyMobile
             // If the ad was completed, the "rewarded" event should be fired previously,
             // setting the completed bool to true. Otherwise the ad was skipped.
             // Events are raised on main thread.
-            Action callback = mIsRewardedAdCompleted ? GetRewardedAdCompletedAction() : GetRewardedAdSkippedAction();
+            Action callback = mIsRewardedAdCompleted ? GetRewardedAdCompletedAction(placement) : GetRewardedAdSkippedAction(placement);
             callback();
 
             // Reset the completed flag.
             mIsRewardedAdCompleted = false;
+
+            //Destroy the RewardedAd to create a new one.
+            DestroyRewardedAds(placement);   
 
             if (OnRewardedAdClosed != null)
                 OnRewardedAdClosed.Invoke(sender, args);

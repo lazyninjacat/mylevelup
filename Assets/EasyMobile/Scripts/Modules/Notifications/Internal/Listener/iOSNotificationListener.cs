@@ -210,7 +210,7 @@ namespace EasyMobile.Internal.Notifications
         {
             Util.NullArgumentTest(callback);
 
-            iOSNotificationNative._GetNotificationResponse(
+            iOSNotificationNative.EM_GetNotificationResponse(
                 identifier,
                 InternalGetNotificationResponseCallback,
                 PInvokeCallbackUtil.ToIntPtr<iOSNotificationResponse>(
