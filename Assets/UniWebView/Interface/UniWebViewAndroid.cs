@@ -288,9 +288,19 @@ public class UniWebViewInterface {
         plugin.CallStatic("print", name);
     }
 
+    public static void ScrollTo(string name, int x, int y, bool animated) {
+        CheckPlatform();
+        plugin.CallStatic("scrollTo", name, x, y, animated);
+    }
+
     public static void SetCalloutEnabled(string name, bool flag) {
         CheckPlatform();
         plugin.CallStatic("setCalloutEnabled", name, flag);
+    }
+
+    public static void SetSupportMultipleWindows(string name, bool flag) {
+        CheckPlatform();
+        plugin.CallStatic("setSupportMultipleWindows", name, flag);
     }
 
     public static void CheckPlatform() {

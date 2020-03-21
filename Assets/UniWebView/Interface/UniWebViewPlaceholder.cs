@@ -58,8 +58,10 @@ public class UniWebViewInterface {
     public static void SetAllowHTTPAuthPopUpWindow(string name, bool flag) { CheckPlatform(); }
     public static void Print(string name) { CheckPlatform(); }
     public static void SetCalloutEnabled(string name, bool flag) { CheckPlatform(); }
+    public static void SetSupportMultipleWindows(string name, bool flag) { CheckPlatform(); }
     public static void SetDragInteractionEnabled(string name, bool flag) { CheckPlatform(); }
-    
+    public static void ScrollTo(string name, int x, int y, bool animated) { CheckPlatform(); }
+
     public static void CheckPlatform() {
         if (!alreadyLoggedWarning) {
             alreadyLoggedWarning = true;

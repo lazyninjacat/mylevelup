@@ -80,12 +80,12 @@ public class VW_PlayList : MonoBehaviour
     // Ints
     private int minRatio;
     private int maxRatio;
-    private int wordsPerReward = 10;
+    public int wordsPerReward = 10;
     private int wordLevel;
     private int maxParts;
     private int toggleCount = 0;
     private int tagToggleCount = 0;
-    private int rewardTime = 10;
+    public int rewardTime = 10;
     private int filteredWordIDListCount;
 
     // Lists
@@ -343,6 +343,7 @@ public class VW_PlayList : MonoBehaviour
         List<int> tempFilteredWordIds = CreateFilteredWordIdList();
         filteredWordIDListCount = tempFilteredWordIds.Count;
 
+
         if (wordsPerReward > tempFilteredWordIds.Count)
         {
             maxParts = 0;
@@ -570,6 +571,15 @@ public class VW_PlayList : MonoBehaviour
         controller.AddOrEditEntry("Word Scramble", AutoWordIds.Count, tempScramble);
 
         controller.CreatingNew();
+        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);
+
+        controller.CreatingNew();
+        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
+
+        controller.CreatingNew();
+        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);
+
+        controller.CreatingNew();
         controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
 
         AutoWordIds.Clear();
@@ -735,7 +745,7 @@ public class VW_PlayList : MonoBehaviour
         {
             Debug.Log("VW_PlayList: INDEX IS " + idx.ToString());
 
-            // Instantiate the new panel and set it's text accordingly
+            // Instantiate the new panel and set its text accordingly
             tempPanel = GameObject.Instantiate(playCopyPanel, playListContent.transform, false);
             tempPanel.transform.Find("TypeText").GetComponent<Text>().text = controller.GetTypeString(playList[idx].type_id).Replace("_", " ");
 
