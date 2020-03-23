@@ -12,6 +12,12 @@ public class MatchingHelper : AB_GameHelper
     [SerializeField] Text wordtext1;
     [SerializeField] Text wordtext2;
     [SerializeField] Text wordtext3;
+    [SerializeField] GameObject wordtext1Container;
+    [SerializeField] GameObject wordtext2Container;
+    [SerializeField] GameObject wordtext3Container;
+
+
+
 
     [SerializeField] VW_GameLoop gameLoop;
     [SerializeField] Canvas parentCanvas;
@@ -26,14 +32,16 @@ public class MatchingHelper : AB_GameHelper
     public List<string> words;
     public List<int> wordIDs;
 
+    public int solvedPairs = 0;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Resume();
 
-    }
+    //// Start is called before the first frame update
+    //void Start()
+    //{
+    //    Resume();
+
+    //}
 
     public void SetupFromString(string json)
     {
@@ -51,7 +59,18 @@ public class MatchingHelper : AB_GameHelper
     // Update is called once per frame
     void Update()
     {
-        
+        if (solvedPairs == words.Count)
+        {
+            words.Clear();
+            wordIDs.Clear();
+            SolveAllMatching();
+        }
+    }
+
+    public void IterateSolvedPairs()
+    {
+        solvedPairs++;
+        Debug.Log("Iterate SolvedPairs. Now solvedPairs = " + solvedPairs);
     }
 
     // Set up game data
@@ -114,28 +133,28 @@ public class MatchingHelper : AB_GameHelper
         if (words.Count == 1)
         {
             wordtext1.text = words[0];
-            wordtext1.gameObject.name = words[0];
+            wordtext1Container.gameObject.name = words[0];
 
         }
         else if (words.Count == 2)
         {
             wordtext1.text = words[0];
-            wordtext1.gameObject.name = words[0];
+            wordtext1Container.gameObject.name = words[0];
 
             wordtext2.text = words[1];
-            wordtext2.gameObject.name = words[1];
+            wordtext2Container.gameObject.name = words[1];
 
         }
         else if (words.Count == 3)
         {
             wordtext1.text = words[0];
-            wordtext1.gameObject.name = words[0];
+            wordtext1Container.gameObject.name = words[0];
 
             wordtext2.text = words[1];
-            wordtext2.gameObject.name = words[1];
+            wordtext2Container.gameObject.name = words[1];
 
             wordtext3.text = words[2];
-            wordtext3.gameObject.name = words[2];
+            wordtext3Container.gameObject.name = words[2];
 
         }
         Debug.Log("End Set Texts");
@@ -161,5 +180,13 @@ public class MatchingHelper : AB_GameHelper
         SetupFromString(playlistDataObject.json);
 
         Debug.Log("done Matching Helper start");
+    }
+
+
+    private void SolveAllMatching()
+    {
+        solvedPairs = 0;
+        gameLoop.PlayEntryCompleted(playlistDataObject.type_id);    
+        
     }
 }
