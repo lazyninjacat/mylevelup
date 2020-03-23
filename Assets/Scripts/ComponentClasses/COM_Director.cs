@@ -160,6 +160,8 @@ public static class COM_Director {
         sceneDomains.Add("counting_game", value);
         sceneDomains.Add("keyboard_game", value);
         sceneDomains.Add("memory_cards", value);
+        sceneDomains.Add("matching_game", value);
+
 
         // Add RewardsList domain master and the scene it is attached to
         value = "MAS_RewardsList";

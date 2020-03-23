@@ -245,28 +245,60 @@ public class CON_PlayList : AB_Controller
                 }
 
                 break;
+
+
+            case 6:
+                //Debug.Log("CON: IN CASE 6");
+
+                DO_MatchingGame matching = JsonUtility.FromJson<DO_MatchingGame>(model.GetJsonData(index));
+
+                //Debug.Log("CON: DESERIALIZED MATCHING GAME!");
+
+                max = matching.wordIdList.Count;
+
+                for (int idx = 0; idx < max; idx++)
+                {
+                    //Debug.Log("CON: IN FOR AT IDX " + idx.ToString());
+                    if (idx == (max - 1))
+                    {
+                        //Debug.Log("CON: IDX == MAX - 1");
+
+                        builder.AppendFormat("{0}", TidyCase(model.wordDict[matching.wordIdList[idx]]));
+                        //Debug.Log("CON: BUILDER IS NOW " + builder.ToString());
+                    }
+                    else
+                    {
+                        //Debug.Log("CON: ELSE!");
+
+                        builder.AppendFormat("{0}{1}", (TidyCase(model.wordDict[matching.wordIdList[idx]])), ", ");
+                        //Debug.Log("CON: BUILDER IS NOW " + builder.ToString());
+                    }
+                }
+
+                break;
+
             default:
                 // TODO: throw and log an error
                 return null;
         }
 
+
+       
+
         return builder.ToString();
 
-        /*       
+             
                      
-            case 5:
-                break;
-            case 6:
-                break;
-            case 7:
-                break;
-            case 8:
-                break;
-            case 10:
-                break;
-            case 11:
-                break;
-         */
+          
+         
+            //case 7:
+            //    break;
+            //case 8:
+            //    break;
+            //case 10:
+            //    break;
+            //case 11:
+         
 
     }
 
@@ -310,9 +342,16 @@ public class CON_PlayList : AB_Controller
                 json = JsonUtility.ToJson((DO_MemoryCards)dataObject);
                 //Debug.Log("CON PL: Case 5 MEMORY reached");
                 break;
+           
+            case 6:
+                json = JsonUtility.ToJson((DO_MatchingGame)dataObject);
+                //Debug.Log("CON PL: Case 6 Matching reached");
+                break;
+
             default:
                 // TODO: throw and log an error
                 return false;
+
         }
 
         // On change

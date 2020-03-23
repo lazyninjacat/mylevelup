@@ -65,6 +65,7 @@ public class VW_PlayList : MonoBehaviour
     private const string REWARD = "Choose_Reward";
     private const string FLASH = "Flash_Card";
     private const string KEYB = "Keyboard_Game";
+    private const string MATCH = "Matching_Game";
     private const string COUNT = "Counting_Game";
     private const string MEMORY = "Memory_Cards";
     private const int PIC_WIDTH = 75;
@@ -826,6 +827,7 @@ public class VW_PlayList : MonoBehaviour
                 case REWARD:
                 case FLASH:
                 case KEYB:
+                case MATCH:
                 //case COUNT:
                 //case MEMORY:
                     return true;

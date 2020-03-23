@@ -29,7 +29,7 @@ public class MOD_PlayList : AB_Model
     public int activeEntryIndex { get; set; }
 
     // IMPORTANT: when creating a new activity type make sure to move it into the enum at the end 
-    enum TypeIds { Word_Scramble, Choose_Reward, Flash_Card, Counting_Game, Keyboard_Game, Memory_Cards, Matching, Multiple_Choice, Question_and_Answer, Face_Scramble, Letter_Trace, Sorting, Face_Match, Random };
+    enum TypeIds { Word_Scramble, Choose_Reward, Flash_Card, Counting_Game, Keyboard_Game, Memory_Cards, Matching_Game, Multiple_Choice, Question_and_Answer, Face_Scramble, Letter_Trace, Sorting, Face_Match, Random };
 
     public MOD_PlayList(MasterClass newMaster) : base(newMaster)
     {

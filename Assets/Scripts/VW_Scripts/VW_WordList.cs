@@ -93,7 +93,7 @@ public class VW_WordList : MonoBehaviour
             List<string> filterTagsList = filterTags.Split(',').ToList();
 
 
-            if (/*filterTags == "" || filterTags == null*/ true)
+            if (filterTags == "" || filterTags == null)
             {
                 Debug.Log("No filter tags detected");
                 tempPanel = GameObject.Instantiate(copyPanel, contentRect.transform, false);
