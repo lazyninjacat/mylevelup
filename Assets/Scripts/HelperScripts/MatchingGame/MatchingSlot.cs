@@ -18,13 +18,17 @@ public class MatchingSlot : MonoBehaviour , IDropHandler
 	{
         Debug.Log("SLOT: Triggered OnDrop!");
 
-        // Get the parent of the letter being dragged
+        // Get the parent of the image being dragged
         Transform parent = MatchingDragHandler.ImageBeingDragged.transform.parent;
 
 		// Get the name of the image being dragged
 		string imageName = MatchingDragHandler.ImageBeingDragged.name;
-		// Get the correct letter that should be on the current slot
-		string textName = transform.name;
+		// Get the correct image name that should be on the current slot
+		string textName = gameObject.transform.name;
+
+        Debug.Log("imageName = " + imageName);
+        Debug.Log("textName = " + textName);
+        Debug.Log("parent = " + textName);
 
 
 

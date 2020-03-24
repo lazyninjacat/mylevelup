@@ -72,14 +72,12 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
     ///<param name="eventData">the data collected about the event by Unity</param>
     public virtual void OnEndDrag(PointerEventData eventData)
     {
-        string word;
 
 
 
-        word = ImageBeingDragged.name;
 
-        Debug.Log("Image dropped is " + word);
-
+        Debug.Log("Image dropped is " + ImageBeingDragged.name);
+        Debug.Log("transform parents name = " + transform.parent.name);
 
         //Unload ImageBeingDragged
         ImageBeingDragged = null;
@@ -107,7 +105,7 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
 
 
 
-            AudioClip tempClip = FileAccessUtil.LoadWordAudio(word + ".wav");
+            AudioClip tempClip = FileAccessUtil.LoadWordAudio(ImageBeingDragged.name + ".wav");
 
             if (tempClip != null)
             {
@@ -116,7 +114,7 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
             }
             else
             {
-                tempClip = Resources.Load<AudioClip>("Sound/" + word);
+                tempClip = Resources.Load<AudioClip>("Sound/" + ImageBeingDragged.name);
 
 
                 if (tempClip != null)

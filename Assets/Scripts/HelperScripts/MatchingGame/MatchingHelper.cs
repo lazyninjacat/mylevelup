@@ -19,6 +19,9 @@ public class MatchingHelper : AB_GameHelper
 
 
 
+
+
+
     [SerializeField] VW_GameLoop gameLoop;
     [SerializeField] Canvas parentCanvas;
 
@@ -36,15 +39,22 @@ public class MatchingHelper : AB_GameHelper
 
 
 
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-    //    Resume();
 
-    //}
+    public override void Resume()
+    {
+        Debug.Log("enter Matching Helper start");
+
+        playlistDataObject = gameLoop.GetCurrentPlay();
+
+        SetupFromString(playlistDataObject.json);
+
+        Debug.Log("done Matching Helper start");
+    }
 
     public void SetupFromString(string json)
     {
+        Debug.Log("Start setupFromString");
+
         Debug.Log(json);
         matchingGameDataObject = JsonUtility.FromJson<DO_MatchingGame>(json);
         SetGameData();    
@@ -53,7 +63,7 @@ public class MatchingHelper : AB_GameHelper
         Shuffle();
         
         // TODO: Set up extra features  
-        Debug.Log("done setupFromString");
+        Debug.Log("End setupFromString");
     }
        
     // Update is called once per frame
@@ -63,7 +73,7 @@ public class MatchingHelper : AB_GameHelper
         {
             words.Clear();
             wordIDs.Clear();
-            SolveAllMatching();
+            GameOver();
         }
     }
 
@@ -106,7 +116,6 @@ public class MatchingHelper : AB_GameHelper
 
             gameLoop.SetImage(words[1], wordimage2.gameObject);
             wordimage2.gameObject.name = words[1];
-
         }
         else if (words.Count == 3)
         {
@@ -118,8 +127,8 @@ public class MatchingHelper : AB_GameHelper
 
             gameLoop.SetImage(words[2], wordimage3.gameObject);
             wordimage3.gameObject.name = words[2];
-
         }
+
 
         Debug.Log("End Set Images");
 
@@ -171,21 +180,23 @@ public class MatchingHelper : AB_GameHelper
 
     }
 
-    public override void Resume()
-    {
-        Debug.Log("enter Matching Helper start");
-
-        playlistDataObject = gameLoop.GetCurrentPlay();
-
-        SetupFromString(playlistDataObject.json);
-
-        Debug.Log("done Matching Helper start");
-    }
 
 
-    private void SolveAllMatching()
+
+    private void GameOver()
     {
         solvedPairs = 0;
+        
+ 
+
+        wordimage1.texture = null;
+        wordimage2.texture = null;
+        wordimage3.texture = null;
+
+        wordtext1.text = "";
+        wordtext2.text = "";
+        wordtext3.text = "";
+
         gameLoop.PlayEntryCompleted(playlistDataObject.type_id);    
         
     }
