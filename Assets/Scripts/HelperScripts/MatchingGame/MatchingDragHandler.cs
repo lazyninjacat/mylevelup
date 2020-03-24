@@ -72,15 +72,17 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
     ///<param name="eventData">the data collected about the event by Unity</param>
     public virtual void OnEndDrag(PointerEventData eventData)
     {
+        string word;
 
+        word = ImageBeingDragged.name;
 
+        
 
-
-        Debug.Log("Image dropped is " + ImageBeingDragged.name);
-        Debug.Log("transform parents name = " + transform.parent.name);
+        Debug.Log("Image dropped is " + word);
+        Debug.Log("transform parent's name = " + transform.parent.name);
 
         //Unload ImageBeingDragged
-        ImageBeingDragged = null;
+        //ImageBeingDragged = null;
         //Re-enables raycasting to the letter
         //GetComponent<CanvasGroup>().blocksRaycasts = true;
 
