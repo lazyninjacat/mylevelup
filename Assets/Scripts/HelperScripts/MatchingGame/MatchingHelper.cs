@@ -21,16 +21,10 @@ public class MatchingHelper : AB_GameHelper
     [SerializeField] Text wordtext1;
     [SerializeField] Text wordtext2;
     [SerializeField] Text wordtext3;
-<<<<<<< HEAD
-<<<<<<< HEAD
     [SerializeField] GameObject wordtext1Container;
     [SerializeField] GameObject wordtext2Container;
     [SerializeField] GameObject wordtext3Container;
 
-=======
->>>>>>> parent of b922019... gameloop now works for matching game
-=======
->>>>>>> parent of b922019... gameloop now works for matching game
 
     [SerializeField] VW_GameLoop gameLoop;
     [SerializeField] Canvas parentCanvas;
@@ -45,25 +39,16 @@ public class MatchingHelper : AB_GameHelper
     public List<string> words;
     public List<int> wordIDs;
 
-<<<<<<< HEAD
-=======
+    public int solvedPairs = 0;
 
->>>>>>> parent of b922019... gameloop now works for matching game
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Resume();
 
-<<<<<<< HEAD
-    // Start is called before the first frame update
-    void Start()
-    {
-        Resume();
+    //// Start is called before the first frame update
+    //void Start()
+    //{
+    //    Resume();
 
-=======
->>>>>>> parent of b922019... gameloop now works for matching game
-    }
+    //}
 
     public void SetupFromString(string json)
     {
@@ -87,8 +72,6 @@ public class MatchingHelper : AB_GameHelper
     // Update is called once per frame
     void Update()
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
         if (solvedPairs == words.Count)
         {
             words.Clear();
@@ -101,12 +84,6 @@ public class MatchingHelper : AB_GameHelper
     {
         solvedPairs++;
         Debug.Log("Iterate SolvedPairs. Now solvedPairs = " + solvedPairs);
-=======
-        
->>>>>>> parent of b922019... gameloop now works for matching game
-=======
-        
->>>>>>> parent of b922019... gameloop now works for matching game
     }
 
     // Set up game data
@@ -181,28 +158,28 @@ public class MatchingHelper : AB_GameHelper
         if (words.Count == 1)
         {
             wordtext1.text = words[0];
-            wordtext1.gameObject.name = words[0];
+            wordtext1Container.gameObject.name = words[0];
 
         }
         else if (words.Count == 2)
         {
             wordtext1.text = words[0];
-            wordtext1.gameObject.name = words[0];
+            wordtext1Container.gameObject.name = words[0];
 
             wordtext2.text = words[1];
-            wordtext2.gameObject.name = words[1];
+            wordtext2Container.gameObject.name = words[1];
 
         }
         else if (words.Count == 3)
         {
             wordtext1.text = words[0];
-            wordtext1.gameObject.name = words[0];
+            wordtext1Container.gameObject.name = words[0];
 
             wordtext2.text = words[1];
-            wordtext2.gameObject.name = words[1];
+            wordtext2Container.gameObject.name = words[1];
 
             wordtext3.text = words[2];
-            wordtext3.gameObject.name = words[2];
+            wordtext3Container.gameObject.name = words[2];
 
         }
         Debug.Log("End Set Texts");
@@ -229,8 +206,6 @@ public class MatchingHelper : AB_GameHelper
 
         Debug.Log("done Matching Helper start");
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 
     private IEnumerator GameOverPause()
@@ -257,8 +232,4 @@ public class MatchingHelper : AB_GameHelper
          
         
     }
-=======
->>>>>>> parent of b922019... gameloop now works for matching game
-=======
->>>>>>> parent of b922019... gameloop now works for matching game
 }

@@ -32,12 +32,12 @@ public class MatchingSlot : MonoBehaviour , IDropHandler
         if (imageName != textName)
         {
           
-            Debug.Log("Nope");
+            Debug.Log("Drop is Incorrect");
 
         }
         else
         {
-            Debug.Log("COrrect!!!!1");
+            Debug.Log("Drop is Correct");
             MatchingDragHandler.ImageBeingDragged.transform.SetParent(transform);
             // Get the first child of the destination slot and set it back to the parent of the image being dragged
             //transform.GetChild(0).SetParent(parent);

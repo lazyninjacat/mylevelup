@@ -83,39 +83,27 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
 
         //Unload ImageBeingDragged
         ImageBeingDragged = null;
-        //Re-enables raycasting to the letter
+
+        //Re-enables raycasting to the image
         //GetComponent<CanvasGroup>().blocksRaycasts = true;
 
         //Check if this object's parent is the starting slot _or_ the canvas
-        //if (transform.parent == startParent || transform.parent == transform.root) {
         if (transform.parent == startParent)
         {
-            Debug.Log("transform parent = " + transform.parent.name);
-            Debug.Log("start parent = " + startParent.name);
-
             //Sets the object's position back to the starting slot
             transform.position = startPosition;
-            //Sets the object's parent back to the starting slot
-            //transform.SetParent (startParent);
-         
-
         }
 
         else
         {
-            //Play soundclip
-
-            //audioSource.Play();
-
-            Debug.Log("transform parent = " + transform.parent.name);
-            Debug.Log("start parent = " + startParent.name);
-
-
+        
             AudioClip tempClip = FileAccessUtil.LoadWordAudio(word + ".wav");
 
             if (tempClip != null)
             {
                 audioSource.clip = tempClip;
+                Debug.Log("Playing word sound");
+
                 audioSource.Play();
             }
             else
@@ -126,6 +114,7 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
                 if (tempClip != null)
                 {
                     audioSource.clip = tempClip;
+                    Debug.Log("Playing word sound");
                     audioSource.Play();
                 }
                 else
@@ -133,14 +122,17 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
                     Debug.Log("No Sound available to play");
                 }
 
-                audioSource.clip = tempClip;
-                audioSource.Play();
+                //audioSource.clip = tempClip;
+                //Debug.Log("Playing word sound");
+                //audioSource.Play();
+
             }
 
             helper.IterateSolvedPairs();
 
 
         }
+        Debug.Log("End OnDrag");
 
     }
 
