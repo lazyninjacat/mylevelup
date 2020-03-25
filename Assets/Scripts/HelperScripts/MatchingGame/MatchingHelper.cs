@@ -41,14 +41,13 @@ public class MatchingHelper : AB_GameHelper
 
     public int solvedPairs = 0;
 
+    public int word1Errors = 0;
+    public int word2Errors = 0;
+    public int word3Errors = 0;
 
 
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-    //    Resume();
 
-    //}
+
 
     public void SetupFromString(string json)
     {
@@ -192,6 +191,10 @@ public class MatchingHelper : AB_GameHelper
     {
         Debug.Log("Start Shuffle Images");
 
+        wordImage1Container.transform.SetSiblingIndex((Random.Range(0, wordIDs.Count)));
+        wordImage2Container.transform.SetSiblingIndex(Random.Range(0, wordIDs.Count));
+        wordImage3Container.transform.SetSiblingIndex(Random.Range(0, wordIDs.Count));
+
         Debug.Log("End Shuffle Images");
 
     }
@@ -221,6 +224,15 @@ public class MatchingHelper : AB_GameHelper
         wordimage3.transform.SetParent(wordImage3Container.transform);
         wordimage3.transform.position = wordImage3StartPosition;
 
+        gameLoop.controller.ReportRoundErrorCount("Matching", word1, word1Errors);
+        gameLoop.controller.ReportRoundErrorCount("Matching", word2, word2Errors);
+        gameLoop.controller.ReportRoundErrorCount("Matching", word3, word3Errors);
+
+
+        word1Errors = 0;
+        word2Errors = 0;
+        word3Errors = 0;
+
 
         gameLoop.PlayEntryCompleted(playlistDataObject.type_id);
     }
@@ -232,4 +244,11 @@ public class MatchingHelper : AB_GameHelper
          
         
     }
+
+
+
+
+
+
+
 }

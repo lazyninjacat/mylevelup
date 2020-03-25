@@ -549,6 +549,12 @@ public class VW_PlayList : MonoBehaviour
         Debug.Log("Creating word list and adding playlist entries for word: " + wordInt);
         List<int> AutoWordIds = new List<int>();
         AutoWordIds.Add(wordInt);
+        List<int> AutoWordIdsMatchingGame = new List<int>();
+        AutoWordIdsMatchingGame.Add(wordInt);
+        AutoWordIdsMatchingGame.Add(wordInt + 1);
+        AutoWordIdsMatchingGame.Add(wordInt + 2);
+
+
 
         controller.CreatingNew();
 
@@ -557,6 +563,7 @@ public class VW_PlayList : MonoBehaviour
         DO_KeyboardGame tempKeyboard = new DO_KeyboardGame(AutoWordIds, true, true, false, true, true);
         DO_WordScramble tempScramble = new DO_WordScramble(AutoWordIds);
         DO_KeyboardGame tempKeyboardTwo = new DO_KeyboardGame(AutoWordIds, true, true, false, true, false);
+        DO_MatchingGame matchingGame = new DO_MatchingGame(AutoWordIdsMatchingGame, false, true);
 
 
         Debug.Log("******************************************** AutoWordIds:");
@@ -576,6 +583,9 @@ public class VW_PlayList : MonoBehaviour
 
         controller.CreatingNew();
         controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
+
+        controller.CreatingNew();
+        controller.AddOrEditEntry("Matching Game", AutoWordIds.Count, matchingGame);
 
         controller.CreatingNew();
         controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);

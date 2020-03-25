@@ -92,6 +92,20 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
         {
             //Sets the object's position back to the starting slot
             transform.position = startPosition;
+            if (word == helper.word1)
+            {
+                helper.word1Errors++;
+            } else if (word == helper.word2)
+            {
+                helper.word2Errors++;
+            } else if (word == helper.word3)
+            {
+                helper.word3Errors++;
+            }
+            else
+            {
+                Debug.Log("Error. word dropped does not match word1, word2 or word3");
+            }
         }
 
         else
