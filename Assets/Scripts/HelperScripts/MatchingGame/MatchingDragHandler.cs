@@ -74,15 +74,15 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
     {
         string word;
 
+
+
         word = ImageBeingDragged.name;
 
-        
-
         Debug.Log("Image dropped is " + word);
-        Debug.Log("transform parent's name = " + transform.parent.name);
+
 
         //Unload ImageBeingDragged
-        //ImageBeingDragged = null;
+        ImageBeingDragged = null;
         //Re-enables raycasting to the letter
         //GetComponent<CanvasGroup>().blocksRaycasts = true;
 
@@ -90,6 +90,9 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
         //if (transform.parent == startParent || transform.parent == transform.root) {
         if (transform.parent == startParent)
         {
+            Debug.Log("transform parent = " + transform.parent.name);
+            Debug.Log("start parent = " + startParent.name);
+
             //Sets the object's position back to the starting slot
             transform.position = startPosition;
             //Sets the object's parent back to the starting slot
@@ -104,10 +107,11 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
 
             //audioSource.Play();
 
+            Debug.Log("transform parent = " + transform.parent.name);
+            Debug.Log("start parent = " + startParent.name);
 
 
-
-            AudioClip tempClip = FileAccessUtil.LoadWordAudio(ImageBeingDragged.name + ".wav");
+            AudioClip tempClip = FileAccessUtil.LoadWordAudio(word + ".wav");
 
             if (tempClip != null)
             {
@@ -116,7 +120,7 @@ public class MatchingDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
             }
             else
             {
-                tempClip = Resources.Load<AudioClip>("Sound/" + ImageBeingDragged.name);
+                tempClip = Resources.Load<AudioClip>("Sound/" + word);
 
 
                 if (tempClip != null)

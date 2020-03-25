@@ -230,37 +230,7 @@ public class VW_GameLoop : MonoBehaviour {
     /// <returns>Play list data object</returns>
     public DO_PlayListObject GetCurrentPlay() { return controller.GetPlayEntry(playIndex); }
 
-    ///<summary>Takes a string and scrambles the letters around</summary>
-    ///<param name="word">a string representing a word</param>
-    ///<returns>a string containing the scrambled word</returns>
-    public string ScrambleWord(string word)
-    {
-        string scrambledWord = "";
-        int arraySize = word.Length;
-        int[] randomArray = new int[arraySize];
-
-        for (int i = 0; i < arraySize; i++)
-        {
-            randomArray[i] = i;
-        }
-
-        Shuffle(randomArray);
-
-        for (int i = 0; i < arraySize; i++)
-        {
-            scrambledWord += word[randomArray[i]];
-        }
-
-        if (scrambledWord == word)
-        {
-            Debug.Log("Word and Scrambled word were the same");
-            return ScrambleWord(word);
-        }
-        else
-        {
-            return scrambledWord;
-        }
-    }
+    
 
     /// <summary>
     /// Plays the audio clip corresponding to the string parameter.
@@ -607,24 +577,6 @@ public class VW_GameLoop : MonoBehaviour {
         Debug.Log("roundCount = " + roundCount + ", totalRoundsThisPart = " + totalRoundsThisPart);
     }
 
-    ///<summary>
-    /// Fisher-Yates Shuffle algorithim used to help scramble the words
-    ///</summary>
-    private static void Shuffle(int[] array)
-    {
-        int arraySize = array.Length;
-        int random;
-        int temp;
-
-        for (int i = 0; i < arraySize; i++)
-        {
-            System.Random rnd = new System.Random();
-            random = i + (int)(rnd.NextDouble() * (arraySize - i));
-            temp = array[random];
-            array[random] = array[i];
-            array[i] = temp;
-        }
-    }
 
     /// <summary>
     /// Pauses gameloop while the passcode modal is open
