@@ -122,7 +122,7 @@ public class VW_PlayList : MonoBehaviour
         playlistHasReward = false;
 
         SetLoopToggleAndValues();
-        SetupPlayAndAddNewLists();
+        //SetupPlayAndAddNewLists();
 
         if (PlayerPrefs.GetInt("AutoPlaylistOnOffKey") == 0)
         {
@@ -593,6 +593,9 @@ public class VW_PlayList : MonoBehaviour
         controller.CreatingNew();
         controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
 
+        controller.CreatingNew();
+        controller.AddOrEditEntry("Matching Game", AutoWordIds.Count, matchingGame);
+
         AutoWordIds.Clear();
         tempFlash = null;
         tempKeyboard = null;
@@ -838,8 +841,8 @@ public class VW_PlayList : MonoBehaviour
                 case FLASH:
                 case KEYB:
                 case MATCH:
-                //case COUNT:
-                //case MEMORY:
+                case COUNT:
+                case MEMORY:
                     return true;
                 default:
                     return false;
