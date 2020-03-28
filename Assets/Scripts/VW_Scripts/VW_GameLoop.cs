@@ -25,19 +25,19 @@ public class VW_GameLoop : MonoBehaviour {
     private const int ZERO_INDEX = 0;
 
     // Create the local vars
-    private int duration;
-    private int playIndex;
+    public int duration;
+    public int playIndex;
     private float totalRoundCount;
-    private float currentRound;
+    public float currentRound;
     private bool passLocked = false;
     private bool frontLocked = false;
     private bool infiniteLoop = false;
-    private int loopIterations;
+    public int loopIterations;
     private int maxIterations;
     private float playTimer;
-    private float roundsTillReward;
+    public float roundsTillReward;
     private bool newPart = true;
-    private float totalRoundsThisPart;
+    public float totalRoundsThisPart;
     
     public CON_GameLoop controller;
     public AudioSource audioSource;
@@ -45,8 +45,8 @@ public class VW_GameLoop : MonoBehaviour {
     public GameObject passCodeModal;
     public GameObject quitModal;
 
-    private GameObject activeCanvas = null;
-    private int activeTypeId = -1;
+    public GameObject activeCanvas = null;
+    public int activeTypeId = -1;
     
     // Timer that starts as soon as the scene is loaded
     private double gameTimer = 0.0;
@@ -64,22 +64,22 @@ public class VW_GameLoop : MonoBehaviour {
 
     
 
-    //Previously playing reward video id & time in video
-    private string previousPlayingVideoId = null;
-    public string PreviousPlayingVideo {
-        get {return previousPlayingVideoId;}
-        set {previousPlayingVideoId = value;}
-    }
-    private DO_Video previousPlayingVideoData = null;
-    public DO_Video PreviousPlayingVideoData {
-        get {return previousPlayingVideoData;}
-        set {previousPlayingVideoData = value;}
-    }
-    private int timeInVideo = 0;
-    public int TimeInVideo {
-        get {return timeInVideo;}
-        set {timeInVideo = value;}
-    }
+    ////Previously playing reward video id & time in video
+    //private string previousPlayingVideoId = null;
+    //public string PreviousPlayingVideo {
+    //    get {return previousPlayingVideoId;}
+    //    set {previousPlayingVideoId = value;}
+    //}
+    //private DO_Video previousPlayingVideoData = null;
+    //public DO_Video PreviousPlayingVideoData {
+    //    get {return previousPlayingVideoData;}
+    //    set {previousPlayingVideoData = value;}
+    //}
+    //private int timeInVideo = 0;
+    //public int TimeInVideo {
+    //    get {return timeInVideo;}
+    //    set {timeInVideo = value;}
+    //}
 
     // Use this for initialization
     void Start () {
@@ -434,6 +434,7 @@ public class VW_GameLoop : MonoBehaviour {
         // Check if we have completed the playlist
         if (controller.PlayListCompleted(playIndex))
         {
+            Debug.Log("Playlist completed");
             ResetRoundListCount();
            
             if (passLocked && (loopIterations >= maxIterations) && controller.PinsExist())
@@ -502,6 +503,8 @@ public class VW_GameLoop : MonoBehaviour {
     /// </summary>
     private void ResetRoundListCount()
     {
+
+        Debug.Log("Reseting round list count");
         playIndex = ZERO_INDEX;
         UpdateProgressBar(0);
         currentRound = FIRST_ROUND;

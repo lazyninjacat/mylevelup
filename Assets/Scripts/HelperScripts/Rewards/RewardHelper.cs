@@ -509,7 +509,7 @@ public class RewardHelper : AB_GameHelper
 
     private IEnumerator StopBrowserReward()
     {
-        if (isWebReward = true)
+        if (isWebReward == true)
         {            
             // Trigger fade out webview animation
             webView.Hide(true, UniWebViewTransitionEdge.Top, 3);
