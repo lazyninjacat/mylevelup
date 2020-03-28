@@ -473,8 +473,8 @@ public class RewardHelper : AB_GameHelper
 
     private IEnumerator BeginBrowserCount()
     {
-        // for (int x = 0; x < ((playlistObj.duration * 60)); x++)
-        for (int x = 0; x < 3; x++) // testing shortcut. Reduces the reward timer to 10 seconds.
+        for (int x = 0; x < ((playlistObj.duration * 60)); x++)
+        //for (int x = 0; x < 3; x++) // testing shortcut. Reduces the reward timer to 10 seconds.
 
         {
             yield return new WaitForSeconds(1);

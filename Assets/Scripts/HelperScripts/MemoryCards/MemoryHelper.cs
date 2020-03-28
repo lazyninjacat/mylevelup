@@ -267,24 +267,39 @@ public class MemoryHelper : AB_GameHelper {
 
             //////////////////////////ADD CODE HERE TO ALLOW LOADING OF CUSTOM WORDS FROM DB vvvvvvvvvvvvvvvvvvvvvvv
             // Load single or multiple images to gamepuzzles depending on AltImages toggle setting
-            ///*else */if (mc.altImages == true)
-            //{
-            //    Texture2D tempTex;
-            //    tempTex = Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + UnityEngine.Random.Range(1, 6));
-            //    gamePuzzles.Add(tempTex == null ? Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + "1") : tempTex);
-            //    //gamePuzzles.Add(Resources.Load<Texture2D>("WordPictures/" + words[index] + "/" + words[index] + "1"));
-            //}
-            //else 
+            /*else */
+            if (mc.altImages == true)
+            {
+                Texture2D tempTex;
+                tempTex = Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + UnityEngine.Random.Range(1, 6));
+                gamePuzzles.Add(tempTex == null ? Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + "1") : tempTex);
+                //gamePuzzles.Add(Resources.Load<Texture2D>("WordPictures/" + words[index] + "/" + words[index] + "1"));
+            }
+            else
+            {
+                gamePuzzles.Add(Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + "1"));
 
-            gamePuzzles.Add(Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + "1"));         
+            }
+
             //////////////////////////ADD CODE HERE TO ALLOW LOADING OF CUSTOM WORDS FROM DB ^^^^^^^^^^^^^^^^^^^^^^^                            
         }
 
 
         for (int i = 0; i < looper; i++)
-        {         
+        {
 
-            gamePuzzles.Add(Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + "1"));
+            if (mc.altImages == true)
+            {
+                Texture2D tempTex;
+                tempTex = Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + UnityEngine.Random.Range(1, 6));
+                gamePuzzles.Add(tempTex == null ? Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + "1") : tempTex);
+                //gamePuzzles.Add(Resources.Load<Texture2D>("WordPictures/" + words[index] + "/" + words[index] + "1"));
+            }
+            else
+            {
+                gamePuzzles.Add(Resources.Load<Texture2D>("WordPictures/" + words[i] + "/" + words[i] + "1"));
+
+            }
         }
         Debug.Log("End AddGamePuzzles");
 
@@ -349,7 +364,6 @@ public class MemoryHelper : AB_GameHelper {
             btns[firstGuessIndex].GetComponent<RawImage>().color = new Color(0, 0, 0, 0);
             btns[secondGuessIndex].GetComponent<RawImage>().color = new Color(0, 0, 0, 0);
 
-            currentRound++;
                         
             StartCoroutine(CheckIfTheGameIsFinished());
         }
@@ -383,7 +397,9 @@ public class MemoryHelper : AB_GameHelper {
         Debug.Log("countCorrectGuesses = " + countCorrectGuesses);
 
         if (countCorrectGuesses == (deckSize / 2))
-        {                       
+        {
+            currentRound++;
+
             Debug.Log("Game Finished. It took you " + countGuesses + " guesses to finish the game");
             ClearItems();
 

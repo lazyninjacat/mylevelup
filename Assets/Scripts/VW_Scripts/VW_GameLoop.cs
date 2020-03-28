@@ -27,7 +27,7 @@ public class VW_GameLoop : MonoBehaviour {
     // Create the local vars
     public int duration;
     public int playIndex;
-    private float totalRoundCount;
+    public float totalRoundCount;
     public float currentRound;
     private bool passLocked = false;
     private bool frontLocked = false;
@@ -36,7 +36,7 @@ public class VW_GameLoop : MonoBehaviour {
     private int maxIterations;
     private float playTimer;
     public float roundsTillReward;
-    private bool newPart = true;
+    public bool newPart = true;
     public float totalRoundsThisPart;
     
     public CON_GameLoop controller;
@@ -131,6 +131,8 @@ public class VW_GameLoop : MonoBehaviour {
             ActivateDeactivateCanvass(controller.GetPlayEntry(playIndex).type_id);
         }
 
+
+        ResetRoundListCount();
         UpdateProgressBar(CalculateRoundsTillReward());
      
 
@@ -148,9 +150,10 @@ public class VW_GameLoop : MonoBehaviour {
     /// This is used to properly configure the progress bar.
     /// </summary>
     private float CalculateRoundsTillReward()
-    {         
-
+    {
+        Debug.Log("Calculating rounds till reward");
         List<float> roundsTillRewardList = new List<float>();
+        Debug.Log("Rounds till reward list count = " + roundsTillRewardList.Count);
         for (float i = currentRound ; i < totalRoundCount; i++)
         {
             DO_PlayListObject tempPlayObj = controller.GetPlayEntry(Mathf.RoundToInt(i));
@@ -158,13 +161,15 @@ public class VW_GameLoop : MonoBehaviour {
             if (!(tempPlayObj.type_id == 1))
             {
                 roundsTillRewardList.Add(i);
+                Debug.Log("Adding to roundstillreward list: " + i);
             }
             else
             {
+                Debug.Log("Break");
                 break;
             }
         }
-        
+        Debug.Log("Done For loop");
         roundsTillReward = roundsTillRewardList.Count;
         Debug.Log("Round till reward = " + roundsTillReward);
         if (newPart == true)
@@ -427,9 +432,17 @@ public class VW_GameLoop : MonoBehaviour {
 
         Debug.Log("playlist entry completed");
         currentRound++;
+        Debug.Log("new current round = " + currentRound);
+
         playIndex++;
+
+        Debug.Log("new play index = " + playIndex);
+
         roundCounter.gameObject.SetActive(true);
         UpdateProgressBar(CalculateRoundsTillReward());
+
+
+        
 
         // Check if we have completed the playlist
         if (controller.PlayListCompleted(playIndex))
@@ -453,10 +466,12 @@ public class VW_GameLoop : MonoBehaviour {
         }
         else
         {
+            Debug.Log("Nope, not done playlist yet");
             continueModal.SetActive(true);
         }
 
         int nextTypeId = controller.GetPlayEntry(playIndex).type_id;
+        Debug.Log("nextTypeId type id = " + nextTypeId);
         if (nextTypeId == 1)
         {
             newPart = true;
@@ -574,6 +589,7 @@ public class VW_GameLoop : MonoBehaviour {
     ///</summary>
     private void UpdateProgressBar(float roundCount)
     {
+        Debug.Log("Updating Round Counter");
         //generate round counter
         float percentToFill = ((totalRoundsThisPart - roundCount) / totalRoundsThisPart);
         roundCounter.fillAmount = percentToFill;

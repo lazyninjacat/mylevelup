@@ -76,7 +76,12 @@ public class MOD_GameLoop : AB_Model
     /// </summary>
     /// <param name="currentEntryValue"></param>
     /// <returns>boolean</returns>    
-    public bool EndOfPlay(int currentEntryValue) { return currentEntryValue >= entryMax; }
+    public bool EndOfPlay(int currentEntryValue)
+    {
+        Debug.Log("Current Entry Value = " + currentEntryValue);
+        Debug.Log("Entry max = " + entryMax);
+        return currentEntryValue >= entryMax;
+    }
 
     /// <summary>
     /// Returns the sum of all the play list entry duration values.

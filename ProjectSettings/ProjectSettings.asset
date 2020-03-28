@@ -258,7 +258,7 @@ PlayerSettings:
   templateDefaultScene: 
   AndroidTargetArchitectures: 3
   AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 2800000, guid: 7d293c78e20c7e24a8aa8d403f16de9c, type: 3}
+  androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: '{dedicated}: Desktop/MyLevelUPKey.keystore'
   AndroidKeyaliasName: mylevelup
   AndroidBuildApkPerCpuArchitecture: 0

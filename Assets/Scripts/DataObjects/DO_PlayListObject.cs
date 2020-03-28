@@ -68,8 +68,12 @@ public class DO_PlayListObject : IComparable<DO_PlayListObject>
             case 5:
                 DO_MemoryCards memory = JsonUtility.FromJson<DO_MemoryCards>(json);
                 return memory.ValidateData(data);
+            case 6:
+                DO_MatchingGame matching = JsonUtility.FromJson<DO_MatchingGame>(json);
+                return matching.ValidateData(data);
             default:
                 // TODO: throw and log an error
+                Debug.Log("Error in DO_PlaylistObject");
                 return false;
         }
     }

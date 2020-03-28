@@ -39,7 +39,7 @@ public class VW_MemoryCards : MonoBehaviour
             PopulateAvailableViewOnly();
            
         }               
-        else if (sceneName == memoryScene)
+        else
         {
             memory = JsonUtility.FromJson<DO_MemoryCards>(controller.GetJsonByIndex(controller.GetActiveContextIndex()));
             ToggleAllToggles();
@@ -121,7 +121,8 @@ public class VW_MemoryCards : MonoBehaviour
     {
 
         // Get the new duration value from the number of children in the current words list scroll view
-        int duration = currentWordsContent.transform.childCount;
+        // Duration is set to 1 to fix a bug that would not allow progress past reward nor past end of playlist.
+        int duration = 1;
 
         // Create bools for the toggle options
         bool wordText = optionsPanel.transform.Find("IncludeWordTextToggle").gameObject.GetComponent<Toggle>().isOn;
