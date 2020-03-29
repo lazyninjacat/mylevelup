@@ -568,7 +568,7 @@ public class VW_PlayList : MonoBehaviour
         DO_WordScramble tempScramble = new DO_WordScramble(AutoWordIds);
         DO_KeyboardGame tempKeyboardTwo = new DO_KeyboardGame(AutoWordIds, true, true, false, true, false);
         DO_MatchingGame matchingGame = new DO_MatchingGame(AutoWordIdsMatchingGame, false, true);
-        DO_MemoryCards memoryCards = new DO_MemoryCards(AutoWordIdsMemoryGame, true, true, true);
+        DO_MemoryCards memoryCards = new DO_MemoryCards(AutoWordIds, true, true, true);
         DO_CountingGame countingGame = new DO_CountingGame(AutoWordIdsMatchingGame, 3, 10, true, true, true, false);
 
 
@@ -585,7 +585,7 @@ public class VW_PlayList : MonoBehaviour
         controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Matching Game", AutoWordIds.Count, matchingGame);
+        controller.AddOrEditEntry("Matching Game", AutoWordIdsMatchingGame.Count, matchingGame);
 
         controller.CreatingNew();
         controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);
@@ -601,6 +601,9 @@ public class VW_PlayList : MonoBehaviour
 
         controller.CreatingNew();
         controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
+
+        controller.CreatingNew();
+        controller.AddOrEditEntry("Matching Game", AutoWordIdsMatchingGame.Count, matchingGame);
 
         //controller.CreatingNew();
         //controller.AddOrEditEntry("Counting Game", AutoWordIds.Count, countingGame);
