@@ -34,7 +34,7 @@ public class VW_StartMenu : MonoBehaviour {
 
         isLockOn = (PlayerPrefs.GetInt("lockOnOff") == 1);
 
-        Debug.Log("********************* \n isLockOn is " + isLockOn.ToString() + "\n*************************");
+        // Debug.Log("********************* \n isLockOn is " + isLockOn.ToString() + "\n*************************");
 
 
         // Create a current time DateTime object
@@ -47,9 +47,9 @@ public class VW_StartMenu : MonoBehaviour {
         DateTime lockOutToOvernight = new DateTime(current.Year, current.Month, current.Day, ((PlayerPrefs.GetInt("LockoutToTimeInt")) + 1), 0, 0);
 
 
-        Debug.Log("current = " + current);
-        Debug.Log("lockOutFrom = " + lockOutFrom);
-        Debug.Log("lockOutTo = " + lockOutTo);
+        //Debug.Log("current = " + current);
+        //Debug.Log("lockOutFrom = " + lockOutFrom);
+        //Debug.Log("lockOutTo = " + lockOutTo);
 
 
 
@@ -57,12 +57,12 @@ public class VW_StartMenu : MonoBehaviour {
         //Display ChildName Key saved in PlayerPref in the ChildNameText game object in scene, or display "My" if the childnamekey is blank or null
         if ((PlayerPrefs.GetString("ChildNameKey") == "") || (PlayerPrefs.GetString("ChildNameKey") == null))
         {
-            Debug.Log("ChildName not set");
+            // Debug.Log("ChildName not set");
             childnameText.text = "My";
         }
         else
         {
-            Debug.Log("ChildName is set to: " + PlayerPrefs.GetString("ChildNameKey"));
+            // Debug.Log("ChildName is set to: " + PlayerPrefs.GetString("ChildNameKey"));
             childnameText.text = PlayerPrefs.GetString("ChildNameKey") + "'s";
         }                
    
@@ -136,8 +136,8 @@ public class VW_StartMenu : MonoBehaviour {
 
     private IEnumerator StartLockTimer(double seconds)
     {
-        Debug.Log("********************* \n TIMER COROUTINE STARTED!\n*************************");
-        Debug.Log("second = " + seconds);
+        //Debug.Log("********************* \n TIMER COROUTINE STARTED!\n*************************");
+        //Debug.Log("second = " + seconds);
         PromptButtonSwitch();
 
         while (seconds > 0)

@@ -572,7 +572,7 @@ public class VW_PlayList : MonoBehaviour
         DO_CountingGame countingGame = new DO_CountingGame(AutoWordIdsMatchingGame, 3, 10, true, true, true, false);
 
 
-        Debug.Log("******************************************** AutoWordIds:");
+        //Debug.Log("******************************************** AutoWordIds:");
         foreach (int wordID in AutoWordIds) { Debug.Log(wordID); }
 
         controller.CreatingNew();
@@ -621,7 +621,7 @@ public class VW_PlayList : MonoBehaviour
 
     public void AddEntry()
     {
-        Debug.Log("VW_PL: Trying to add entry of type " + GetAddNewTypeTextString(EventSystem.current.currentSelectedGameObject));
+        // Debug.Log("VW_PL: Trying to add entry of type " + GetAddNewTypeTextString(EventSystem.current.currentSelectedGameObject));
 
         // Set new entry creation flag to true
         controller.CreatingNew();
@@ -643,12 +643,12 @@ public class VW_PlayList : MonoBehaviour
     public void EditEntry()
     {
         GameObject currentObj = EventSystem.current.currentSelectedGameObject;
-        Debug.Log("VW_PL: Trying to EDIT entry of type " + GetTypeTextString(currentObj));
+        // Debug.Log("VW_PL: Trying to EDIT entry of type " + GetTypeTextString(currentObj));
 
         controller.EditingEntry();
         controller.SetActiveEntryIndex(currentObj.transform.parent.GetSiblingIndex());
 
-        Debug.Log("VW_PL: Set edit entry flag to true and set active index to " + currentObj.transform.parent.GetSiblingIndex());
+        // Debug.Log("VW_PL: Set edit entry flag to true and set active index to " + currentObj.transform.parent.GetSiblingIndex());
         controller.SceneChange(GetTypeTextString(currentObj));
     }
 
@@ -660,7 +660,7 @@ public class VW_PlayList : MonoBehaviour
             Debug.Log("VW_PL: Active panel index was greater than one. Proceeding to removal.");
             if (controller.RemoveEntryData(activePanelIndex))
             {
-                Debug.Log("VW_PL: Controller returned true on remove data entry");
+                // Debug.Log("VW_PL: Controller returned true on remove data entry");
                 confirmDeleteModal.SetActive(false);
                 deleteSuccessModal.SetActive(true);
 
@@ -763,16 +763,16 @@ public class VW_PlayList : MonoBehaviour
         yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
         
         List<DO_PlayListObject> playList = controller.GetPlayList();
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n VW: COUNT OF PLAY LIST IS " + playList.Count.ToString() + "\n &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        //Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n VW: COUNT OF PLAY LIST IS " + playList.Count.ToString() + "\n &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 
         if (playList.Count == 0) { PlaylistEmptyPanel.SetActive(true); }
         else { PlaylistEmptyPanel.SetActive(false); }
 
-        Debug.Log("VW_PlayList: ENTERING FOR for PANELS!");
+        //Debug.Log("VW_PlayList: ENTERING FOR for PANELS!");
 
         for (int idx = 0; idx < playList.Count; idx++)
         {
-            Debug.Log("VW_PlayList: INDEX IS " + idx.ToString());
+            //Debug.Log("VW_PlayList: INDEX IS " + idx.ToString());
 
             // Instantiate the new panel and set its text accordingly
             tempPanel = GameObject.Instantiate(playCopyPanel, playListContent.transform, false);

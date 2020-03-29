@@ -438,13 +438,13 @@ public static class FileAccessUtil
         if (!Directory.Exists(fileDir))
         {
             //TODO: User feedback of failed attempt
-            Debug.Log("Error - Photo Directory doesn't exist!");
+            //Debug.Log("Error - Photo Directory doesn't exist!");
             return null;
         }
         else if (!File.Exists(filePath))
         {
             //TODO: User feedback of failed attempt
-            Debug.Log("Error - Photo doesn't exist!");
+            //Debug.Log("Error - Photo doesn't exist!");
             return null;
         }
 

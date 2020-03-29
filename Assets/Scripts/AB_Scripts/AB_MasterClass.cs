@@ -18,7 +18,7 @@ public abstract class MasterClass {
 
     public MasterClass()
     {
-        Debug.Log("MAS: creating new master");
+        // Debug.Log("MAS: creating new master");
         controllers = new Dictionary<string, AB_Controller>();
         models = new Dictionary<string, AB_Model>();
         TagForKeepAlive();
@@ -51,11 +51,11 @@ public abstract class MasterClass {
     ///<param name="key"> A string representing the key of the model you want to retrieve.</param>
     ///<returns> The model object belonging to the key passed from the models dictionary.</returns>
     public object GetModel(string key) {
-        Debug.Log("MASW: In GetModel trying to fetch model " + key);
+        // Debug.Log("MASW: In GetModel trying to fetch model " + key);
         int test = models.Count;
-        Debug.Log("MASW: number of models in models is: " + test);
+        // Debug.Log("MASW: number of models in models is: " + test);
         test = controllers.Count;
-        Debug.Log("MASW: number of controllers in controllers is: " + test);
+        // Debug.Log("MASW: number of controllers in controllers is: " + test);
 
         return models[key]; }
 
@@ -78,11 +78,11 @@ public abstract class MasterClass {
     ///</summary>
     public void KillWorkers()
     {
-        Debug.Log("MAS: KILLING WORKERS!");
+        // Debug.Log("MAS: KILLING WORKERS!");
         models.Clear();
         controllers.Clear();
         WorkersAlive = false;
-        Debug.Log("MAS: WORKERS ARE DEAD COLLECTIONS ARE NULL!");
+        // Debug.Log("MAS: WORKERS ARE DEAD COLLECTIONS ARE NULL!");
     }
 
     ///<summary>
@@ -94,7 +94,7 @@ public abstract class MasterClass {
     ///</remarks>
     public void CreateAndAssignWorkers()
     {
-        Debug.Log("MAS: In create and assign workers!");
+        // Debug.Log("MAS: In create and assign workers!");
 
         // Create the workers and then assign them to their coworkers
         CreateWorkers();

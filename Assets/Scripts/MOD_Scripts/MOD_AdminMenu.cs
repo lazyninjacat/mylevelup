@@ -30,21 +30,21 @@ public class MOD_AdminMenu : AB_Model {
 
         if (!PlayerPrefs.HasKey(ON_OFF_KEY)) PlayerPrefs.SetInt(ON_OFF_KEY, 0);
 
-        Debug.Log("********************* \n IN MODEL ON OFF KEY IS " + PlayerPrefs.GetInt(ON_OFF_KEY).ToString() + "\n*************************");
+        // Debug.Log("********************* \n IN MODEL ON OFF KEY IS " + PlayerPrefs.GetInt(ON_OFF_KEY).ToString() + "\n*************************");
     }
 
     public override void GetCoworkers(MasterClass master) { }
 
     public void SetLockOutPref(List<int> prefs)
     {
-        Debug.Log("********************* \n IN MODEL SETTING LOCK PREFS \n*************************");
+        // Debug.Log("********************* \n IN MODEL SETTING LOCK PREFS \n*************************");
 
         LockOutPrefs tempStruct = new LockOutPrefs(prefs[0], prefs[1], prefs[2], prefs[3]);
 
         PlayerPrefs.SetString(LOCK_KEY, JsonUtility.ToJson(tempStruct));
         PlayerPrefs.Save();
 
-        Debug.Log("********************* \n IN MODEL LOCK VALUE IS " + PlayerPrefs.GetString(LOCK_KEY) + "\n*************************");
+        // Debug.Log("********************* \n IN MODEL LOCK VALUE IS " + PlayerPrefs.GetString(LOCK_KEY) + "\n*************************");
     }
     public bool CheckLockOutPref() { return PlayerPrefs.HasKey(LOCK_KEY); }
 

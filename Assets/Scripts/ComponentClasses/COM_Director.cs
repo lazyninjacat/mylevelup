@@ -173,7 +173,7 @@ public static class COM_Director {
         value = "MAS_GameLoop";
         sceneDomains.Add("game_loop", value);
 
-        Debug.Log("DIR: Added scenes successfully");
+        // Debug.Log("DIR: Added scenes successfully");
 
         TagAsKeepAlive();
     }

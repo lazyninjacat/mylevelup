@@ -62,7 +62,7 @@ public class DataService  {
         var dbPath = filepath;
 #endif
             _connection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
-        Debug.Log("Final PATH: " + dbPath);     
+        // Debug.Log("Final PATH: " + dbPath);     
 
 	}
 
@@ -94,13 +94,6 @@ public class DataService  {
 
 	public IEnumerable<Game_Settings> GetGameSettingsTable(){
 		return _connection.Table<Game_Settings>();
-	}
-
-	///<summary>Gets all rows from the Reward_Stats table</summary>
-	///<returns>IEnumerable object of the Reward_Stats type</returns>
-
-	public IEnumerable<Reward_Stats> GetRewardStatsTable(){
-		return _connection.Table<Reward_Stats>();
 	}
 
 	///<summary>Gets all rows from the Rewards table</summary>
@@ -251,14 +244,6 @@ public class DataService  {
 		_connection.Execute(cmd, resetToInt, tableName);
 	}
 
-	///<summary>Inserts a reward_stats object into the Reward_Stats table</summary>
-	///<param name="rs">an object containing the data for the insertion</param>
-	///<returns>an int value to show if the insert was successful, 1 was successful, 0 unsuccessful</returns>
-
-	public int InsertRewardStats(Reward_Stats rs){
-		return _connection.Insert(rs);
-	}
-
 	///<summary>Inserts data collected for a fully played game</summary>
 	///<param name="userId">the user id of the user who played the game</param>
 	///<param name="roundsComplete">the number of rounds completed</param>
@@ -369,14 +354,6 @@ public class DataService  {
 		return _connection.Query<Game_History>(query);
 	}
 
-	///<summary>Gets the user's reward history based on the user id</summary>
-	///<param name="userId">the user id of the user whose stats you want</param>
-	///<returns>an IEnumerable containing the returned rows from the query</returns>
-
-	public IEnumerable<Reward_Stats> GetUserRewardHistory(int userId){
-		string query = "SELECT reward_stats_id, reward_type, video_id, video_title, keywords FROM Reward_Stats WHERE user_id = \'" + userId + "\'";
-		return _connection.Query<Reward_Stats>(query);
-	}
 
     public IEnumerable<DO_PlayListObject> GetPlayList()
     {
