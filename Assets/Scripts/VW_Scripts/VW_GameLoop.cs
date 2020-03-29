@@ -450,7 +450,7 @@ public class VW_GameLoop : MonoBehaviour {
             Debug.Log("Playlist completed");
             ResetRoundListCount();
            
-            if (passLocked && (loopIterations >= maxIterations) && controller.PinsExist())
+            if (passLocked && (loopIterations >= maxIterations))
             {
               loopIterations = STARTING_ITERATION;
               passCodeModal.SetActive(true);
@@ -483,26 +483,6 @@ public class VW_GameLoop : MonoBehaviour {
         ActivateDeactivateCanvass(nextTypeId);
     }
 
-    /// <summary>
-    /// Takes the pin from the pin input field and verifies that it is the right pin before
-    /// closing the pass code modal
-    /// </summary>
-    public void VerifyPin()
-    {
-        int pin = short.Parse(pinField.text);
-
-        // If pin matches then deactivate the pass code modal and continue; else, block.
-        if (controller.PinGood(pin))
-        {
-            passCodeModal.SetActive(false);
-        }
-        else
-        {
-            invalidPinModal.SetActive(true);
-        }
-
-        pinField.text = "";
-    }
 
 
 

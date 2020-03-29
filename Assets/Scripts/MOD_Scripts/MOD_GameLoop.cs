@@ -44,11 +44,6 @@ public class MOD_GameLoop : AB_Model
 
     public override void GetCoworkers(MasterClass master) { }
 
-    // TODO: REPLACE THIS BULLSHIT
-    public int CheckPin(int pin) { return dataService.DoesPinExist(pin); }
-    public int AdminsRowNumber() { return dataService.NumberOfPins(); }
-    /////////////////////////////////////////////////////////////////////
-
     /// <summary>
     /// Takes a file name (a word) and recovers randomly selected byte array belonging to that word.
     /// </summary>
@@ -163,75 +158,8 @@ public class MOD_GameLoop : AB_Model
         Debug.Log("******************\n MOD: Final round count is: " + totalRoundCount.ToString() + "\n**********************");
     }
 
-    ///<summary>
-    /// Gets a count of the rows in the VideoHistoryTable
-    ///</summary>
-    public int GetVideoHistoryCount(){
-        return dataService.GetVideoHistoryCount();
-    }
-
-    ///<summary>
-    /// Retrieves the data from the VideoHistory table, creates and sorts a Dictionary based on
-    /// the watch count of the videos.
-    ///</summary>
-    ///<returns> A Dictionary with video id as a key and the details and stats of that video in a DO_Video object as the value</returns>
-    public Dictionary<string, DO_Video> GetVideoHistory(){
-        Dictionary<string, DO_Video> videos = new Dictionary<string, DO_Video>();
-        DO_Video video;
-        IEnumerable<VideoHistory> data = dataService.GetVideoHistories();
-        foreach (var row in data){
-            //Debug.Log(row.video_data);
-            video = JsonUtility.FromJson<DO_Video>(row.video_data);
-            //Debug.Log(video);
-            videos.Add(row.videoId, video);
-        }
-
-        var sortedByWatchCount = videos.OrderByDescending(pair => pair.Value.watchCount).ToDictionary(pair => pair.Key, pair => pair.Value);
-                           
-        return sortedByWatchCount;
-    }
-
-    ///<summary>
-    /// Saves a video id and it's associated data to the DB.true If the video exists as an entry in the DB it will perform an update.
-    /// If It doesn;t exist in the DB, it will perform an insert.
-    ///</summary>
-    ///<param name="vid">A string representing the Youtube video id of the video</param>
-    ///<param name="vData">A DO_Video object containing the data for the video</param>
-    ///<returns>An int signalling the result of the transaction.true Returns 1 of successful, 0 if unsuccessful.</returns>
-    public int SaveVideoToVideoHistory(string vid, DO_Video vData){
-        int result = dataService.CheckIfVideoHistoryExists(vid);
-        string videoData = JsonUtility.ToJson(vData, false);
-        int dbOperationResult = 0;
-        if (result > 0){//exists
-            Debug.Log("Video Exists....performing an UPDATE");
-            dbOperationResult = dataService.SaveToVideoHistory(vid, videoData, true);
-        }
-        else{
-            Debug.Log("Video doesn't exist.....performing an INSERT");
-            dbOperationResult = dataService.SaveToVideoHistory(vid, videoData, false);
-        }
-        return dbOperationResult;
-    }
-
-    ///<summary>
-    /// Queries the DB for a set of rows from the VideoHistory table based on the parameters passed.
-    ///</summary>
-    ///<param name="numOfRows">The number of rows you want returned</param>
-    ///<param name="pageStart">The row you wish the query to start on</param>
-    ///<returns>A Dictionary (string, DO_Video) containing the result of the query.</returns>
-    public Dictionary<string, DO_Video> GetPageOfHistory(int numOfRows, int pageStart ){
-        Dictionary<string, DO_Video> videos = new Dictionary<string, DO_Video>();
-        DO_Video video;
-        IEnumerable<VideoHistory> data = dataService.GetPageOfVideoHistory(numOfRows, pageStart);
-        foreach (var row in data){
-            //Debug.Log(row.video_data);
-            video = JsonUtility.FromJson<DO_Video>(row.video_data);
-            //Debug.Log(video);
-            videos.Add(row.videoId, video);
-        }
-
-        return videos;
-    }
+ 
+   
 
     public void ReportRoundErrors(string gameType, string word, int totalErrors)
     {

@@ -13,10 +13,6 @@ public class CON_GameLoop : AB_Controller
     public override void GetCoworkers(MasterClass newMaster) { model = (MOD_GameLoop)master.GetModel("MOD_GameLoop"); }
     public override void SceneChange(string scene) { master.RequestSceneChange(scene); }
 
-    // TODO: REPLACE THIS BULLSHIT
-    public bool PinGood(int pin) { return model.CheckPin(pin) == 1 ? true : false; }
-    public bool PinsExist() { return model.AdminsRowNumber() > 0 ? true : false; }
-    /////////////////////////////////////////////////////////////////////
 
     public byte[] LoadRandomWordPic(string word) { return model.LoadRandomWordPic(word); }
 
@@ -62,38 +58,8 @@ public class CON_GameLoop : AB_Controller
     /// <returns>bool</returns>
     public bool IsPassLocked() { return model.IsPassLocked(); }
 
-    ///<summary>
-    /// Calls the model to return the contents of the VideoHistory table
-    ///</summary>
-    ///<returns>A sorted Dictionary of a video id with video data</returns>
-    public Dictionary<string, DO_Video> GetVideoHistory(){return model.GetVideoHistory();}
 
-    ///<summary>
-    /// Calls the model to return the number of rows passed starting from the row passed from the VideoHistory table
-    ///</summary>
-    ///<param name="numOfRows">An int representing the number of rows you want returned</param>
-    ///<param name="pageStart">An int representing the row you wish to start the query on. If this value is greater than the number of rows in the table, it will returning nothing.</param>
-    ///<returns>A Dictionary containing the video id's and video data for the rows returned</returns>
-    public Dictionary<string, DO_Video> RequestPageOfVideoHistory(int numOfRows, int pageStart){
-        return model.GetPageOfHistory(numOfRows, pageStart);
-    }
-
-    ///<summary>
-    /// Makes a call to the model to get the count of rows in VideoHistory
-    ///</summary>
-    ///<returns>An int representing the number of rows in the table</returns>
-    public int RequestVideoHistoryCount(){
-        return model.GetVideoHistoryCount();
-    }
-
-    ///<summary>
-    /// Calls the model to save a video to the VideoHistory table
-    ///</summary>
-    ///<returns>An int representing how many rows were updated/inserted</returns>
-    public int SaveVideoToVideoHistory(string vid, DO_Video vData){
-        int result = model.SaveVideoToVideoHistory(vid, vData);
-        return result;
-    }
+ 
 
     public void ReportRoundErrorCount(string gameType, string word, int totalErrors)
     {

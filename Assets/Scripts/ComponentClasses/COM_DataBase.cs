@@ -75,19 +75,6 @@ public class DataService  {
         return _connection.Table<Game_Config>();
     }
 
-    ///<summary> Gets all rows from the Admins table</summary>
-    ///<returns>IEnumerable object of the Admins type</returns>
-
-    public IEnumerable<Admins> GetAdminsTable(){
-		return _connection.Table<Admins>();
-	}
-
-	///<summary>>Gets all rows from the Game_History table</summary>
-	///<returns>IEnumerable object of the Game_History type</returns>
-
-	public IEnumerable<Game_History> GetGameHistoryTable(){
-		return _connection.Table<Game_History>();
-	}
 
 	///<summary>Gets all rows from the Game_Settings table</summary>
 	///<returns>IEnumerable object of the Game_Settings type</returns>
@@ -104,19 +91,9 @@ public class DataService  {
 	}
 
 
-	///<summary>Gets all rows from the User_Stats table</summary>
-	///<returns>IEnumerable object of the User_Stats type</returns>
 
-	public IEnumerable<User_Stats> GetUserStatsTable(){
-		return _connection.Table<User_Stats>();
-	}
 
-	///<summary>Gets all rows from the Users table</summary>
-	///<returns>IEnumerable object of the Users type</returns>
 
-	public IEnumerable<Users> GetUsersTable(){
-		return _connection.Table<Users>();
-	}
 
 	///<summary>Gets all rows from the Words table</summary>
 	///<returns>IEnumerable object of the Word type</returns>
@@ -125,56 +102,10 @@ public class DataService  {
 		return _connection.Table<Words>();
 	}
 
-	///<summary>Gets all rows from the Words_List table</summary>
-	///<returns>IEnumerable object of the Words_List type</returns>
+	
 
-	public IEnumerable<Words_List> GetWordsListTable(){
-		return _connection.Table<Words_List>();
-	}
 
-	///<summary>Get all rows from the VideoHistory table</summary>
-	///<returns>IEnumerable object of the VideoHistory type</returns>
 
-	public IEnumerable<VideoHistory> GetVideoHistories(){
-		return _connection.Table<VideoHistory>();
-	}
-
-//################## Dev Defined DB Calls #######################//
-
-	///<summary>Retrieves all the words from the Words table that have a matching difficulty</summary>
-	///<param name="difficulty">the int value for the word difficulty you want to return</param>
-	///<returns>an IEnumerable containing all the words returned from the query</returns>
-
-	public IEnumerable<Words> GetWordsWithDifficulty(int difficulty){
-		string lowerVal = "0";
-		string upperVal = "1";
-
-		switch(difficulty){
-			case 0: case 1:
-				//Very Easy
-				break;
-			case 2: case 3: case 4:
-				//Easy
-				lowerVal = "2";
-				upperVal = "4";
-				break;
-			case 5: case 6:
-				//Medium
-				lowerVal = "5";
-				upperVal = "6";
-				break;
-			case 7: case 8: case 9: case 10:
-				//Hard
-				lowerVal = "7";
-				upperVal = "10";
-				break;
-			default:
-				//Error
-				break;
-		}
-		string q = "SELECT word_name, word_image, word_sound FROM Words WHERE word_difficulty BETWEEN " + lowerVal + " AND " + upperVal;
-		return _connection.Query<Words>(q);
-	}
 
 	///<summary>Gets all word id's and word name's of all the words in the Words_List table</summary>
 	///<returns>IEnumerable object of the Words type</returns>
@@ -279,30 +210,6 @@ public class DataService  {
 		return hashString.PadLeft(32, '0');
 	}
 
-	///<summary>Checks the admin table if the username and password exist</summary>
-	///<param name="username">the username to search for</param>
-	///<param name="hashedPw">the hashed password used to compare</param>
-	///<returns>a bool on whether the login attempt was successful</returns>
-
-	public bool CheckPassword(string username, string hashedPw){
-		string query = "SELECT admin_name FROM Admins WHERE admin_name = \'" + username + "\' AND admin_pass = \'" + hashedPw + "\'";
-		IEnumerable<Admins> results = _connection.Query<Admins>(query);
-		foreach (var row in results){
-			if (string.Equals(row.admin_name, username, System.StringComparison.OrdinalIgnoreCase)){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	///<summary>Searches the admins table for a single admin username</summary>
-	///<param name="username">the username to search for</param>
-	///<returns>an IEnumerable of all the rows found from the search</returns>
-
-	public IEnumerable<Admins> SearchForAdmin(string username){
-		string query = "SELECT admin_name FROM Admins WHERE admin_name = \'" + username + "\'";
-		return _connection.Query<Admins>(query);
-	}
 
 	///<summary>Inserts a new row into the admins table to create a new admin account</summary>
 	///<param name="username">the username of the new admin</param>
@@ -343,15 +250,6 @@ public class DataService  {
     public int CreateWord(string wordName, string stockCustom, string wordTags, string wordSound, string wordImage){
 		string query = "INSERT INTO Words (word_name, stock_custom, word_tags, word_sound, word_image) VALUES(?, ?, ?, ?, ?)";
 		return _connection.Execute(query, wordName, stockCustom, wordTags, wordSound, wordImage);
-	}
-
-	///<summary>Gets the user's game history based on the user id</summary>
-	///<param name="userId">the user id of the user whose stats you want</param>
-	///<returns>an IEnumerable containing the returned rows from the query</returns>
-
-	public IEnumerable<Game_History> GetUserGameHistory(int userId){
-		string query = "SELECT game_history_id, rounds_completed, words_solved, solve_time, num_tile_moves FROM Game_History WHERE user_id = \'" + userId + "\'";
-		return _connection.Query<Game_History>(query);
 	}
 
 
@@ -587,83 +485,6 @@ public class DataService  {
         string query = "INSERT INTO Admins (pin) VALUES(?)";
         return _connection.Execute(query, pin);
     }
-
-    // TODO: GET RID OF THIS BULLSHIT
-    public int NumberOfPins()
-    {
-        string query = "SELECT COUNT(*) FROM Admins";
-        return _connection.ExecuteScalar<int>(query);
-    }
-
-    public int DoesPinExist(int pin)
-    {
-        string query = "SELECT EXISTS (SELECT * FROM Admins WHERE pin = ? LIMIT 1)";
-        return _connection.ExecuteScalar<int>(query, pin);
-    }
-
-    public int CreateAdminPin(string name, int pin)
-    {
-        string query = "INSERT INTO Admins (admin_name, pin) VALUES(?, ?)";
-        return _connection.Execute(query, name, pin);
-    }
-
-    public int DoesAdminExist(string adminName)
-    {
-        string query = "SELECT EXISTS (SELECT * FROM Admins WHERE admin_name = ? LIMIT 1)";
-        return _connection.ExecuteScalar<int>(query, adminName);
-    }
-
-	///<summary>
-	/// Get's a count of the numer of entries in the VideoHistory table
-	///</summary>
-	///<returns>An int representing the number of entries in the table</returns>
-	public int GetVideoHistoryCount(){
-		string query = "SELECT COUNT(*) FROM VideoHistory";
-		return _connection.ExecuteScalar<int>(query);
-	}
-
-    /// <summary>
-    /// Checks the VideoHistory table for a entry with the given videoId. Returns 1 if found and 0 if not.
-    /// </summary>
-    /// <param name="vid">The videoId to look for</param>
-    /// <returns>int</returns>
-	public int CheckIfVideoHistoryExists(string vid){
-		string query = "SELECT EXISTS (SELECT * FROM VideoHistory WHERE videoId = ? LIMIT 1)";
-        return _connection.ExecuteScalar<int>(query, vid);
-	}
-
-	///<summary>
-	/// Performs either an update or insert on the VideoHistory table depending on the bool value passed.
-	/// If true is passed it performs an update, if false is passed it performs an insert.
-	///</summary>
-	///<param name="vid">A string representing the videoId</param>
-	///<param name="vData">A json string representing the data of the video</param>
-	///<param name="update">A bool used to determine if it should perform an update or an insert</param>
-	///<returns>An int how many rows were successfully updated/inserted</returns>
-	public int SaveToVideoHistory(string vid, string vData, bool update){
-		string query = "";
-		if (update){//If it is an update
-        	query = "UPDATE VideoHistory SET video_data = ? WHERE videoId = ?";
-        	return _connection.Execute(query, vData, vid);
-		}
-		else{//It is an insert
-        	query = "INSERT INTO VideoHistory (videoId, video_data) VALUES (?, ?)";
-        	return _connection.Execute(query, vid, vData);
-		}
-	}
-
-	///<summary>
-	/// Performs a SELECT on the VideoHistory table returning the number of rows you pass, starting on the row you pass.
-	///</summary>
-	///<param name="numOfRows">The number of rows you want returned</param>
-	///<param name="pageStart">The row you want the retrieval to start on. If this number is greater than the number of rows in the table, it will return nothing.</param>
-	///<returns>An IEnumerable<\VideoHistory> object containing the data from the query.</returns>
-	public IEnumerable<VideoHistory> GetPageOfVideoHistory(int numOfRows, int pageStart){
-		string query = "SELECT * FROM VideoHistory LIMIT ? OFFSET ?";
-		return _connection.Query<VideoHistory>(query, numOfRows, pageStart);
-	}
-
-
 
 
 }
