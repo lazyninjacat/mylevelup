@@ -62,8 +62,6 @@ public class DataService  {
         var dbPath = filepath;
 #endif
             _connection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
-        // Debug.Log("Final PATH: " + dbPath);     
-
 	}
 
     //########## Table Return queries - returns all data in each table ##########//
@@ -75,45 +73,29 @@ public class DataService  {
         return _connection.Table<Game_Config>();
     }
 
-
 	///<summary>Gets all rows from the Rewards table</summary>
 	///<returns>IEnumerable object of the Reward type</returns>
-
 	public IEnumerable<Rewards> GetRewardsTable(){
 		return _connection.Table<Rewards>();
 	}
 
-
-
-
-
-
 	///<summary>Gets all rows from the Words table</summary>
 	///<returns>IEnumerable object of the Word type</returns>
-
 	public IEnumerable<Words> GetWordsTable(){
 		return _connection.Table<Words>();
 	}
 
-	
-
-
-
-
 	///<summary>Gets all word id's and word name's of all the words in the Words_List table</summary>
 	///<returns>IEnumerable object of the Words type</returns>
-
 	public IEnumerable<Words> GetWordsInWordsList(){
 		string q = "SELECT Words.word_name, Words.word_image, Words.word_sound FROM Words INNER JOIN Words_List ON Words.word_id = Words_List.word_id";
 		return _connection.Query<Words>(q);
 	}	
 
-
 	///<summary>Inserts a word into the Words_List table</summary>
 	///<param name="wordId">the word_id fk of the word</param>
 	///<param name="wlId">the word_list_id to add the word to
 	///<returns>an int value of how many rows were successfully inserted</returns>
-
 	public int InsertIntoWordList(int wordId, int wlId){
 		string query = "INSERT INTO Words_List (word_id, word_list_id) VALUES(?, ?)";
 		return _connection.Execute(query, wordId, wlId);
@@ -123,7 +105,6 @@ public class DataService  {
 	///<param name="wordId">the word_id of the word to be deleted</param>
 	///<param name="wlId">the word_list_id that the word is to be removed from</param>
 	///<returns>an int value of how many rows were successfully deleted</returns>
-
 	public int DeleteFromWordList(int wordId, int wlId){
 		string query = "DELETE FROM Words_List WHERE word_id = ? AND word_list_id = ?";
 		return _connection.Execute(query, wordId, wlId);
@@ -132,29 +113,14 @@ public class DataService  {
 	///<summary>SQL query to reset the auto increment sequence number back to the value given</summary>
 	///<param name="tableName">the name of the table to reset the sequence number</param>
 	///<param name="resetToInt">the number to reset the sequence to</param>
-
 	public void ReseedTable(string tableName, int resetToInt){
 		string cmd = "UPDATE SQLITE_SEQUENCE SET seq = ? WHERE name = ?";
 		_connection.Execute(cmd, resetToInt, tableName);
 	}
 
-	///<summary>Inserts data collected for a fully played game</summary>
-	///<param name="userId">the user id of the user who played the game</param>
-	///<param name="roundsComplete">the number of rounds completed</param>
-	///<param name="wordsSolved">a string comprised of all the words solved in the game</param>
-	///<param name="solveTime">the amount of time in seconds the game took to complete</param>
-	///<param name="tileMoves">the number of moves it took to complete the game</param>
-	///<returns>an int value to show how many rows were successfully inserted</returns>
-
-	public int InsertIntoGameHistory(int userID, int roundsComplete, string wordsSolved, int solveTime, int tileMoves){
-		string query = "INSERT INTO Game_History (user_id, rounds_completed, words_solved, solve_time, num_tile_moves) VALUES(?, ?, ?, ?, ?)";
-		return _connection.Execute(query, userID, roundsComplete, wordsSolved, solveTime, tileMoves);
-	}
-
 	///<summary>Creates an MD5 hash of a string and returns the string</summary>
 	///<param name="strToEncrypt">the string you want to encrypt</param>
 	///<returns>a hashed string</returns>
-
 	public string Md5Sum(string strToEncrypt){
 		System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
 		byte[] bytes = ue.GetBytes(strToEncrypt);
@@ -173,24 +139,10 @@ public class DataService  {
 		return hashString.PadLeft(32, '0');
 	}
 
-
-	///<summary>Inserts a new row into the admins table to create a new admin account</summary>
-	///<param name="username">the username of the new admin</param>
-	///<param name="hashedPw">the hashed password of the new admin</param>
-	///<param name="email">the associated email for the admin account</param>
-	///<returns>an int representing how many rows were successfully inserted</returns>
-
-	public int CreateAdmin(string username, string hashedPw, string email){
-		string query = "INSERT INTO Admins (admin_name, admin_pass, admin_email) VALUES(?, ?, ?)";
-		return _connection.Execute(query, username, hashedPw, email);
-	}
-
 	///<summary>Checks if a given word already exists in the DB</summary>
 	///<param name="wordToAdd">the word we are checking for existance</param>
 	///<returns>a boolean to signify whether it exists or not</returns>
-
 	public bool CheckWordExistance(string wordToAdd){
-        Debug.Log("Word to check for is " + wordToAdd);
 		string query = "SELECT word_name FROM Words WHERE word_name = \'" + wordToAdd.ToLower() + "\'";
 		IEnumerable<Words> results = _connection.Query<Words>(query);
 		foreach (var row in results){
@@ -207,15 +159,12 @@ public class DataService  {
     ///<parem name="wordTags"> any descriptor tags</parem>
     ///<parem name="wordSound"> filename of word audio clip</parem>
     ///<parem name="wordImage"> filename of primary image</parem>
-
     ///<returns>an int representing how many rows were successfully inserted</returns>
-
     public int CreateWord(string wordName, string stockCustom, string wordTags, string wordSound, string wordImage){
 		string query = "INSERT INTO Words (word_name, stock_custom, word_tags, word_sound, word_image) VALUES(?, ?, ?, ?, ?)";
 		return _connection.Execute(query, wordName, stockCustom, wordTags, wordSound, wordImage);
 	}
-
-
+    
     public IEnumerable<DO_PlayListObject> GetPlayList()
     {
         string query = "SELECT id, order_id, duration, type_id, json, custom_json FROM Play_List";
@@ -224,7 +173,6 @@ public class DataService  {
 
     public int DeleteFromPlayList(int id)
     {
-        Debug.Log("*************************************\n COM: Deleting from play list! \n ********************************");
         string query = "DELETE FROM Play_List WHERE id = ?";
         return _connection.Execute(query, id);
     }
@@ -243,7 +191,6 @@ public class DataService  {
 
     public int ChangeOrderIdValue(int dbId, int newOrderId)
     {
-        Debug.Log(string.Format("DATASERVICE: Changing order id value to {0} for table id {1}", newOrderId, dbId));
         string query = "UPDATE Play_List SET order_id = ? WHERE id = ?";
         return _connection.Execute(query, newOrderId, dbId);
     }
@@ -296,15 +243,6 @@ public class DataService  {
         return _connection.Query<Game_Config>(query);
     }
 
-
-    /*
-    public IEnumerable<PlayList> GetPlayListById(string id)
-    {
-
-    }
-    */
-
-    //int idOfWord, string category, int length, int difficulty, string image, string sound, string imageTwo, string imageThree
     // Edits the data in a database word entry
     public int EditWordEntry(WordDO wordData)
     {
@@ -334,7 +272,6 @@ public class DataService  {
     {
         string query = "SELECT COUNT(total_errors) FROM Mastery WHERE word = ? ";
         return _connection.ExecuteScalar<int>(query, word);
-
     }
 
     public int GetLastIdInWords()
@@ -347,9 +284,7 @@ public class DataService  {
     {
         string query = "SELECT word_id, word_name FROM Words";
         return _connection.Query<Words>(query);
-    }
-
- 
+    }     
 
     public IEnumerable<Words> GetLastById()
     {
@@ -364,7 +299,6 @@ public class DataService  {
     /// <returns>int</returns>
     public int DoesWordIdExist(int id)
     {
-        //Debug.Log("*************************************\n EXIST: Checking if word exists in DB \n ********************************");
         string query = "SELECT EXISTS (SELECT * FROM Words WHERE word_id = ? LIMIT 1)";
         return _connection.ExecuteScalar<int>(query, id);
     }
@@ -436,20 +370,7 @@ public class DataService  {
         string query = "UPDATE Rewards SET reward_url = ? WHERE reward_name = ?";
         return _connection.Execute(query, reward_url, rewardName);
     }
-
-    public int GetUserPin(string user)
-    {
-        string query = "SELECT pin FROM Admins WHERE admin_name = ?";
-        return _connection.ExecuteScalar<int>(query, user);
-    }
-
-    public int InsertPin(int pin)
-    {
-        string query = "INSERT INTO Admins (pin) VALUES(?)";
-        return _connection.Execute(query, pin);
-    }
-
-
+    
 }
 
   /*  © 2018 GitHub, Inc.

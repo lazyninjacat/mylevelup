@@ -15,30 +15,30 @@ using System;
 public class MOD_GameLoop : AB_Model
 {
     private DataService dataService;
-
     private List<DO_PlayListObject> playListData;
     private Dictionary<int, string> wordList;
-
     private int entryMax;
     private int durationMax { get; set; }
     private int loopIterations;
     private bool infiniteLoop;
     private bool passLocked;
     public float totalRoundCount = 0;
-
     private const int REWARD_ID = 1;
 
     /// <summary>
-    /// The constructor for the game loop model.
+    /// This is the constructor for the game loop model.
     /// </summary>
     /// <param name="newMaster"></param>
     public MOD_GameLoop(MasterClass newMaster) : base(newMaster)
     {
         dataService = StartupScript.ds;
+
         GrabListData();
+
         entryMax = playListData.Count;
-        Debug.Log("MOD: Play list data count is " + entryMax.ToString());
+
         GetGameLoopSettings(0);
+
         TotalRoundCount();
     }
 
@@ -73,8 +73,6 @@ public class MOD_GameLoop : AB_Model
     /// <returns>boolean</returns>    
     public bool EndOfPlay(int currentEntryValue)
     {
-        Debug.Log("Current Entry Value = " + currentEntryValue);
-        Debug.Log("Entry max = " + entryMax);
         return currentEntryValue >= entryMax;
     }
 
@@ -96,11 +94,6 @@ public class MOD_GameLoop : AB_Model
     /// <returns>bool</returns>
     public bool IsPassLocked() { return passLocked; }
 
-    // Incomplete methods
-    public AudioClip GetClipByName(string word) { return null; }
-    public Texture GetTextureByName(string word) { return null; }
-    // Incomplete methods
-
     /// <summary>
     /// Grabs all play list and word + word id data from the data service 
     /// and populates the list and dictionary.
@@ -109,16 +102,18 @@ public class MOD_GameLoop : AB_Model
     {
         // Instantiate the play list, populate it and sort
         playListData = new List<DO_PlayListObject>();
+
         playListData = dataService.GetPlayList().ToList();
+
         playListData.Sort();
 
         // Instantiate words list and populate it
         wordList = new Dictionary<int, string>(); 
+
         foreach (var pair in dataService.GetWordsAndIdsOnly())
         {
             wordList.Add(pair.word_id, pair.word_name);
         }
-
     }
 
     /// <summary>
@@ -130,7 +125,9 @@ public class MOD_GameLoop : AB_Model
         foreach (var row in dataService.GetConfigByPlayListId(playListId))
         {
             loopIterations = row.iteration_number;
+
             infiniteLoop = row.infinite_loop == 0 ? false : true;
+
             passLocked = row.pass_locked == 0 ? false : true;
         }
     }
@@ -141,25 +138,14 @@ public class MOD_GameLoop : AB_Model
     /// </summary>
     private void TotalRoundCount()
     {
-        Debug.Log("******************\n MOD: In TotalRoundCount \n**********************");
-
         foreach (DO_PlayListObject entry in playListData)
         {
-            Debug.Log("******************\n MOD: Entry has type id of: " + entry.type_id.ToString() + "\n**********************");
-
             if (entry.type_id != REWARD_ID)
             {
-                Debug.Log("******************\n MOD: Entry Id was not REWARD_ID \n**********************");
                 totalRoundCount = totalRoundCount + entry.duration;
-                Debug.Log("******************\n MOD: Total round count is now: " + totalRoundCount.ToString() + "\n**********************");
             }
         }
-
-        Debug.Log("******************\n MOD: Final round count is: " + totalRoundCount.ToString() + "\n**********************");
-    }
-
- 
-   
+    }    
 
     public void ReportRoundErrors(string gameType, string word, int totalErrors)
     {

@@ -15,32 +15,37 @@ public class MOD_PlayList : AB_Model
     private List<DO_PlayListObject> playListEntries;
     private HashSet<DO_PlayListObject> entryCheckSet;
     private HashSet<int> wordIdCheckSet;
-
     public Dictionary<int, string> wordDict;
     public Dictionary<int, string> rewardDict;
     public Dictionary<int, string> tagsDict;
-
     public List<string> wordTagsList;
     public int loopIterations { get; set; }
     public bool infiniteLoops { get; set; }
     public bool passLocked { get; set; }
-
     public bool creatingNewEntry { get; set; }
     public int activeEntryIndex { get; set; }
 
-    // IMPORTANT: when creating a new activity type make sure to move it into the enum at the end 
+    // IMPORTANT: when creating a new activity type make sure to move it into the enum at the end and insert new cases throughout codebase where necessary
     enum TypeIds { Word_Scramble, Choose_Reward, Flash_Card, Counting_Game, Keyboard_Game, Memory_Cards, Matching_Game, Multiple_Choice, Question_and_Answer, Face_Scramble, Letter_Trace, Sorting, Face_Match, Random };
 
     public MOD_PlayList(MasterClass newMaster) : base(newMaster)
     {
         dataService = StartupScript.ds;
+
         playListEntries = new List<DO_PlayListObject>();
+
         entryCheckSet = new HashSet<DO_PlayListObject>();
+
         wordIdCheckSet = new HashSet<int>();
+
         RetrieveAndSort();
+
         PopulateWordList();
+
         PopulateWordTagList();
+
         PopulateTagsDictionary();
+
         GetGameLoopSettings(0);
     }
 
@@ -50,12 +55,19 @@ public class MOD_PlayList : AB_Model
     }
 
     public List<DO_PlayListObject> GetPlayListObjects() { return playListEntries; }
+
     public int GetDurationValue(int idx) { return playListEntries[idx].duration; }
+
     public string GetJsonData(int idx) { return playListEntries[idx].json; }
+
     public string GetCustomJson(int idx) { return playListEntries[idx].custom_json; }
+
     public string[] GetTypeStrings() { return Enum.GetNames(typeof(TypeIds)); }
+
     public IEnumerable<Words> GetWordsTable() { return dataService.GetWordsTable(); }
+
     public int GetTypeId(string typeStr) { return (int)Enum.Parse(typeof(TypeIds), typeStr.Replace(" ", "_")); }
+
     public string GetTypeString(int typeId) { return Enum.GetName(typeof(TypeIds), typeId); }
 
     /// <summary>
@@ -64,6 +76,7 @@ public class MOD_PlayList : AB_Model
     public void ResetSceneData()
     {
         activeEntryIndex = -1;
+
         creatingNewEntry = false;
     }
 
@@ -80,23 +93,20 @@ public class MOD_PlayList : AB_Model
     /// <returns>bool</returns>
     public bool AddOrEditEntryData(int typeId, int duration, string json, string customJson = null)
     {
-        //Debug.Log("MOD Playlist: AddOrEditEntry method, typeId = " + typeId + ", duration = " + duration + ", json = " + json.ToString());
-
         DO_PlayListObject temp;
 
         // Check if we are creating a new entry
         if (creatingNewEntry)
         {
-            //Debug.Log("Creating New Entry = " + creatingNewEntry);
             temp = new DO_PlayListObject(playListEntries.Count, duration, typeId, json);
 
             if (dataService.AddNewPlayListRow(temp) < 1)
             {
-                //Debug.Log("addnewplaylistrow temp is < 1. returning false. temp = " + temp);
                 return false;
             }
 
             IEnumerable<DO_PlayListObject> tempCollection = dataService.GetLastInsertedRowId(temp.order_id);
+
             int newRowId = -1;
 
             foreach (DO_PlayListObject obj in tempCollection)
@@ -105,12 +115,11 @@ public class MOD_PlayList : AB_Model
             }
 
             temp.id = newRowId;
+
             playListEntries.Add(temp);
         }
         else
         {
-            //Debug.Log("NOT Creating New Entry. bool is set to = " + creatingNewEntry);
-
             temp = new DO_PlayListObject(playListEntries[activeEntryIndex].id, playListEntries[activeEntryIndex].order_id, duration, typeId, json);
 
             if (dataService.EditPlayListRow(temp) < 1)
@@ -123,7 +132,6 @@ public class MOD_PlayList : AB_Model
 
         return true;
     }
-
 
     public bool DeletePlaylist()
     {
@@ -138,7 +146,6 @@ public class MOD_PlayList : AB_Model
         }
     }
 
-
     /// <summary>
     /// Removes an entry from the play list entry list and deletes the corresponding entry from the data base.
     /// Returns false if deletion from the data base is not successful.
@@ -149,12 +156,10 @@ public class MOD_PlayList : AB_Model
     {
         bool pass = false;
 
-        //Debug.Log(string.Format("MOD_PlayList: Removing data with order id of {0}", idx));
         if (dataService.DeleteFromPlayList(playListEntries[idx].id) > 0)
         {
             if (FixOrderIds(idx))
-            {
-                //Debug.Log(string.Format("MOD_PlayList: Dataservice successfully removed entry with order id of {0} and db id of {1}", idx, playListEntries[idx].id));
+            {             
                 // TODO: catch out of bounds exception
                 playListEntries.RemoveAt(idx);
                 pass = true;
@@ -163,18 +168,12 @@ public class MOD_PlayList : AB_Model
 
         if (!pass)
         {
-            Debug.Log(string.Format("MOD_PlayList: Failed to remove data with order id of {0}", idx));
             // TODO: Toss an error
             return false;
         }
 
         return true;
-    }
-
-
-    
-
-
+    }         
 
     /// <summary>
     /// Sets the config data for the game loop. Takes in a number of ints and bools.
@@ -213,7 +212,9 @@ public class MOD_PlayList : AB_Model
         if (dataService.ChangeOrderIdValue(playListEntries[idxA].id, idxB) > 0 && dataService.ChangeOrderIdValue(playListEntries[idxB].id, idxA) > 0)
         {
             var temp = playListEntries[idxA];
+
             playListEntries[idxA] = playListEntries[idxB];
+
             playListEntries[idxB] = temp;
         }
         else
@@ -225,8 +226,7 @@ public class MOD_PlayList : AB_Model
     }
 
     /// <summary>
-    /// Checks if any changes have been made to the data structs in use by this 
-    /// model.
+    /// Checks if any changes have been made to the data structs in use by this model.
     /// </summary>
     public void VerifyData()
     {
@@ -236,29 +236,24 @@ public class MOD_PlayList : AB_Model
         foreach (DO_PlayListObject entry in playListEntries)
         {
             tempCheck = dataService.DoesPlayEntryExist(entry.id);
-            //Debug.Log("************************************** \n VERIFY: TEMP CHECK IS: " + tempCheck.ToString() + "\n@@@@@@@@@@@@@@@@@@@@@@@");
 
             // Check if play list entry is NOT present in database
             if (tempCheck <= 0)
-            {
-                //Debug.Log("************************************** \n VERIFY: tempCheck was less than 0 for entry order id" + entry.order_id.ToString() + "\n !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            {               
                 entryCheckSet.Add(entry);
             }
             else
             {
-                //Debug.Log("************************************** \n VERIFY: tempCheck CLEARED FINE! \n ))))))))))))))))))))))))))))))))))))))");
+                Debug.Log("VERIFY: tempCheck CLEARED!");
             }
         }
 
         // Check if any of the play list objects were flagged as dead
         if (entryCheckSet.Count > 0)
         {
-            //Debug.Log("************************************** \n VERIFY: entryCheckSet had COUNT GREATER THAN 0 \n &&&&&&&&&&&&&&&&&&&&&&&&");
-
             // Remove all dead play list objects from the play entry list
             foreach (DO_PlayListObject entry in entryCheckSet)
-            {
-                //Debug.Log("************************************** \n VERIFY: REMOVING ENTRY of order id " + entry.order_id.ToString() + "\n ******************************");
+            {               
                 playListEntries.Remove(entry);
             }
 
@@ -267,36 +262,34 @@ public class MOD_PlayList : AB_Model
         }
 
         int lastId = -1;
+
         lastId = dataService.GetLastIdInWords();
 
         // Check if a new word id has been added to the word dict
         if (lastId == -1)
         {
-            //Debug.Log("*************************************VERIFY: LAST ID WAS -1!!!!!!");
-            // TODO: ERROR
+            Debug.Log("VERIFY: LAST ID WAS -1!");
+            // TODO: Log an ERROR
         }
         else if (!wordDict.ContainsKey(lastId))
-        {
-            //Debug.Log("************************************** \n VERIFY: WORD LIST DID NOT CONTAIN id of " + lastId.ToString() + "\n %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-
+        {          
             // Re-populate the wordDict if a new id is found
             PopulateWordList();
+
             PopulateWordTagList();
+
             PopulateTagsDictionary();
         }
         else
         {
-            //Debug.Log("*************************************VERIFY: CHECKING WORD ID LIST! \n ^^^^^^^^^^^^^^^^^^^^^^^^");
             // Verify word list if no new id is found to check for removed words
             foreach (var entry in wordDict)
             {
                 tempCheck = dataService.DoesWordIdExist(entry.Key);
-                //Debug.Log("*************************************VERIFY: TEMPCHECK IS NOW " + tempCheck.ToString() + "\n ##############");
 
                 // Check if word is NOT present in data base
                 if (tempCheck <= 0)
                 {
-                    //Debug.Log("*************************************VERIFY: Adding ID TO wordIdCheckSet! \n &&&&&&&&&&&&&&&&&&&");
                     wordIdCheckSet.Add(entry.Key);
                 }
             }
@@ -304,12 +297,9 @@ public class MOD_PlayList : AB_Model
             // Check if any of the word ids were flagged as dead
             if (wordIdCheckSet.Count > 0)
             {
-                //Debug.Log("*************************************VERIFY: wordIdCheckSet count was GREATER THAN 0 \n }}}}}}}}}}}}}}}}}}}}}}}}}}}");
-
                 // Remove all dead ids from the word id/word dictionary
                 foreach (int id in wordIdCheckSet)
                 {
-                    //Debug.Log("*************************************VERIFY: REMOVING word ID of " + id.ToString() + "\n BUUUUUUUUUUUUUUUUUUUUUUUUUUUTTTTTTTTTTTTTTTTTTTTTTTTTTTSSSSS");
                     wordDict.Remove(id);
                 }
 
@@ -319,36 +309,38 @@ public class MOD_PlayList : AB_Model
         }
     }
 
+    public int GetTotalWords()
+    {
+        List<int> wordsTotalList = new List<int>();
+
+        foreach (var row in GetWordsTable())
+        {
+            wordsTotalList.Add(row.word_id);
+        }
+
+        return wordsTotalList.Count;
+    }
+
     /// <summary>
     /// Creates and populates the word id/word Dictionary.
     /// </summary>
     private void PopulateWordList()
     {
-        Debug.Log("MOD_Playlist Populate words list");
         if (wordDict == null)
         {
             wordDict = new Dictionary<int, string>();
-            Debug.Log("wordDict was null!!! created new");
         }
         else if (wordDict.Count > 0)
         {
             wordDict.Clear();
-            Debug.Log("wordDict was not null. cleared!!!");
-
         }
 
         GetWordsTable();
-        Debug.Log("GetWordsTable Testing.");
-
-
 
         foreach (var row in GetWordsTable())
         {
             wordDict.Add(row.word_id, row.word_name);
         }
-
-        Debug.Log("wordDict count = " + wordDict.Count);
-
     }
 
     /// <summary>
@@ -356,28 +348,21 @@ public class MOD_PlayList : AB_Model
     /// </summary>
     private void PopulateWordTagList()
     {
-
-
-        Debug.Log("MOD_Playlist Populate wordTagsList");
         if (wordTagsList == null)
         {
             wordTagsList = new List<string>();
-            Debug.Log("wordTagsList was null!!! created new");
         }
         else if (wordTagsList.Count > 0)
         {
             wordTagsList.Clear();
-            Debug.Log("wordTagsList was not null. cleared!!!");
-
         }
 
-        GetWordsTable();
-        Debug.Log("GetWordsTable Testing.");
-        
+        GetWordsTable();       
 
         foreach (var row in GetWordsTable())
         {
             List<string> tempWordTagsList = row.word_tags.Split(',').ToList();
+
             foreach (string tag in tempWordTagsList)
             {
                 if (!(wordTagsList.Contains(tag) || wordTagsList.Contains(" " + tag)))
@@ -387,44 +372,28 @@ public class MOD_PlayList : AB_Model
             }
 
             tempWordTagsList.Clear();
-            tempWordTagsList = null;
-            
-        }
 
-       
-        foreach (string str in wordTagsList)
-        {
-            Debug.Log(str);
-        }
-
+            tempWordTagsList = null;            
+        }     
     }
 
     private void PopulateTagsDictionary()
     {
-        Debug.Log("MOD_Playlist Populate words list");
         if (tagsDict == null)
         {
             tagsDict = new Dictionary<int, string>();
-            Debug.Log("tagsDict was null!!! created new");
         }
         else if (tagsDict.Count > 0)
         {
             tagsDict.Clear();
-            Debug.Log("tagsDict was not null. cleared!!!");
-
         }
 
         GetWordsTable();
-        Debug.Log("GetWordsTable words table retrieved from database.");
-
-
 
         foreach (var row in GetWordsTable())
         {
             tagsDict.Add(row.word_id, row.word_tags);
         }
-
-        Debug.Log("tagsDict count = " + tagsDict.Count);
     }
 
     private void PopulateRewardList()
@@ -453,25 +422,27 @@ public class MOD_PlayList : AB_Model
         foreach (var row in dataService.GetConfigByPlayListId(playListId))
         {
             loopIterations = row.iteration_number;
+
             infiniteLoops = row.infinite_loop == 0 ? false : true;
+
             passLocked = row.pass_locked == 0 ? false : true;
         }
     }
 
+    /// <summary>
     /// This function is called each time an entry is deleted from the playlist. 
     /// Using the order ids for each entry it shuffles them into their proper order.
     /// </summary>
     private bool FixOrderIds(int idx)
     {
         int startIdx = idx + 1;
+
         bool pass = true;
+
         int failIdx = 0;
 
         for (; startIdx < playListEntries.Count; startIdx++)
-        {
-            Debug.Log("*****\n DB id is " + playListEntries[startIdx].id + "\n*****");
-            Debug.Log("*****\n Order id is " + playListEntries[startIdx].order_id + "\n*****");
-
+        {           
             // Change the order ID of the target playlist entry by -1
             if (dataService.ChangeOrderIdValue(playListEntries[startIdx].id, playListEntries[startIdx].order_id - 1) > 0)
             {
@@ -479,7 +450,7 @@ public class MOD_PlayList : AB_Model
             }
             else
             {
-                //TODO: Insert error lolololol Future Dale will hate me
+                //TODO: Log error
 
                 // Change the failIdx value to match the index value of the failed entry
                 failIdx = startIdx;
@@ -492,8 +463,7 @@ public class MOD_PlayList : AB_Model
             }
         }
 
-        // If any one call to the data service failed then restore all playlist 
-        // entry's order_id value to previous values up to the failIdx entry
+        // If any one call to the data service failed then restore all playlist entry's order_id value to previous values up to the failIdx entry
         if (!pass)
         {
             for (int x = idx + 1; x < failIdx; x++)
@@ -508,8 +478,7 @@ public class MOD_PlayList : AB_Model
     }
 
     /// <summary>
-    /// Retrieves the play list data from the data base and sorts it according to 
-    /// the order id.
+    /// Retrieves the play list data from the data base and sorts it according to the order id.
     /// </summary>
     private void RetrieveAndSort()
     {
@@ -530,10 +499,6 @@ public class MOD_PlayList : AB_Model
 
         playListEntries.Sort();
     }
-
-
-
-    //######################### Choose Reward Functionality #####################
 
     public IEnumerable<Rewards> GetRewardsTable() { return dataService.GetRewardsTable(); }
 }

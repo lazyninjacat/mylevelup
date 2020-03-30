@@ -36,7 +36,6 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private GameObject tagsViewportContent;
     [SerializeField] GameObject playlistMissingRewardModal;
 
-
     // Texts
     [SerializeField] private Text rewardTimeText;
     [SerializeField] private Text autoplaylistEnabledRewardTimeText;
@@ -44,21 +43,17 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private Text tagsText;
     [SerializeField] private Text ratioText;
 
-
     // Buttons
     [SerializeField] private Button addButton;
     [SerializeField] private Button autoPlaylistButton;
-
 
     // Toggles
     [SerializeField] private Toggle infiniteLoopToggle;
     [SerializeField] private Toggle passLocked;
 
-
     // Other
     [SerializeField] private InputField loopNumberField;
     [SerializeField] private Slider rewardTimeSlider;
-
 
     // Constants
     private const string SCRAM = "Word_Scramble";
@@ -99,6 +94,7 @@ public class VW_PlayList : MonoBehaviour
     // Dictionaries
     private Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(); // This dictionary contains the wordID int and wordName string from the words table in the database.
     private Dictionary<int, string> wordIdTagDict = new Dictionary<int, string>(); // This dictionary contains the wordID int and wordTags string from the words table in the database.
+    // TODO: Replace this dictionary with a simple array or list and just use the index instead of the dictionary key.
     private Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>(); // This dictionary is used to contain the index '0-?' ints and the wordID ints, filtered by wordtag. 
     
     // Controller and Model
@@ -108,40 +104,42 @@ public class VW_PlayList : MonoBehaviour
     private bool playlistHasReward;
 
 
-
-
     void Start () {
         // Populate the add new scrollview
         MAS_PlayList tempMaster = (MAS_PlayList)COM_Director.GetMaster("MAS_PlayList");
 
         controller = (CON_PlayList)tempMaster.GetController("CON_PlayList");
-
-        Debug.Log("VW: Starting the play list view!");
-
+        
         // set the playlist has reward bool to false before populating the scroll view. If a reward is present in the playlist it will switch this bool back to true.
         playlistHasReward = false;
 
         SetLoopToggleAndValues();
-        //SetupPlayAndAddNewLists();
 
         if (PlayerPrefs.GetInt("AutoPlaylistOnOffKey") == 0)
         {
             autoPlaylistEnabledPanel.SetActive(false);
+
             SetupPlayAndAddNewLists();
         }
         else
         {
             autoPlaylistEnabledPanel.SetActive(true);
+
             autoplaylistEnabledRewardTimeText.text = PlayerPrefs.GetString("AutoplaylistRewardTimeKey");
+
             autoplaylistEnabledRewardsText.text = PlayerPrefs.GetString("AutoplaylistRewardsKey");
+
             tagsText.text = PlayerPrefs.GetString("CurrentAutoplaylistTags");
 
             addButton.interactable = false;
         }
 
         Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(controller.GetIdToWordsDict());
+
         Dictionary<int, string> wordIdTagDict = new Dictionary<int, string>(controller.GetIdToWordTagsDict());
+
         List<string> selectedWordTagsList = new List<string>();
+
         Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>();
 
 
@@ -152,16 +150,12 @@ public class VW_PlayList : MonoBehaviour
         else
         {
             rewardTime = PlayerPrefs.GetInt("AutoplaylistRewardTimeIntKey");
+
             wordsPerReward = rewardTime;
+        }      
 
-        }
-      
-
-        //maxParts = ((wordsDatabase.Count / wordsPerReward));
-        Debug.Log("maxParts = " + maxParts + ", wordDatabaseCount = " + wordsDatabase.Count);
         RequestData();
     }
-
 
     private void Update()
     {
@@ -169,24 +163,25 @@ public class VW_PlayList : MonoBehaviour
         else
         {
             loopNumberField.interactable = false;
+
             loopNumberField.text = null;
         }                
         
         if (autoPlaylistEnabledPanel.activeSelf)
         {
             addButton.interactable = false;
+
             passcodePanel.SetActive(false);
         }
-    }
-    
-
+    }   
     
     public void OnRewardSliderChange()
     {
         rewardTime = Mathf.RoundToInt(rewardTimeSlider.value);
+
         rewardTimeText.text = rewardTime.ToString();
+
         wordsPerReward = rewardTime;
-        Debug.Log("Setting rewardTime to: " + rewardTime);
     }
 
     // All the open/close methods for the autoplaylist popup modals sequence.
@@ -195,19 +190,27 @@ public class VW_PlayList : MonoBehaviour
         SetRewardTimePanel.SetActive(true);
     }
     public void CloseSetRewardTimePanel() { SetRewardTimePanel.SetActive(false); }
+
     public void OpenSetRatioPanel() { SetRatioPanel.SetActive(true); }
+
     public void CloseSetRatioPanel() { SetRatioPanel.SetActive(false); }
+
     public void OpenSetRewardsPanel() { SetRewardsPanel.SetActive(true); }
+
     public void CloseSetRewardsPanel() { SetRewardsPanel.SetActive(false); }    
+
     public void OpenSetWordTagsPanel() { SetWordTagsPanel.SetActive(true); }
+
     public void CloseSetWordTagsPanel()
     {
-
         selectedWordTagsList = CreateSelectedWordTagsList();
+
         StringBuilder sb = new StringBuilder();
+
         foreach (string str in selectedWordTagsList)
         {
             int tempint = 0;
+
             if (selectedWordTagsList.Count == 1)
             {
                 sb.Append(str);
@@ -217,67 +220,85 @@ public class VW_PlayList : MonoBehaviour
                 if (tempint != selectedWordTagsList.Count)
                 {
                     sb.Append(str + ", ");
+
                     tempint++;
                 }
                 else
                 {
                     sb.Append(str);
-                }
-               
+                }               
             }
         }
-        tagsText.text = sb.ToString();
-        PlayerPrefs.SetString("CurrentAutoplaylistTags", tagsText.text);
-        SetWordTagsPanel.SetActive(false);
 
+        tagsText.text = sb.ToString();
+
+        PlayerPrefs.SetString("CurrentAutoplaylistTags", tagsText.text);
+
+        SetWordTagsPanel.SetActive(false);
     }
+
     public void CloseConfirmAutoplaylistOffModal() { confirmAutoplaylistOffModal.SetActive(false); }
+
     public void CloseRemoveModal() { confirmDeleteModal.SetActive(false); }
+
     public void CloseDeleteSuccessModal() { deleteSuccessModal.SetActive(false); }
-    public void CloseConfirmAutoplaylistOnModal() {
+
+    public void CloseConfirmAutoplaylistOnModal()
+    {
         confirmAutoplaylistOnModal.SetActive(false);
+
         addButton.interactable = true;
     }
+
     public void OpenRemoveModal()
     {
         activePanelIndex = (EventSystem.current.currentSelectedGameObject.transform.parent.GetSiblingIndex());
+
         activePanel = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
-        Debug.Log(string.Format("VW: Index of currently selected panel for removal is {0}", activePanelIndex.ToString()));
+
         confirmDeleteModal.SetActive(true);
     }
+
     public void OpenAddPanel()
     {
         addButton.interactable = false;
+
         addNewPanel.SetActive(true);
     }
+
     public void CloseAddPanel()
     {
         addButton.interactable = true;
+
         addNewPanel.SetActive(false);
     }
     
-
     public void TurnOffAutoPlaylist()
     {
         PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 0);
+
         autoPlaylistEnabledPanel.SetActive(false);
+
         confirmAutoplaylistOffModal.SetActive(false);
+
         ClearPlaylist();
+
         addButton.interactable = true;
+
         passcodePanel.SetActive(true);
+
         controller.ClearData();
     }
-
-
+    
     public void ResetAutoplaylistButton()
     {
         confirmAutoplaylistOnModal.SetActive(true);
     }
     
-
     public void OnAutoPlaylistButton()
     {
         addButton.interactable = false;
+
         autoPlaylistButton.interactable = false;
 
         if ((PlayerPrefs.GetInt("AutoPlaylistOnOffKey") == 0))
@@ -289,61 +310,43 @@ public class VW_PlayList : MonoBehaviour
             confirmAutoplaylistOffModal.SetActive(true);
         }
     }
-
-
+    
     public void BeginCreateAutoplaylist()
     {
         StartCoroutine(BeginCreateAutoplaylistLaunchHelper());
+
         loadingPanel.SetActive(true);
     }
     private IEnumerator BeginCreateAutoplaylistLaunchHelper()
     {
         yield return new WaitForSeconds(2);
+
         CreateAutoPlaylist();
     }
-
-
+    
     /// <summary>
     /// This method executes the auto playlist creation. 
     /// It clears the playlist, create the new entries, and displays the new playlist in the scrollview.
     /// </summary>
     public void CreateAutoPlaylist()
     {
-        Debug.Log("Begin CreateAutoPlaylist Method");
         addButton.interactable = false;
+
         passcodePanel.SetActive(false);
 
         PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 1);
 
         autoPlaylistEnabledPanel.SetActive(true);
 
-        // First clear all existing playlist entries
-        ClearPlaylist();
-
-        //List<int> tempFilteredWordIds = CreateFilteredWordIdList();
-        //Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>();
-        //int tempOrderInt = 0;
-
-        //foreach (int id in tempFilteredWordIds)
-        //{
-        //    OrderedFilteredWordIdsDict.Add(tempOrderInt, id);
-        //    Debug.Log("adding to OrderedWordIdDict, order = " + tempOrderInt + ", wordID = " + id);
-        //    tempOrderInt++;
-        //}
-        //Debug.Log("Done creating orderedwordiddict. count = " + OrderedFilteredWordIdsDict.Count);
-
-        // Then create the list of word IDs filtered by the tags selected by the user in the SetWordTags panel
-        //CreateFilteredWordIdList();
-
+        // Clear all existing playlist entries
+        ClearPlaylist(); 
 
         PlaylistEmptyPanel.SetActive(false);
 
-        // Then we create each of the playlist entries one by one, up to the wordsPerReward.
-        Debug.Log("Begin Create Autoplaylist method");
-
+        // Create each of the playlist entries one by one, up to the wordsPerReward.
         List<int> tempFilteredWordIds = CreateFilteredWordIdList();
-        filteredWordIDListCount = tempFilteredWordIds.Count;
 
+        filteredWordIDListCount = tempFilteredWordIds.Count;
 
         if (wordsPerReward > tempFilteredWordIds.Count)
         {
@@ -352,45 +355,33 @@ public class VW_PlayList : MonoBehaviour
         else
         {
             maxParts = ((tempFilteredWordIds.Count / wordsPerReward));
-
-        }
-        Debug.Log("tempFilteredWordIds count = " + tempFilteredWordIds.Count);
-        Debug.Log("wordsPerReward = " + wordsPerReward);
-        Debug.Log("maxparts = " + maxParts);
-
-      
+        } 
 
         for (int i = 0; i <= maxParts; i++)
         {          
             CreateAutoPlaylistEntries(i);
         }
 
-        Debug.Log("Done Create Autoplaylist method");
-
         loadingPanel.SetActive(false);
-
-        //Display the newly created playlist in the scrollview
-        //SetupPlayAndAddNewLists();
     }
-
 
     private Dictionary<int, int> CreateOrderedWordIDList()
     {
         List<int> tempFilteredWordIds = CreateFilteredWordIdList();
 
         Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>();
+
         int tempOrderInt = 0;
 
         foreach (int id in tempFilteredWordIds)
         {
             OrderedFilteredWordIdsDict.Add(tempOrderInt, id);
-            //Debug.Log("adding to OrderedWordIdDict, order = " + tempOrderInt + ", wordID = " + id);
+
             tempOrderInt++;
         }
-        Debug.Log("Done creating orderedwordiddict. count = " + OrderedFilteredWordIdsDict.Count);
+
         return OrderedFilteredWordIdsDict;
     }
-
 
     /// <summary>
     /// This method creates a filtered word list consisting of the word ID ints from the existing word database 
@@ -398,14 +389,11 @@ public class VW_PlayList : MonoBehaviour
     /// </summary>
     private List<int> CreateFilteredWordIdList()
     {
-        Debug.Log("Begin CreateFilteredWordIdList method");
-
         List<int> filteredWordIntList = new List<int>();
-        // List<string> selectedWordTagsList = CreateSelectedWordTagsList();
-        Dictionary<int, string> wordIdTagDict = new Dictionary<int, string>(controller.GetIdToWordTagsDict());
-        Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(controller.GetIdToWordsDict());
-        Debug.Log("selctedwordtagslist count = " + selectedWordTagsList.Count());
 
+        Dictionary<int, string> wordIdTagDict = new Dictionary<int, string>(controller.GetIdToWordTagsDict());
+
+        Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(controller.GetIdToWordsDict());
 
         foreach (var entry in wordIdTagDict)
         {
@@ -413,45 +401,36 @@ public class VW_PlayList : MonoBehaviour
 
             foreach (string tg in tempTagList)
             {
-                //Debug.Log("tg = " + tg);
-
                 if (!(filteredWordIntList.Contains(entry.Key)))
                 {
-                    //Debug.Log("word id " + entry.Key + " is not in the filteredwordlist yet");
                     if ((selectedWordTagsList.Contains(tg)) || (selectedWordTagsList.Contains(" " + entry.Value)))
                     {
                         filteredWordIntList.Add(entry.Key);
-                        //Debug.Log("adding wordID " + entry.Key + " to filteredWordIdList from tg = " + tg); 
                     }
-                }
-                
-            }
-          
-
+                }                
+            }   
         }
 
         return filteredWordIntList;
-
     }
 
     private void CreateAutoPlaylistEntries(int part)
     {
-        Debug.Log("Beginning CreateAutoPlaylistEntries, part = " + part);
         // Create a choose reward playlist entry, with pre-set reward time (rewardTime) and types (rewardInts)
         List<int> rewardInts = new List<int>();
+
         rewardInts.Add(1);
+
         DO_ChooseReward tempChooseReward = new DO_ChooseReward(CreateRewardIdsList(), rewardTime);
 
         Dictionary<int, int> OrderedFilteredWordIdsDict = CreateOrderedWordIDList();
-        //Debug.Log("OrderedFilteredWordIdsDict count = " + OrderedFilteredWordIdsDict.Count);
 
-        Debug.Log("Words per reward = " + wordsPerReward);
-
-
+        //TODO: code refactor. Replace these nested for loops below
 
         if (part == maxParts)
         {
             int tempint = 0;
+
             for (int i = ((wordsPerReward * part) + 1); i <= filteredWordIDListCount; i++)
             {
                 foreach (var entry in OrderedFilteredWordIdsDict)
@@ -461,10 +440,12 @@ public class VW_PlayList : MonoBehaviour
                         CreateWordLists(entry.Value);
                     }
                 }
+
                 tempint++;
             }
+
             int remainderInt = wordsPerReward - tempint;
-            Debug.Log("remainderInt = " + remainderInt);
+
             for (int i = 1; i <= remainderInt; i++)
             {
                 foreach (var entry in OrderedFilteredWordIdsDict)
@@ -474,9 +455,9 @@ public class VW_PlayList : MonoBehaviour
                         CreateWordLists(entry.Value);
                     }
                 }
+
                 tempint++;
             }
-
         }
         else if (part == 0 && part != maxParts)
         {
@@ -484,15 +465,13 @@ public class VW_PlayList : MonoBehaviour
             {
                 foreach (var entry in OrderedFilteredWordIdsDict)
                 {
-                    //Debug.Log("entry.Key = " + entry.Key + ", forloop i = " + i);
                     if (entry.Key == i)
                     {
                         CreateWordLists(entry.Value);
                     }
                 }
             }
-        }
-        
+        }        
         else
         {
             for (int i = ((wordsPerReward * part) + 1); i <= (wordsPerReward * (part + 1)); i++)
@@ -505,16 +484,10 @@ public class VW_PlayList : MonoBehaviour
                     }
                 }
             }
-        }
-
-        //Debug.Log("About to add a reward playlist entry. rewardTime = " + rewardTime + ", rewards =" );
-        //foreach (int rewardInt in tempChooseReward.rewardIdsList)
-        //{
-        //    Debug.Log("rewardInt " + rewardInt);
-
-        //}
+        }             
 
         controller.CreatingNew();
+
         controller.AddOrEditEntry("Choose Reward", rewardTime, tempChooseReward);
     }
 
@@ -530,80 +503,90 @@ public class VW_PlayList : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        //playListTransform.sizeDelta = new Vector2(playListTransform.rect.width, playListTransform.rect.height - (yOffSet));
+
         ResetActiveVariables();
+
         SetupPlayAndAddNewLists();
+
         OrderedFilteredWordIdsDict.Clear();
-        Debug.Log("Playlist cleared");
-        autoPlaylistButton.interactable = true;
-        
+
+        autoPlaylistButton.interactable = true;        
     }
 
     /// <summary>
-    /// This method creates all of the playlist entries programatically for the autoplaylist feature. 
-    /// First flashcard, then keyboard, then wordscramble.
+    /// This method creates all of the playlist entries programatically for the autoplaylist feature.  
     /// </summary>
     /// <param name="wordInt"></param>
     private void CreateWordLists(int wordInt)
     {
-        Debug.Log("Creating word list and adding playlist entries for word: " + wordInt);
         List<int> AutoWordIds = new List<int>();
+
         AutoWordIds.Add(wordInt);
+
         List<int> AutoWordIdsMatchingGame = new List<int>();
+
         List<int> AutoWordIdsMemoryGame = new List<int>();
-        AutoWordIdsMatchingGame.Add(wordInt);
-        AutoWordIdsMatchingGame.Add(wordInt + 1);
-        AutoWordIdsMatchingGame.Add(wordInt + 2);
 
+        // Create AutoWordIds for the matching game, with the current word and two additional random words.
+        AutoWordIdsMatchingGame.Add(wordInt);        
+        AutoWordIdsMatchingGame.Add(UnityEngine.Random.Range(1, controller.GetTotalWordsCount()));
+        AutoWordIdsMatchingGame.Add(UnityEngine.Random.Range(1, controller.GetTotalWordsCount()));
+
+        // Create AutoWordIds for the memory game, with the current word and one additional random word.
         AutoWordIdsMemoryGame.Add(wordInt);
-        AutoWordIdsMemoryGame.Add(wordInt + 1);
-
-
+        AutoWordIdsMemoryGame.Add(UnityEngine.Random.Range(1, controller.GetTotalWordsCount()));  
 
         controller.CreatingNew();
 
-
         DO_FlashCard tempFlash = new DO_FlashCard(AutoWordIds);
+
         DO_KeyboardGame tempKeyboard = new DO_KeyboardGame(AutoWordIds, true, true, false, true, true);
+
         DO_WordScramble tempScramble = new DO_WordScramble(AutoWordIds);
+
         DO_KeyboardGame tempKeyboardTwo = new DO_KeyboardGame(AutoWordIds, true, true, false, true, false);
+
         DO_MatchingGame matchingGame = new DO_MatchingGame(AutoWordIdsMatchingGame, false, true);
-        DO_MemoryCards memoryCards = new DO_MemoryCards(AutoWordIds, true, true, true);
+
+        DO_MemoryCards memoryCards = new DO_MemoryCards(AutoWordIds, true, false, true);
+
         DO_CountingGame countingGame = new DO_CountingGame(AutoWordIdsMatchingGame, 3, 10, true, true, true, false);
 
-
-        //Debug.Log("******************************************** AutoWordIds:");
         foreach (int wordID in AutoWordIds) { Debug.Log(wordID); }
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Flash Card", AutoWordIds.Count, tempFlash);
+        controller.AddOrEditEntry("Flash Card", 1, tempFlash);
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);      
+        controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboard);      
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
+        controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboardTwo);
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Matching Game", AutoWordIdsMatchingGame.Count, matchingGame);
+        controller.AddOrEditEntry("Matching Game", 1, matchingGame);
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);
+        controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboard);
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
+        controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboardTwo);
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Memory Cards", AutoWordIds.Count, memoryCards);
+        controller.AddOrEditEntry("Word Scramble", 1, tempScramble);
 
         controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);
+        controller.AddOrEditEntry("Matching Game", 1, matchingGame);
 
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
 
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Matching Game", AutoWordIdsMatchingGame.Count, matchingGame);
+        //controller.CreatingNew();
+        //controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);
+
+        //controller.CreatingNew();
+        //controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
+
+        //controller.CreatingNew();
+        //controller.AddOrEditEntry("Matching Game", AutoWordIdsMatchingGame.Count, matchingGame);
 
         //controller.CreatingNew();
         //controller.AddOrEditEntry("Counting Game", AutoWordIds.Count, countingGame);
@@ -619,74 +602,71 @@ public class VW_PlayList : MonoBehaviour
         tempKeyboard = null;
         tempScramble = null;
         tempKeyboardTwo = null;
-
     }
 
     public void AddEntry()
     {
-        // Debug.Log("VW_PL: Trying to add entry of type " + GetAddNewTypeTextString(EventSystem.current.currentSelectedGameObject));
-
         // Set new entry creation flag to true
         controller.CreatingNew();
 
         EventSystem.current.currentSelectedGameObject.GetComponent<Animation>().Play("ButtonWiggleAnim");
 
         string nextScene =  GetAddNewTypeTextString(EventSystem.current.currentSelectedGameObject);
-        StartCoroutine(AddEntryHelper(nextScene));
 
+        StartCoroutine(AddEntryHelper(nextScene));
     }
 
     private IEnumerator AddEntryHelper(string nextScene)
     {
         yield return new WaitForSeconds(1);
-        controller.SceneChange(nextScene);
 
+        controller.SceneChange(nextScene);
     }
 
     public void EditEntry()
     {
         GameObject currentObj = EventSystem.current.currentSelectedGameObject;
-        // Debug.Log("VW_PL: Trying to EDIT entry of type " + GetTypeTextString(currentObj));
 
         controller.EditingEntry();
+
         controller.SetActiveEntryIndex(currentObj.transform.parent.GetSiblingIndex());
 
-        // Debug.Log("VW_PL: Set edit entry flag to true and set active index to " + currentObj.transform.parent.GetSiblingIndex());
         controller.SceneChange(GetTypeTextString(currentObj));
     }
 
     public void RemoveEntry()
     {
-        Debug.Log("VW_PL: Attempting to remove entry at index " + activePanelIndex.ToString());
         if (activePanelIndex > -1)
         {
-            Debug.Log("VW_PL: Active panel index was greater than one. Proceeding to removal.");
             if (controller.RemoveEntryData(activePanelIndex))
             {
-                // Debug.Log("VW_PL: Controller returned true on remove data entry");
                 confirmDeleteModal.SetActive(false);
+
                 deleteSuccessModal.SetActive(true);
 
-                // Destroy the panel belonging to the word entry
                 Destroy(activePanel);
+
                 playListTransform.sizeDelta = new Vector2(playListTransform.rect.width, playListTransform.rect.height - (yOffSet));
+
                 ResetActiveVariables();
             }
             else
             {
-                // TODO: toss an error regarding DB query failure
+                // TODO: log an error regarding DB query failure
             }
         }
         else
         {
-            //TODO: toss an error about active panel index
+            //TODO: log an error about active panel index
         }
     }
 
     public void MoveEntryUp()
     {
         Transform panelParent = EventSystem.current.currentSelectedGameObject.transform.parent;
+
         panelParent.gameObject.GetComponent<Animation>().Play();
+
         int currentIndex = panelParent.GetSiblingIndex();
 
         if (currentIndex > (0))
@@ -697,6 +677,7 @@ public class VW_PlayList : MonoBehaviour
             }
             else
             {
+                // TODO: Log an error
                 Debug.Log("Error in MoveEntryUp method");
             }
         } 
@@ -705,6 +686,7 @@ public class VW_PlayList : MonoBehaviour
     public void MoveEntryDown()
     {
         Transform panelParent = EventSystem.current.currentSelectedGameObject.transform.parent;
+
         panelParent.gameObject.GetComponent<Animation>().Play();
 
         int currentIndex = panelParent.GetSiblingIndex();
@@ -717,12 +699,10 @@ public class VW_PlayList : MonoBehaviour
             }
             else
             {
-                // TODO: toss a db query error
+                // TODO: log a db query error
             }
         } 
-    }
-
-    
+    }    
 
     public void ToggleLoopOptions() { loopNumberField.interactable = passLocked.isOn;  }
     
@@ -734,11 +714,13 @@ public class VW_PlayList : MonoBehaviour
     public void Exit()
     {
         bool success = false;
+
         success = ((controller.SetLoopData(0, infiniteLoopToggle.isOn, loopNumberField.text == "" ? 1 : Int16.Parse(loopNumberField.text), passLocked.isOn)) && (playlistHasReward || ((PlayerPrefs.GetInt("AutoPlaylistOnOffKey")) == 1))) ;
 
         if (!success)
         {
             playlistMissingRewardModal.SetActive(true);
+
             return;
         }
 
@@ -748,37 +730,35 @@ public class VW_PlayList : MonoBehaviour
     private void ResetActiveVariables()
     {
         activePanel = null;
+
         activePanelIndex = -1;
     }
 
     private void SetupPlayAndAddNewLists()
     {
-        Debug.Log("VW_PlayList: Setting up!");
-
         controller.VerifyData();
         
         // Populate the play list scrollview and size it properly
         VerticalLayoutGroup verticalLayout = playListContent.GetComponent<VerticalLayoutGroup>();
 
         GameObject tempPanel;
+
         playListTransform = playListContent.GetComponent<RectTransform>();
+
         float entryNum = 0;
+
         yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
         
         List<DO_PlayListObject> playList = controller.GetPlayList();
-        //Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n VW: COUNT OF PLAY LIST IS " + playList.Count.ToString() + "\n &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 
         if (playList.Count == 0) { PlaylistEmptyPanel.SetActive(true); }
         else { PlaylistEmptyPanel.SetActive(false); }
 
-        //Debug.Log("VW_PlayList: ENTERING FOR for PANELS!");
-
         for (int idx = 0; idx < playList.Count; idx++)
         {
-            //Debug.Log("VW_PlayList: INDEX IS " + idx.ToString());
-
             // Instantiate the new panel and set its text accordingly
             tempPanel = GameObject.Instantiate(playCopyPanel, playListContent.transform, false);
+
             tempPanel.transform.Find("TypeText").GetComponent<Text>().text = controller.GetTypeString(playList[idx].type_id).Replace("_", " ");
 
             if (controller.GetTypeString(playList[idx].type_id) == "Choose_Reward")
@@ -790,51 +770,40 @@ public class VW_PlayList : MonoBehaviour
 
             // Activate the panel and add one to the entry count
             tempPanel.SetActive(true);
-            entryNum += 1;
 
-            
-
+            entryNum += 1;     
         }
 
         // Resize the content box on the Y
         playListTransform.sizeDelta = new Vector2(playListTransform.rect.width, entryNum * yOffSet);
 
-        Debug.Log("VW_PlayList: FINISHED PLAY LIST SETUP!");
-
         // Clear values and populate the add new list scrollview and size it properly
         verticalLayout = addNewContent.GetComponent<VerticalLayoutGroup>();
 
         addNewTransform = addNewContent.GetComponent<RectTransform>();
+
         entryNum = 0;
+
         yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
 
         foreach (string typeStr in controller.GetTypeStrings())
         {
             // Instantiate the new panel and set its text accordingly
             tempPanel = GameObject.Instantiate(buttonCopyPanel, addNewContent.transform, false);
+
             tempPanel.transform.Find("TypeText").GetComponent<Text>().text = typeStr.Replace("_", " ");
-
-
-
 
             if (!CheckType(typeStr))
             {
                 tempPanel.transform.gameObject.GetComponent<Button>().interactable = false;
             }
 
-            /**
-            if (entryNum >= 3)
-            {
-                tempPanel.transform.Find("AddButton").gameObject.GetComponent<Button>().interactable = false;
-            }
-            **/
-
             // Activate the panel and add one to the entry count
             tempPanel.SetActive(true);
+
             entryNum += 1;
         }
         
-        Debug.Log("VW_PlayList: DONE SETUP!");
         // Resize the content box on the Y
         addNewTransform.sizeDelta = new Vector2(addNewTransform.rect.width, entryNum * yOffSet);
     }
@@ -842,12 +811,16 @@ public class VW_PlayList : MonoBehaviour
     private void SetLoopToggleAndValues()
     {
         bool check = controller.CheckIfPassLocked();
+
         passLocked.isOn = check;
+
         loopNumberField.interactable = check;
+
         loopNumberField.text = controller.GetLoopNumber().ToString();
     }
 
     private string GetTypeTextString(GameObject obj) { return obj.transform.parent.Find("TypeText").gameObject.GetComponent<Text>().text.ToLower().Replace(" ", "_"); }
+
     private string GetAddNewTypeTextString(GameObject obj) { return obj.transform.Find("TypeText").gameObject.GetComponent<Text>().text.ToLower().Replace(" ", "_"); }
 
     private bool CheckType(string type)
@@ -855,17 +828,24 @@ public class VW_PlayList : MonoBehaviour
             switch (type)
             {
                 case SCRAM:
+
                 case REWARD:
+
                 case FLASH:
+
                 case KEYB:
+
                 case MATCH:
+
                 case COUNT:
+
                 case MEMORY:
+
                     return true;
+
                 default:
                     return false;
-            }
-    
+            }    
     }
 
     /// <summary>
@@ -876,6 +856,7 @@ public class VW_PlayList : MonoBehaviour
     public static string TidyCase(string sourceStr)
     {
         sourceStr.Trim();
+
         if (!string.IsNullOrEmpty(sourceStr))
         {
             char[] allCharacters = sourceStr.ToCharArray();
@@ -902,16 +883,15 @@ public class VW_PlayList : MonoBehaviour
         }
         return sourceStr;
     }
-
-
+    
     /////////////////////////////// Choose Reward Stuff vvvvvvvvvvvvvvvvvvvvv
-    ///
 
     private void RequestData()
     {
-        Debug.Log("VW_Playlist Sending data request to the controller...");
         Dictionary<int, string> rewardDict = controller.RequestRewards();
+
         List<string> listTags = controller.GetWordTagsList();
+
         Dictionary<int, string> tagsDict = controller.GetIdToWordTagsDict();
 
 
@@ -919,13 +899,17 @@ public class VW_PlayList : MonoBehaviour
         {
             //Create a panel
             GameObject panel = GameObject.Instantiate(rewardPanel, RewardsViewportContent.transform, false);
+
             panel.name = reward.Key.ToString();
+
             GameObject label = panel.transform.Find("Label").gameObject;
+
             label.GetComponent<Text>().text = reward.Value;
+
             label.name = reward.Value.ToString();
 
-
             Toggle t = panel.GetComponent<Toggle>();
+
             t.onValueChanged.AddListener(delegate
             {
                 OnToggleChange(t);
@@ -934,9 +918,13 @@ public class VW_PlayList : MonoBehaviour
             panel.SetActive(true);
 
             GameObject panelImage = panel.transform.Find("Image").gameObject;
+
             RawImage img = panelImage.GetComponent<RawImage>();
+
             Texture2D tx = new Texture2D(PIC_WIDTH, PIC_HEIGHT);
+
             byte[] rewardPic = FileAccessUtil.LoadRewardPic(reward.Value);
+
             //If not a custom reward
             if (rewardPic == null)
             {
@@ -951,33 +939,34 @@ public class VW_PlayList : MonoBehaviour
                 }
                 else
                 {
+                    // TODO: log an error
                     Debug.Log("VW_Playlist Loading custom picture failed.");
                 }
-            }
-
-            
+            }            
         }
 
         foreach (string entry in listTags)
         {
             //Create a panel
             GameObject tPanel = GameObject.Instantiate(tagPanel, tagsViewportContent.transform, false);
+
             tPanel.name = entry;
+
             GameObject tagLabel = tPanel.transform.Find("Label").gameObject;
+
             tagLabel.GetComponent<Text>().text = entry;
+
             tagLabel.name = entry;
 
             Toggle toggleTag = tPanel.GetComponent<Toggle>();
+
             toggleTag.onValueChanged.AddListener(delegate
             {
                 OnToggleTagChange(toggleTag);
             });
 
             tPanel.SetActive(true);
-
-        }
-
-                     
+        }                     
     }
 
     public void OnToggleTagChange(Toggle tagToggleChange)
@@ -1006,7 +995,6 @@ public class VW_PlayList : MonoBehaviour
 
     private List<string> CreateSelectedWordTagsList()
     {
-        //Dictionary<int, string> dict = controller.GetIdToWordTagsDict();
         List<string> tagStrings = new List<string>();
 
         foreach (Transform child in tagsViewportContent.transform)
@@ -1014,25 +1002,12 @@ public class VW_PlayList : MonoBehaviour
             
             if (child.GetComponent<Toggle>().isOn)
             {
-                //Debug.Log(child.name + " tag toggle is on");
                 tagStrings.Add(child.name);
-            }
-            //else
-            //{
-            //    Debug.Log(child.name + " tag is off");
-            //}
-        }
-
-        Debug.Log("*************************************************************Done creating tagStrings list. Count and list items follow: \n Count = " + tagStrings.Count);
-        foreach (string str in tagStrings)
-        {
-            Debug.Log(str);
-        }
-        
+            }           
+        } 
 
         return tagStrings;
     }
-
 
     /// <summary>
     /// Creates and returns a list of reward id integers.
@@ -1041,7 +1016,9 @@ public class VW_PlayList : MonoBehaviour
     private List<int> CreateRewardIdsList()
     {
         Dictionary<int, string> dict = controller.RequestRewards();
+
         List<int> list = new List<int>();
+
         List<string> rewardStrings = new List<string>();
 
         foreach (Transform child in RewardsViewportContent.transform)
@@ -1055,6 +1032,7 @@ public class VW_PlayList : MonoBehaviour
         foreach (var reward in dict)
         {
             int temptint = reward.Key;
+
             if (list.Contains(temptint))
             {
                 rewardStrings.Add(reward.Value);
@@ -1064,18 +1042,16 @@ public class VW_PlayList : MonoBehaviour
 
         string combindedString = string.Join(",", rewardStrings.ToArray());
 
-
         autoplaylistEnabledRewardTimeText.text = rewardTime.ToString();
+
         PlayerPrefs.SetString("AutoplaylistRewardTimeKey", rewardTime.ToString());
+
         PlayerPrefs.SetInt("AutoplaylistRewardTimeIntKey", rewardTime);
+
         autoplaylistEnabledRewardsText.text = combindedString;
+
         PlayerPrefs.SetString("AutoplaylistRewardsKey", combindedString);
-
-
-
 
         return list;
     }
-
-
 }

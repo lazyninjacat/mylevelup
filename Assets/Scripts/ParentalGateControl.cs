@@ -7,47 +7,37 @@ using UnityEngine.SceneManagement;
 public class ParentalGateControl : MonoBehaviour {
 
 	public Text task;
-
 	private string taskDescription;
 	private int correctAnswer;
 	private string textFalseAnswer = "Incorrect, try again\n";
-
     private bool firstTry;
-
 	Delegate callback;
 
     private void Start()
     {
         firstTry = true;
+
         GenerateAndShowTask();
     }
-
-
-
-
-
+          
     public void CheckAnswer(Text userAnswer)
 	{
-        Debug.Log("userAnswer = " + userAnswer.text.ToString() + ", correntAnswer = " + correctAnswer.ToString());
-
         if (userAnswer.text.Equals(correctAnswer.ToString())) 
-		{
-       
+		{       
             Close();
-            InvokeCallback(true);
 
-            //Debug.Log("PARENTAL GATE WAS PASSED!!!");
+            InvokeCallback(true);
         }
         else
 		{
             firstTry = false;
+
             GenerateAndShowTask();
+
             task.GetComponent<Animation>().Play();
+
 			InvokeCallback(false);
-
-			//Debug.Log("PARENTAL GATE ERROR!!!");
 		}
-
 	}
 	
 	public void Close()
@@ -56,13 +46,18 @@ public class ParentalGateControl : MonoBehaviour {
 	}
     private IEnumerator CloseHelper()
     {
-
         task.text = "Correct!";
+
         task.GetComponent<Animation>().Play("ButtonWiggleAnim");
+
         yield return new WaitForSeconds(0.5f);
+
         gameObject.GetComponent<Animation>().Play("ShrinkGoneAnim");
+
         yield return new WaitForSeconds(0.5f);
+
         firstTry = true;
+
         GenerateAndShowTask();
 
         if (SceneManager.GetActiveScene().name == "game_loop")
@@ -72,12 +67,14 @@ public class ParentalGateControl : MonoBehaviour {
         else if (SceneManager.GetActiveScene().name == "admin_login")
         {
             Transform parentalGatePanel = gameObject.transform.parent;
+
             parentalGatePanel.gameObject.SetActive(false);
+
             gameObject.SetActive(false);
+
             SceneManager.LoadScene("admin_menu");
         }
     }
-
 
 	public void Show(Action<bool> callback)
 	{
@@ -90,11 +87,10 @@ public class ParentalGateControl : MonoBehaviour {
 
 	private void GenerateAndShowTask()
 	{
-        Debug.Log("First Try = " + firstTry);
-
         int a = UnityEngine.Random.Range(0, 4);
-		int b = UnityEngine.Random.Range(1, 5);
-		
+
+		int b = UnityEngine.Random.Range(1, 5);	
+        
 		correctAnswer = a + b;
 
         if (firstTry == true)
@@ -121,6 +117,5 @@ public class ParentalGateControl : MonoBehaviour {
 		{
 			this.callback.DynamicInvoke(result);
 		}
-	}
-		
+	}		
 }
