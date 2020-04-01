@@ -89,8 +89,17 @@ public class VW_WordList : MonoBehaviour
 
         foreach (var entry in sortedWordList)
         {
-            List<string> wordTagsList = entry.Value.WordTags.Split(',').ToList();
-            List<string> filterTagsList = filterTags.Split(',').ToList();
+
+            List<string> wordTagsList = new List<string>();
+            List<string> filterTagsList = new List<string>();
+
+            if (entry.Value.WordTags != null)
+            {
+                wordTagsList = entry.Value.WordTags.Split(',').ToList();
+                filterTagsList = filterTags.Split(',').ToList();
+            }
+           
+
 
 
             if (filterTags == "" || filterTags == null)
@@ -98,7 +107,12 @@ public class VW_WordList : MonoBehaviour
                 Debug.Log("No filter tags detected");
                 tempPanel = GameObject.Instantiate(copyPanel, contentRect.transform, false);
                 tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key);
-                tempPanel.transform.GetChild(1).GetComponent<Text>().text = TidyCase(entry.Value.WordTags);
+
+                if (entry.Value.WordTags != null)
+                {
+                    tempPanel.transform.GetChild(1).GetComponent<Text>().text = TidyCase(entry.Value.WordTags);
+                }
+
 
 
                 if (!entry.Value.StockCustom.Equals("custom"))
@@ -128,8 +142,11 @@ public class VW_WordList : MonoBehaviour
                             Debug.Log("wordtaglist contains = " + tag + " for word " + entry.Value.Word_name);
                             tempPanel = GameObject.Instantiate(copyPanel, contentRect.transform, false);
                             tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key);
-                            tempPanel.transform.GetChild(1).GetComponent<Text>().text = TidyCase(entry.Value.WordTags);
 
+                            if (entry.Value.WordTags != null)
+                            {
+                                tempPanel.transform.GetChild(1).GetComponent<Text>().text = TidyCase(entry.Value.WordTags);
+                            }
 
                             if (!entry.Value.StockCustom.Equals("custom"))
                             {
@@ -146,13 +163,13 @@ public class VW_WordList : MonoBehaviour
 
                         }
                     }
-                   
+
                 }
             }
 
-         
 
-            
+
+
         }
 
         tempScrollviewList.Clear();
