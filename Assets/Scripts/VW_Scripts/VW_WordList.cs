@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
+using BestHTTP;
+using OldMoatGames;
 
 public class VW_WordList : MonoBehaviour
 {
@@ -22,7 +24,8 @@ public class VW_WordList : MonoBehaviour
     [SerializeField] Text masteryScoreText;
     [SerializeField] Text playCountText;
 
-
+    [SerializeField] RawImage testImg;
+    [SerializeField] private AnimatedGifPlayer AnimatedGifPlayer;
 
     private static GameObject activePanel = null;
     private static RectTransform contentTransform;
@@ -52,7 +55,22 @@ public class VW_WordList : MonoBehaviour
 
         Debug.Log("VW: Starting the word list view!");
 
+
         DisplayScrollViewWords();
+        AnimatedGifPlayer.FileName = "https://matthewriddett.com/static/mludlc/testing.gif";
+
+    }
+
+    public void DLCButton()
+    {
+        HTTPRequest request = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/test.png"), OnRequestFinished);
+        request.Send();
+    }
+
+    void OnRequestFinished(HTTPRequest request, HTTPResponse response)
+    {
+        Debug.Log("Request Finished! Text received: " + response.DataAsText);
+        testImg.texture = response.DataAsTexture2D;
 
     }
 
