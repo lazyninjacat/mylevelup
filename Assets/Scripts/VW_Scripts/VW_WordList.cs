@@ -5,14 +5,18 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
 using BestHTTP;
-using OldMoatGames;
+using UnityEngine.Networking;
 
 public class VW_WordList : MonoBehaviour
 {
+    
+
+
     private const string MODAL_DEFAULT_TEXT = "Are you sure you want to delete the word {0}?";
     private const string IN_USE_DELETE_TEXT = "The word {0} is currently being used. Removing it will delete some play lists as well. Continue?";
 
-    [SerializeField] GameObject copyPanel;
+    [SerializeField] GameObject wordCopyPanel;
+    [SerializeField] GameObject tagCopyPanel;
     [SerializeField] GameObject contentRect;
     [SerializeField] GameObject deleteModal;
     [SerializeField] GameObject successModal;
@@ -23,17 +27,20 @@ public class VW_WordList : MonoBehaviour
     [SerializeField] Text averageErrorsText;
     [SerializeField] Text masteryScoreText;
     [SerializeField] Text playCountText;
+    [SerializeField] GameObject DLCPanel;
 
-    [SerializeField] RawImage testImg;
-    [SerializeField] private AnimatedGifPlayer AnimatedGifPlayer;
 
     private static GameObject activePanel = null;
     private static RectTransform contentTransform;
     private static float yOffSet = 70;
     private string filterTags = "";
 
+ 
     private MOD_WordEditing model;
     private CON_WordEditing controller;
+
+    // bool to keep track for the WordsTagsToggle
+    private bool isWords = true;
 
 
     // TODO: Finish stats so we can reactivate the button
@@ -57,20 +64,6 @@ public class VW_WordList : MonoBehaviour
 
 
         DisplayScrollViewWords();
-        AnimatedGifPlayer.FileName = "https://matthewriddett.com/static/mludlc/testing.gif";
-
-    }
-
-    public void DLCButton()
-    {
-        HTTPRequest request = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/test.png"), OnRequestFinished);
-        request.Send();
-    }
-
-    void OnRequestFinished(HTTPRequest request, HTTPResponse response)
-    {
-        Debug.Log("Request Finished! Text received: " + response.DataAsText);
-        testImg.texture = response.DataAsTexture2D;
 
     }
 
@@ -123,7 +116,7 @@ public class VW_WordList : MonoBehaviour
             if (filterTags == "" || filterTags == null)
             {
                 Debug.Log("No filter tags detected");
-                tempPanel = GameObject.Instantiate(copyPanel, contentRect.transform, false);
+                tempPanel = GameObject.Instantiate(wordCopyPanel, contentRect.transform, false);
                 tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key);
 
                 if (entry.Value.WordTags != null)
@@ -158,7 +151,7 @@ public class VW_WordList : MonoBehaviour
                         if ((entry.Value.WordTags.Contains(tag)) || (entry.Value.WordTags.Contains(" " + tag)))
                         {
                             Debug.Log("wordtaglist contains = " + tag + " for word " + entry.Value.Word_name);
-                            tempPanel = GameObject.Instantiate(copyPanel, contentRect.transform, false);
+                            tempPanel = GameObject.Instantiate(wordCopyPanel, contentRect.transform, false);
                             tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key);
 
                             if (entry.Value.WordTags != null)
@@ -178,16 +171,10 @@ public class VW_WordList : MonoBehaviour
                             tempPanel.SetActive(true);
                             entryNum += 1;
                             tempScrollviewList.Add(entry.Value.Word_name);
-
                         }
                     }
-
                 }
             }
-
-
-
-
         }
 
         tempScrollviewList.Clear();
@@ -201,9 +188,6 @@ public class VW_WordList : MonoBehaviour
 
     public void OnAddNewfilterTagButton()
     {
-
-
-
 
         if (filterTagsText.text == "" || filterTagsText.text == null)
         {
@@ -363,4 +347,161 @@ public class VW_WordList : MonoBehaviour
         }
         return sourceStr;
     }
+
+
+    public void WordsTagsToggle()
+    {
+        if (isWords)
+        {
+            DisplayScrollViewTags();
+            isWords = false;
+        }
+        else
+        {
+            DisplayScrollViewWords();
+            isWords = true;
+        }
+    }
+
+
+    private void DisplayScrollViewTags()
+    {
+        Debug.Log("Begin DisplayScrollViewTags method");
+
+        // Clear the scroll view
+        foreach (Transform child in contentRect.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+
+
+    }
+
+    public void OpenDLCPanel()
+    {
+        DLCPanel.SetActive(true);
+    }
+    public void CloseDLCPanel()
+    {
+        DLCPanel.SetActive(false);
+    }
+
+
+
+    //////////////////////////////////////////
+    //////////////////////////////////////////
+    // DLC 
+
+    private string tempWordName;
+    private string tempWordTags;
+    private bool doneWordDownloadStep = false;
+    private bool doneImageDownload = false;
+
+    public void VehiclesDLC()
+    {
+        string[] vehicles = { "vehicles", "airplane", "bus", "truck", "car", "scooter", "boat", "bike", "van", "train" };
+        StartCoroutine(DownloadWordSet(vehicles));       
+    }
+
+    private IEnumerator DownloadWordSet(string[] dlcArray)
+    {
+        Debug.Log("Downloading " + dlcArray[0]);
+
+        for (int i = 0; i < dlcArray.Length - 1; i++)
+        {
+            StartCoroutine(DownloadWord(dlcArray[i+1], dlcArray[0]));
+            yield return new WaitUntil(() => doneWordDownloadStep);
+        }
+
+        ResetScrollView();
+    }
+
+    private IEnumerator DownloadWord(string word, string tags)
+    {
+        Debug.Log("Downloading word: " + word);
+        doneWordDownloadStep = false;
+        doneImageDownload = false;
+        tempWordName = word;
+        tempWordTags = tags;
+
+        HTTPRequest request1 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "1.png"), OnRequestFinished1);
+        request1.Send();
+        yield return new WaitUntil(() => doneImageDownload);
+        doneImageDownload = false;
+        HTTPRequest request2 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "2.png"), OnRequestFinished1);
+        request2.Send();
+        yield return new WaitUntil(() => doneImageDownload);
+        doneImageDownload = false;
+        HTTPRequest request3 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "3.png"), OnRequestFinished1);
+        request3.Send();
+        yield return new WaitUntil(() => doneImageDownload);
+        doneImageDownload = false;
+        HTTPRequest request4 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "4.png"), OnRequestFinished1);
+        request4.Send();
+        yield return new WaitUntil(() => doneImageDownload);
+        doneImageDownload = false;
+        HTTPRequest request5 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "5.png"), OnRequestFinished2);
+        request5.Send();
+        yield return new WaitUntil(() => doneImageDownload);
+        doneImageDownload = false;
+        StartCoroutine(DownloadAudioClip(word));
+    }
+
+    void OnRequestFinished1(HTTPRequest request, HTTPResponse response)
+    {
+        Debug.Log("Request Finished! Text received: " + response.DataAsText);
+        controller.SetCurrentTexture(response.DataAsTexture2D);
+        if (controller.IsTextureSet()) {
+            controller.AddNewTexture();
+        }
+        doneImageDownload = true;
+    }
+
+    void OnRequestFinished2(HTTPRequest request, HTTPResponse response)
+    {
+        Debug.Log("Request Finished! Text received: " + response.DataAsText);
+        controller.SetCurrentTexture(response.DataAsTexture2D);
+        if (controller.IsTextureSet())
+        {
+            controller.AddNewTexture();
+        }
+        controller.SaveNewWord(tempWordName, tempWordTags);
+        Debug.Log("Done downloading word: " + tempWordName);
+        controller.ClearTextureList();
+        doneImageDownload = true;
+
+
+    }
+
+    private void ResetScrollView()
+    {
+        DisplayScrollViewWords();
+        DLCPanel.SetActive(false);
+    }
+
+          
+    IEnumerator DownloadAudioClip(string file_name)
+    {
+        string url = "https://matthewriddett.com/static/mludlc/" + file_name + "/" + file_name + ".wav";
+        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        {
+            yield return www.SendWebRequest();
+            if (www.isNetworkError || www.isHttpError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                string savePath = string.Format("{0}/{1}.wav", Application.persistentDataPath + "/WordAudio/", file_name);
+                System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
+            }
+        }
+
+        doneWordDownloadStep = true;
+        
+    }
 }
+
+
+

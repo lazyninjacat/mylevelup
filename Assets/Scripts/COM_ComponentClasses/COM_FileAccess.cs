@@ -42,6 +42,7 @@ public static class FileAccessUtil
     public static bool SaveRewardPic(Texture2D photo, string fileName) { return SavePhotoToDir(photo, fileName, REWARD_PIC_DIRECTORY); }
     public static bool SaveWordPic(Texture2D photo, string fileName) { return SavePhotoToDir(photo, fileName, PICTURE_DIRECTORY); }
     public static bool SaveWordAudio(AudioClip clip, string fileName) { return SaveAudioToDir(clip, fileName, AUDIO_DIRECTORY); }
+    public static bool SaveDLCWordAudio(byte[] audioFile, string fileName) { return SaveDLCAudioToDir(audioFile, fileName, AUDIO_DIRECTORY);  }
 
     // All the public facing Load methods
     public static byte[] LoadRewardPic(string fileName) { return LoadPhotoByDir(fileName, REWARD_PIC_DIRECTORY); }
@@ -235,7 +236,7 @@ public static class FileAccessUtil
     {
         directory = directory + "/" + fileName.ToLower() + "/";
 
-        Debug.Log("*******************\nCOMFILE: NEW DIR IS "+directory+"\n&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        Debug.Log("COMFILE: NEW DIR IS " + directory);
 
         if (!Directory.Exists(directory))
         {
@@ -479,6 +480,21 @@ public static class FileAccessUtil
         File.WriteAllBytes(filePath, bytes);
 
         return File.Exists(filePath);
+    }
+
+    private static bool SaveDLCAudioToDir(byte[] audiofile, string fileName, string fileDir)
+    {
+        if (!Directory.Exists(fileDir))
+        {
+            Directory.CreateDirectory(fileDir);
+        }
+
+        // Get the file path and write bytes to the file
+        string filePath = fileDir + "/" + fileName.ToLower() + ".wav";
+        File.WriteAllBytes(filePath, audiofile);
+
+        return File.Exists(filePath);
+
     }
 
     /// <summary>

@@ -286,8 +286,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1995667619}
   m_HandleRect: {fileID: 1995667618}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1594,7 +1594,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 544929628}
   m_HandleRect: {fileID: 544929627}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3691,9 +3691,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Counting Game has been saved
-
-    successfully.'
+  m_Text: Matching game has been saved.
 --- !u!222 &1142799814
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3774,7 +3772,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Error, could not save Counting Game.
+  m_Text: Error, could not save Matching Game.
 --- !u!222 &1167420437
 CanvasRenderer:
   m_ObjectHideFlags: 0

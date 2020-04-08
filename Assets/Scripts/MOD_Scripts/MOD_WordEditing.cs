@@ -150,6 +150,23 @@ public class MOD_WordEditing : AB_Model
         return false;
     }
 
+
+    public bool SaveDLCAudio(byte[] audioFile, string wordName)
+    {
+        bool audioSuccess = false;
+
+        audioSuccess = FileAccessUtil.SaveDLCWordAudio(audioFile, wordName);
+
+        if (audioSuccess)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     /// <summary>
     /// Creates a new word list entry and saves it to the database and the word list dictionary.
     /// Additionally, it saves any new audio or picture files.
@@ -161,7 +178,8 @@ public class MOD_WordEditing : AB_Model
     {
         string img, sound, tags;
         int rowsInserted;
-        bool audioSuccess = true, photoSuccess = true;
+        bool audioSuccess = true;
+        bool photoSuccess = true;
 
         // Check if the audio file path and photo file paths are active
         if (CurrentClip != null)
@@ -472,7 +490,7 @@ public class MOD_WordEditing : AB_Model
         {
             if (!wordImageNames.Contains(fileName)) {
                 isolatedName = Regex.Split(fileName, PNG_PATTERN);
-                Debug.Log("*********************************\n Saving textures, isolated file name is " +isolatedName[1]+ "\n************************");
+                Debug.Log("Saving textures, isolated file name is " + isolatedName[1]);
                 wordImageNames.Add(isolatedName[1]);
                 x += 1;
             }

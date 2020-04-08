@@ -357,11 +357,14 @@ public class MOD_PlayList : AB_Model
             wordTagsList.Clear();
         }
 
-        GetWordsTable();       
+        GetWordsTable();
+
+        List<string> tempWordTagsList = new List<string>();
+
 
         foreach (var row in GetWordsTable())
         {
-            List<string> tempWordTagsList = row.word_tags.Split(',').ToList();
+            tempWordTagsList = row.word_tags.Split(',').ToList();
 
             foreach (string tag in tempWordTagsList)
             {

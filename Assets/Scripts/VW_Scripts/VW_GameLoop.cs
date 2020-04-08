@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 /// <summary>
 /// This is the View script for the primary Game Loop scene. Some of its
@@ -62,24 +63,7 @@ public class VW_GameLoop : MonoBehaviour {
     [SerializeField] GameObject playlistEmptyPanel;
     [SerializeField] GameObject parentalGatePanel;
 
-    
 
-    ////Previously playing reward video id & time in video
-    //private string previousPlayingVideoId = null;
-    //public string PreviousPlayingVideo {
-    //    get {return previousPlayingVideoId;}
-    //    set {previousPlayingVideoId = value;}
-    //}
-    //private DO_Video previousPlayingVideoData = null;
-    //public DO_Video PreviousPlayingVideoData {
-    //    get {return previousPlayingVideoData;}
-    //    set {previousPlayingVideoData = value;}
-    //}
-    //private int timeInVideo = 0;
-    //public int TimeInVideo {
-    //    get {return timeInVideo;}
-    //    set {timeInVideo = value;}
-    //}
 
     // Use this for initialization
     void Start () {
@@ -119,14 +103,14 @@ public class VW_GameLoop : MonoBehaviour {
         }
         else if (passLocked && frontLocked)
         {
-            Debug.Log("****************************\n COROUTINE START \n***********************************");
+            Debug.Log("PAUSE THEN CONTINUE COROUTINE START");
             StartCoroutine(PauseThenContinue());
         }
         else
         {
-            Debug.Log("****************************\n UPDATING BAR \n***********************************");
+            Debug.Log("UPDATING BAR");
             UpdateProgressBar(0);
-            Debug.Log("****************************\n BAR UPDATED! ACTIVATING CANVASSES \n***********************************");
+            Debug.Log("BAR UPDATED! ACTIVATING CANVASSES");
 
             ActivateDeactivateCanvass(controller.GetPlayEntry(playIndex).type_id);
         }
@@ -136,7 +120,7 @@ public class VW_GameLoop : MonoBehaviour {
         UpdateProgressBar(CalculateRoundsTillReward());
      
 
-        Debug.Log("****************************\n Game Loop View STARTED! \n***********************************");
+        Debug.Log("Game Loop View STARTED!");
 
 
     }
@@ -207,11 +191,6 @@ public class VW_GameLoop : MonoBehaviour {
     /// </summary>
     public void UnpauseGame()
     {
-        //if (activeCanvas != null)
-        //{
-        //    activeCanvas.SetActive(true);
-        //}
-
         quitModal.SetActive(false);
     }
 
@@ -219,12 +198,7 @@ public class VW_GameLoop : MonoBehaviour {
     /// Activates the quit model and deactivates the current active canvas
     /// </summary>
     public void PauseGame()
-    {
-        //if (activeCanvas != null)
-        //{
-        //    activeCanvas.SetActive(false);
-        //}
-
+    { 
         quitModal.SetActive(true);
     }
 
@@ -250,25 +224,26 @@ public class VW_GameLoop : MonoBehaviour {
             audioSource.clip = tempClip;
             audioSource.Play();
         }
+     
         else
         {
             tempClip = Resources.Load<AudioClip>("Sound/" + word);
-
           
-               if (tempClip != null)
-                    {
-                        audioSource.clip = tempClip;
-                        audioSource.Play();
-                    }
-                    else
-                    {
-                        //Do nothing
-                    }
-
+            if (tempClip != null)
+            {
                 audioSource.clip = tempClip;
-            audioSource.Play();
+                audioSource.Play();
+            }
+            else
+            {
+                Debug.Log("No audioclip found");
+            }
+
+            //audioSource.clip = tempClip;
+            //audioSource.Play();
         }
     }
+
 
     /// <summary>
     /// This function takes the name of an image (usually the word itself), a RawImage Game Object, 

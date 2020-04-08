@@ -98,6 +98,13 @@ public class CON_WordEditing : AB_Controller
     public void SetCurrentClip(AudioClip clip) { model.CurrentClip = clip; }
 
     /// <summary>
+    /// Saves a downloaded audio file.
+    /// </summary>
+    /// <param name="audioFile"></param>
+    /// <param name="wordName"></param>
+    public void SaveDLCAudioClip(byte[] audioFile, string wordName) { model.SaveDLCAudio(audioFile, wordName);  }
+
+    /// <summary>
     /// Sets the target word to the provided value.
     /// </summary>
     /// <param name="word"></param>
@@ -170,12 +177,20 @@ public class CON_WordEditing : AB_Controller
     public bool WordInUse(int id) { return model.inUseWordIds.Contains(id); }
 
     public void AddNewTexture() { model.AddNewTexture(); }
+
     public void DeleteInvalidPlayEntries() { model.DeleteInvalidPlayEntries(); }
+
     public void PopulateInUseSet() { model.PopulateInUseSet(); }
+
     public void ClearTextureList() { model.ClearTextureList(); }
+
     public bool RetrievePictures(string word) { return model.RetrieveSavedPics(word); }
+
     public int SaveTextures(string word) { return model.SaveTextures(word); }
+
     public List<Texture2D> GetImages() { return model.GetImageList(); }
+
     public List<Texture2D> GetStockImages() { return model.GetStockImageList(); }
+
     public bool AreTexturesPresent() { return model.AreTexturesPresent(); } 
 }

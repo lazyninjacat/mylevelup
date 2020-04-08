@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using EasyMobile;
+using BestHTTP;
 
 public class VW_WordEditAdd : MonoBehaviour
 {
@@ -62,7 +63,6 @@ public class VW_WordEditAdd : MonoBehaviour
         model = (MOD_WordEditing)tempMaster.GetModel("MOD_WordEditing");
         controller = (CON_WordEditing)tempMaster.GetController("CON_WordEditing");
         activeButtons = 0;
-
         CleanUpScroll();
         EditOrAdd();
         CleanUpScroll();
@@ -83,8 +83,25 @@ public class VW_WordEditAdd : MonoBehaviour
             cameraAccessButton.interactable = false;
             micAccessButton.interactable = false;
         }
+
+        wordTags = wordTagsText.text;
     }
 
+    public void DLCButton()
+    {       
+        HTTPRequest request = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/test.png"), OnRequestFinished);
+        request.Send();        
+    }
+
+    void OnRequestFinished(HTTPRequest request, HTTPResponse response)
+    {
+        Debug.Log("Request Finished! Text received: " + response.DataAsText);
+        controller.SetCurrentTexture(response.DataAsTexture2D);
+        galleryCameraModal.SetActive(false);
+        saveButton.interactable = true;
+        CleanUpScroll();
+        DisplayGallery(); 
+    }
 
     private void SetUpWordTags()
     {
@@ -94,8 +111,6 @@ public class VW_WordEditAdd : MonoBehaviour
         Debug.Log("GetTargetWordTags = " + wordTags);
         wordTagsText.text = wordTags;
         Debug.Log("word tags = " + wordTagsText.text);
-
-
     }
 
 
@@ -134,7 +149,7 @@ public class VW_WordEditAdd : MonoBehaviour
     public void StartSave()
     {
         loadingAnimPanel.SetActive(true);
-        Debug.Log("loadingAnimPanel Active? " + loadingAnimPanel.activeSelf);
+        Debug.Log("loadingAnimPanel Active = " + loadingAnimPanel.activeSelf);
         Save();
     }
 
@@ -142,7 +157,7 @@ public class VW_WordEditAdd : MonoBehaviour
     {        
         string word;
 
-        if (controller.IsEditSettings)
+        if (controller.IsEditSettings) // if the word is being edited (i.e. not new)
         {
             // Check if any changes have been made. 
             if (controller.GetCurrentClip() == null && controller.GetImages().Count == 0 && !imageDeleted && (wordTags == wordTagsOriginal))
@@ -172,40 +187,30 @@ public class VW_WordEditAdd : MonoBehaviour
                 textModal.transform.GetChild(0).GetComponent<Text>().text = string.Format(MODAL_MISSING_DATA);
             }
         }
-        else
+        else // the word is new (i.e. not an existing word being edited)
         {
             word = controller.GetTargetWord();
 
             if (controller.DoesDbEntryExist(word))
-            {
-               
+            {               
                 loadingAnimPanel.SetActive(false);
                 textModal.transform.GetChild(0).GetComponent<Text>().text = word + " already exists\n\n(Click to try again)";
-
-
-
                 EnableErrorModal();
-
             }
             else
             {
                 if (controller.SaveNewWord(word, wordTags) || imageDeleted)
                 {
-
                     //Handle UI changes to notify success and set-up popup for additional options
                     textModal.transform.GetChild(0).GetComponent<Text>().text = string.Format(MODAL_ADD_TEXT, TidyCase(word));
                     loadingAnimPanel.SetActive(false);
-
                     EnableAddModal();
-
                 }
                 else
                 {
                     textModal.transform.GetChild(0).GetComponent<Text>().text = "Something went horribly wrong";
                     loadingAnimPanel.SetActive(false);
-
                     EnableErrorModal();
-
                     // TODO: add proper error handling
                 }
             }
@@ -597,6 +602,8 @@ public class VW_WordEditAdd : MonoBehaviour
         Debug.Log("gallery button ///////////////////************************************");
 
     }
+
+
 
     private void PickFromGalleryCallback(string error, MediaResult[] results)
     {

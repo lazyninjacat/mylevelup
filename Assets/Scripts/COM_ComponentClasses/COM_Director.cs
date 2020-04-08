@@ -97,7 +97,9 @@ public static class COM_Director {
         masterPool.Add("MAS_RewardsList", new MAS_RewardsList());
 
         masterPool.Add("MAS_Admin", new MAS_Admin());
-        
+
+
+
         // TODO: Tie this to a config or something.
 
         // Add the Admin domain master and the scenes it is attached to
@@ -128,6 +130,7 @@ public static class COM_Director {
         sceneDomains.Add("image_camera", value);
 
         sceneDomains.Add("record_audio", value);
+
 
         // Add the PlayList domain master and the scenes it is attached to
         value = "MAS_PlayList";

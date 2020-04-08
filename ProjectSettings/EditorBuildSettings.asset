@@ -71,4 +71,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/matching_game.unity
     guid: 304c2b6634b4fe746be785eacb49f659
+  - enabled: 1
+    path: Assets/Scenes/words_DLC.unity
+    guid: 6782856d3f5c8b048b001269d9f9a6b3
   m_configObjects: {}
