@@ -404,6 +404,13 @@ public class VW_WordList : MonoBehaviour
         StartCoroutine(DownloadWordSet(vehicles));       
     }
 
+    public void FoodDLC()
+    {
+        string[] food = { "food", "apple", "banana", "broccoli", "cake", "candy", "carrot", "celery", "cereal", "cheese", "cherry", "cookie", "milk", "orange", "peach", "peas", "pepper", "potato", "strawberry" };
+        StartCoroutine(DownloadWordSet(food));
+    }
+
+
     private IEnumerator DownloadWordSet(string[] dlcArray)
     {
         Debug.Log("Downloading " + dlcArray[0]);
@@ -417,13 +424,13 @@ public class VW_WordList : MonoBehaviour
         ResetScrollView();
     }
 
-    private IEnumerator DownloadWord(string word, string tags)
+    private IEnumerator DownloadWord(string word, string tag)
     {
         Debug.Log("Downloading word: " + word);
         doneWordDownloadStep = false;
         doneImageDownload = false;
         tempWordName = word;
-        tempWordTags = tags;
+        tempWordTags = tag;
 
         HTTPRequest request1 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "1.png"), OnRequestFinished1);
         request1.Send();
@@ -483,7 +490,7 @@ public class VW_WordList : MonoBehaviour
           
     IEnumerator DownloadAudioClip(string file_name)
     {
-        string url = "https://matthewriddett.com/static/mludlc/" + file_name + "/" + file_name + ".wav";
+        string url = "https://matthewriddett.com/static/mludlc/" + "Sound/" + file_name + ".wav";
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
             yield return www.SendWebRequest();
