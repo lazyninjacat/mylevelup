@@ -397,31 +397,65 @@ public class VW_WordList : MonoBehaviour
     private string tempWordTags;
     private bool doneWordDownloadStep = false;
     private bool doneImageDownload = false;
+    private bool isDoneWordSetDataDownload;
+    private string[] wordSetArray;
+    private string wordSetString;
+    private bool isWordSetArrayFinished;
 
     public void VehiclesDLC()
     {
-        string[] vehicles = { "vehicles", "airplane", "bus", "truck", "car", "scooter", "boat", "bike", "van", "train" };
-        StartCoroutine(DownloadWordSet(vehicles));       
+        StartCoroutine(DownloadWordSet("vehicle"));       
     }
 
     public void FoodDLC()
-    {
-        string[] food = { "food", "apple", "banana", "broccoli", "cake", "candy", "carrot", "celery", "cereal", "cheese", "cherry", "cookie", "milk", "orange", "peach", "peas", "pepper", "potato", "strawberry" };
-        StartCoroutine(DownloadWordSet(food));
+    {       
+        StartCoroutine(DownloadWordSet("food"));
     }
 
 
-    private IEnumerator DownloadWordSet(string[] dlcArray)
+    private IEnumerator DownloadWordSet(string wordSetName)
     {
-        Debug.Log("Downloading " + dlcArray[0]);
+        Debug.Log("Downloading " + wordSetName);
 
-        for (int i = 0; i < dlcArray.Length - 1; i++)
+        //get the word set data
+        StartCoroutine(DownloadWordSetDataText(wordSetName));
+        yield return new WaitUntil(() => isDoneWordSetDataDownload);
+
+        //download each word in the set based on the word set data
+        for (int i = 0; i < wordSetArray.Length; i++)
         {
-            StartCoroutine(DownloadWord(dlcArray[i+1], dlcArray[0]));
+            StartCoroutine(DownloadWord(wordSetArray[i], wordSetName));
             yield return new WaitUntil(() => doneWordDownloadStep);
         }
 
+        //clear the wordSetArray.
+        wordSetArray = null;
+
         ResetScrollView();
+    }
+
+   
+
+    private IEnumerator DownloadWordSetDataText(string wordSetName)
+    {
+        isDoneWordSetDataDownload = false;
+        isWordSetArrayFinished = false;
+        Debug.Log("Starting download word set data text coroutine");
+        HTTPRequest requestWordSetData = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/WordSets/" + wordSetName + ".txt"), OnRequestWordSetDataFinished);
+        requestWordSetData.Send();
+        yield return new WaitUntil(() => isDoneWordSetDataDownload);
+        Debug.Log("Done word set data textfile download");
+        //move on to the next download step
+
+
+    }
+
+    void OnRequestWordSetDataFinished(HTTPRequest request, HTTPResponse response)
+    {
+        Debug.Log("RequestWordSetData Finished! Text received: " + response.DataAsText);
+        //create the word set array from the comma seperated list in the word set data textfile.
+        wordSetArray = response.DataAsText.Split(',').ToArray();
+        isDoneWordSetDataDownload = true;
     }
 
     private IEnumerator DownloadWord(string word, string tag)
@@ -432,23 +466,25 @@ public class VW_WordList : MonoBehaviour
         tempWordName = word;
         tempWordTags = tag;
 
-        HTTPRequest request1 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "1.png"), OnRequestFinished1);
+
+        // Download this word's images
+        HTTPRequest request1 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "1.png"), OnRequestFinished1);
         request1.Send();
         yield return new WaitUntil(() => doneImageDownload);
         doneImageDownload = false;
-        HTTPRequest request2 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "2.png"), OnRequestFinished1);
+        HTTPRequest request2 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "2.png"), OnRequestFinished1);
         request2.Send();
         yield return new WaitUntil(() => doneImageDownload);
         doneImageDownload = false;
-        HTTPRequest request3 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "3.png"), OnRequestFinished1);
+        HTTPRequest request3 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "3.png"), OnRequestFinished1);
         request3.Send();
         yield return new WaitUntil(() => doneImageDownload);
         doneImageDownload = false;
-        HTTPRequest request4 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "4.png"), OnRequestFinished1);
+        HTTPRequest request4 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "4.png"), OnRequestFinished1);
         request4.Send();
         yield return new WaitUntil(() => doneImageDownload);
         doneImageDownload = false;
-        HTTPRequest request5 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/" + word + "/" + word + "5.png"), OnRequestFinished2);
+        HTTPRequest request5 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "5.png"), OnRequestFinished2);
         request5.Send();
         yield return new WaitUntil(() => doneImageDownload);
         doneImageDownload = false;
