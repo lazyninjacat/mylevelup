@@ -401,17 +401,16 @@ public class VW_WordList : MonoBehaviour
     private string[] wordSetArray;
     private string wordSetString;
     private bool isWordSetArrayFinished;
+    [SerializeField] GameObject DownloadProgressPanel;
+    [SerializeField] Image DownloadProgressBar;
+ 
 
-    public void VehiclesDLC()
+    public void DLCButton(string wordset)
     {
-        StartCoroutine(DownloadWordSet("vehicle"));       
+        DownloadProgressPanel.SetActive(true);
+        DownloadProgressBar.fillAmount = 0;
+        StartCoroutine(DownloadWordSet(wordset));
     }
-
-    public void FoodDLC()
-    {       
-        StartCoroutine(DownloadWordSet("food"));
-    }
-
 
     private IEnumerator DownloadWordSet(string wordSetName)
     {
@@ -424,14 +423,30 @@ public class VW_WordList : MonoBehaviour
         //download each word in the set based on the word set data
         for (int i = 0; i < wordSetArray.Length; i++)
         {
-            StartCoroutine(DownloadWord(wordSetArray[i], wordSetName));
-            yield return new WaitUntil(() => doneWordDownloadStep);
+            if (controller.DoesDbEntryExist(wordSetArray[i]) == false)
+            {
+                StartCoroutine(DownloadWord(wordSetArray[i], wordSetName));
+                yield return new WaitUntil(() => doneWordDownloadStep);
+            }
+            else
+            {
+                Debug.Log(wordSetArray[i] + " already exists in the database.");
+            }
+
+            if (i > 0)
+            {
+                DownloadProgressBar.fillAmount = (i / (wordSetArray.Length - 1));
+
+            }
+
+
         }
 
         //clear the wordSetArray.
         wordSetArray = null;
-
+        DownloadProgressPanel.SetActive(false);
         ResetScrollView();
+        controller.ClearData();
     }
 
    
@@ -526,7 +541,7 @@ public class VW_WordList : MonoBehaviour
           
     IEnumerator DownloadAudioClip(string file_name)
     {
-        string url = "https://matthewriddett.com/static/mludlc/" + "Sound/" + file_name + ".wav";
+        string url = "https://matthewriddett.com/static/mludlc/" + "sound/" + file_name + ".wav";
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
             yield return www.SendWebRequest();
