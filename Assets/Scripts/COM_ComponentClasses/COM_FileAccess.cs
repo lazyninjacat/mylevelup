@@ -142,10 +142,12 @@ public static class FileAccessUtil
         if (!Directory.Exists(directory))
         {
             //TODO: User feedback of failed attempt
+            Debug.Log("Attempting to delete non existent directory for " + directory);
             return true;
         }
         else
         {
+            Debug.Log("Deleting directory for " + directory);
             Directory.Delete(directory);
             return !Directory.Exists(directory);
         }

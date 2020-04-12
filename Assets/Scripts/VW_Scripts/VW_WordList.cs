@@ -23,19 +23,36 @@ public class VW_WordList : MonoBehaviour
     [SerializeField] GameObject viewDataModal;
     [SerializeField] InputField filterTagsInputField;
     [SerializeField] Text filterTagsText;
-    [SerializeField] private GameObject filterTagsPanel;
+    [SerializeField] GameObject filterTagsPanel;
     [SerializeField] Text averageErrorsText;
     [SerializeField] Text masteryScoreText;
     [SerializeField] Text playCountText;
     [SerializeField] GameObject DLCPanel;
+    [SerializeField] GameObject DownloadProgressPanel;
+    [SerializeField] Image DownloadProgressBar;
+    [SerializeField] GameObject DeleteTagWordsModal;
+
+    [SerializeField] Text DeleteTagWordsModalMessageText;
 
 
+    private string tagWordsToDelete = "";
+
+    private string tempWordName;
+    private string tempWordTags;
+    private bool doneWordDownloadStep = false;
+    private bool doneImageDownload = false;
+    private bool isDoneWordSetDataDownload;
+    private string[] wordSetArray;
+    private string wordSetString;
+    private bool isWordSetArrayFinished;
     private static GameObject activePanel = null;
     private static RectTransform contentTransform;
     private static float yOffSet = 70;
     private string filterTags = "";
 
- 
+    private List<string> WordsForDeleteList = new List<string>();
+
+
     private MOD_WordEditing model;
     private CON_WordEditing controller;
 
@@ -115,7 +132,7 @@ public class VW_WordList : MonoBehaviour
 
             if (filterTags == "" || filterTags == null)
             {
-                Debug.Log("No filter tags detected");
+                //Debug.Log("No filter tags detected");
                 tempPanel = GameObject.Instantiate(wordCopyPanel, contentRect.transform, false);
                 tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key);
 
@@ -374,8 +391,148 @@ public class VW_WordList : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+        GameObject tempPanel;
+        contentTransform = contentRect.GetComponent<RectTransform>();
+        float entryNum = 0;
+
+        // Create a sorted word list of the existing word database
+        SortedDictionary<string, WordDO> sortedWordList = new SortedDictionary<string, WordDO>(controller.GetListCopy());
+
+        List<string> tempScrollviewList = new List<string>();
+
+        // Dictionary, where Key is the tag and Value is the word list
+        Dictionary<string, List<string>> TagToWordListDictionary = new Dictionary<string, List<string>>();
 
 
+        //Create the tags to words dictionary
+        // go through the sortedWordList and check each for tags
+        foreach (var entry in sortedWordList)
+        {
+
+            List<string> tempWordTagsList = new List<string>();
+            List<string> tempWordsList = new List<string>();
+
+            if (entry.Value.WordTags != null)
+            {
+                tempWordTagsList = entry.Value.WordTags.Split(',').ToList();
+                foreach (string tag in tempWordTagsList)
+                {
+                    if (TagToWordListDictionary.ContainsKey(tag))
+                    {
+                        Debug.Log("wordTagsDictionary already contains " + tag + ". Adding word to tag dictionary key.");
+                        Debug.Log("before adding, existing tag wordlist count that shouldn't be 0 actually = " + TagToWordListDictionary[tag].Count);
+
+                        foreach (string word in TagToWordListDictionary[tag])
+                        {
+                            Debug.Log("before adding, includes: " + word);
+                        }
+                        TagToWordListDictionary[tag].Add(entry.Value.Word_name);
+                        Debug.Log("Existing tag's current wordlist count = " + TagToWordListDictionary[tag].Count);
+                        foreach (string word in TagToWordListDictionary[tag])
+                        {
+                            Debug.Log("after adding, includes: " + word);
+                        }                  
+                                            
+                    }
+                    else
+                    {
+                        Debug.Log("New tag entry for TagToWordListDictionary = " + tag);
+                      
+                        tempWordsList.Add(entry.Value.Word_name);
+                        Debug.Log("New entry, tempWordsList count that should be 1 actually = " + tempWordsList.Count);
+                        TagToWordListDictionary.Add(tag, tempWordsList);
+                        Debug.Log("New tag's current wordlist count = " + TagToWordListDictionary[tag].Count);
+
+                        foreach (string word in TagToWordListDictionary[tag])
+                        {
+                            Debug.Log("includes: " + word);
+                        }
+
+                   
+
+                    }
+
+                    Debug.Log("TagToWordlist entry count for " + tag + " = " + TagToWordListDictionary[tag].Count);
+              
+                    Debug.Log("Done with tag:" + tag + " in word:" + entry.Value.Word_name);
+                }
+                Debug.Log("Clearing the tempwordlist and temp wordtaglslist");
+               
+            }
+        }
+      
+        foreach (var entry in TagToWordListDictionary)
+        {
+            //Debug.Log("tag = " + tag);
+            if (!tempScrollviewList.Contains(entry.Key))
+            {
+                //Debug.Log(entry.Value.Word_name + " is not yet in the tempscrollviewlist");
+
+                tempPanel = GameObject.Instantiate(tagCopyPanel, contentRect.transform, false);
+                tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key);
+
+                string tempTagWords = "";
+
+                foreach (string word in entry.Value)
+                {
+                    if (tempTagWords != "")
+                    {
+                        tempTagWords = tempTagWords + ", " + word;
+                        Debug.Log("adding " + word + " to tempwordtags string");
+                    }
+                    else
+                    {
+                        tempTagWords = word;
+                        Debug.Log("adding " + word + " to temptagwords string. tempwordtage string now = " + tempTagWords);
+
+                    }
+                }
+                tempPanel.transform.GetChild(1).GetComponent<Text>().text = tempTagWords;                
+                tempPanel.name = entry.Key;
+                tempPanel.SetActive(true);
+                entryNum += 1;
+                tempScrollviewList.Add(entry.Key);
+            }
+        }
+
+        tempScrollviewList.Clear();
+        tempScrollviewList = null;
+        sortedWordList.Clear();
+
+        contentTransform.sizeDelta = new Vector2(contentTransform.rect.width, entryNum * yOffSet);
+
+
+    }
+
+
+    public void DeleteTagButton()
+    {
+        DeleteTagWordsModal.SetActive(true);
+        DeleteTagWordsModalMessageText.text = "Are you sure you want to delete all words with the tag '" + EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(0).GetComponent<Text>().text.ToString() + "'?";
+        tagWordsToDelete = EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(1).GetComponent<Text>().text.ToString();
+        Debug.Log("Pressed delete button on tag: " + EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(1).GetComponent<Text>().text.ToString());
+    }
+
+    public void CloseDeleteTagWordsModal()
+    {
+        DeleteTagWordsModal.SetActive(false);
+    }
+
+
+    public void DeleteAllTagWords()
+    {
+        WordsForDeleteList = tagWordsToDelete.Split(',').ToList();
+        foreach (string word in WordsForDeleteList)
+        {
+            Debug.Log("Deleting " + word);
+            controller.DeleteWord(word);
+        }
+        Debug.Log("Done deleting words for " + gameObject.GetComponentInParent<Transform>().name);
+        tagWordsToDelete = "";
+        DeleteTagWordsModal.SetActive(false);
+        isWords = false;
+        controller.ClearData();
+        DisplayScrollViewTags();
     }
 
     public void OpenDLCPanel()
@@ -392,22 +549,12 @@ public class VW_WordList : MonoBehaviour
     //////////////////////////////////////////
     //////////////////////////////////////////
     // DLC 
-
-    private string tempWordName;
-    private string tempWordTags;
-    private bool doneWordDownloadStep = false;
-    private bool doneImageDownload = false;
-    private bool isDoneWordSetDataDownload;
-    private string[] wordSetArray;
-    private string wordSetString;
-    private bool isWordSetArrayFinished;
-    [SerializeField] GameObject DownloadProgressPanel;
-    [SerializeField] Image DownloadProgressBar;
  
 
     public void DLCButton(string wordset)
     {
         DownloadProgressPanel.SetActive(true);
+        CloseDLCPanel();
         DownloadProgressBar.fillAmount = 0;
         StartCoroutine(DownloadWordSet(wordset));
     }
@@ -423,6 +570,10 @@ public class VW_WordList : MonoBehaviour
         //download each word in the set based on the word set data
         for (int i = 0; i < wordSetArray.Length; i++)
         {
+            float tempFloat1 = ((float)i) + 1;
+            float tempFloat2 = (float)wordSetArray.Length;
+            DownloadProgressBar.fillAmount = tempFloat1 / tempFloat2;
+
             if (controller.DoesDbEntryExist(wordSetArray[i]) == false)
             {
                 StartCoroutine(DownloadWord(wordSetArray[i], wordSetName));
@@ -432,18 +583,12 @@ public class VW_WordList : MonoBehaviour
             {
                 Debug.Log(wordSetArray[i] + " already exists in the database.");
             }
-
-            if (i > 0)
-            {
-                DownloadProgressBar.fillAmount = (i / (wordSetArray.Length - 1));
-
-            }
-
-
         }
 
         //clear the wordSetArray.
         wordSetArray = null;
+
+        //turn off the download progress panel, reset scrollview and clear data
         DownloadProgressPanel.SetActive(false);
         ResetScrollView();
         controller.ClearData();

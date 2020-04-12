@@ -316,6 +316,10 @@ public class MOD_WordEditing : AB_Model
                     DO_MemoryCards memory = JsonUtility.FromJson<DO_MemoryCards>(entry.json);
                     inUseWordIds.UnionWith(memory.wordIdList);
                     break;
+                case 6:
+                    DO_MatchingGame matching = JsonUtility.FromJson<DO_MatchingGame>(entry.json);
+                    inUseWordIds.UnionWith(matching.wordIdList);
+                    break;
                 default:
                     break;
             }
