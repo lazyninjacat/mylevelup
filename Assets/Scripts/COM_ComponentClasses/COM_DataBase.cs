@@ -116,6 +116,7 @@ public class DataService  {
 	public void ReseedTable(string tableName, int resetToInt){
 		string cmd = "UPDATE SQLITE_SEQUENCE SET seq = ? WHERE name = ?";
 		_connection.Execute(cmd, resetToInt, tableName);
+        
 	}
 
 	///<summary>Creates an MD5 hash of a string and returns the string</summary>
@@ -161,7 +162,7 @@ public class DataService  {
     ///<parem name="wordImage"> filename of primary image</parem>
     ///<returns>an int representing how many rows were successfully inserted</returns>
     public int CreateWord(string wordName, string stockCustom, string wordTags, string wordSound, string wordImage){
-		string query = "INSERT INTO Words (word_name, stock_custom, word_tags, word_sound, word_image) VALUES(?, ?, ?, ?, ?)";
+        string query = "INSERT INTO Words (word_name, stock_custom, word_tags, word_sound, word_image) VALUES(?, ?, ?, ?, ?)";
 		return _connection.Execute(query, wordName, stockCustom, wordTags, wordSound, wordImage);
 	}
     
