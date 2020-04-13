@@ -12,9 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/admin_menu.unity
     guid: bf789c253c6314b23be7b974f69ac882
   - enabled: 1
-    path: Assets/Scenes/create_admin.unity
-    guid: 59c82309f649d48ffb5312e1ff17af8e
-  - enabled: 1
     path: Assets/Scenes/statistics.unity
     guid: 744ac9a1c8c5e42849ac360707842777
   - enabled: 1
@@ -71,7 +68,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/matching_game.unity
     guid: 304c2b6634b4fe746be785eacb49f659
-  - enabled: 1
-    path: Assets/Scenes/words_DLC.unity
-    guid: 6782856d3f5c8b048b001269d9f9a6b3
   m_configObjects: {}

@@ -176,7 +176,9 @@ public class MOD_WordEditing : AB_Model
     /// <returns>bool</returns>
     public bool CreateNewDbEntry(string word, string wordTags)
     {
-        string img, sound, tags;
+        string img;
+        string sound;
+        string tags;
         int rowsInserted;
         bool audioSuccess = true;
         bool photoSuccess = true;

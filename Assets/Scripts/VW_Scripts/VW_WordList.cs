@@ -696,8 +696,9 @@ public class VW_WordList : MonoBehaviour
             }
             else
             {
-                string savePath = string.Format("{0}/{1}.wav", Application.persistentDataPath + "/WordAudio/", file_name);
-                System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
+                controller.SaveDLCAudioClip(www.downloadHandler.data, file_name);
+                //string savePath = string.Format("{0}/{1}.wav", Application.persistentDataPath + "/WordAudio/", file_name);
+                //System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
             }
         }
 

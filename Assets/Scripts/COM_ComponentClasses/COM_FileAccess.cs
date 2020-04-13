@@ -389,6 +389,13 @@ public static class FileAccessUtil
     /// <returns>bool true if successful</returns>
     private static bool SavePhotoToDir(Texture2D photo, string fileName, string fileDir)
     {
+        //To be used once on first play
+        if (!Directory.Exists(Application.persistentDataPath + "/WordPictures"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/WordPictures");
+        }
+
+
         if (!Directory.Exists(fileDir))
         {
             Directory.CreateDirectory(fileDir);
@@ -441,13 +448,13 @@ public static class FileAccessUtil
         if (!Directory.Exists(fileDir))
         {
             //TODO: User feedback of failed attempt
-            //Debug.Log("Error - Photo Directory doesn't exist!");
+            Debug.Log("Error - Photo Directory doesn't exist!");
             return null;
         }
         else if (!File.Exists(filePath))
         {
             //TODO: User feedback of failed attempt
-            //Debug.Log("Error - Photo doesn't exist!");
+            Debug.Log("Error - Photo doesn't exist!");
             return null;
         }
 
@@ -469,9 +476,22 @@ public static class FileAccessUtil
     /// <returns>bool</returns>
     private static bool SaveAudioToDir(AudioClip clip, string fileName, string fileDir)
     {
+        //Check if the word audio directory exists, and if not then create it. This should only be needed when playing for first time.
+        if (!Directory.Exists(Application.persistentDataPath + "/WordAudio"))
+        {
+            Debug.Log("Creating the /WordAudio directory");
+            Directory.CreateDirectory(Application.persistentDataPath + "/WordAudio");
+        }
+
+        //Check if
         if (!Directory.Exists(fileDir))
         {
+            Debug.Log("Creating new directory for " + fileName + " at: " + fileDir + " for audioclip:" + clip.name);
             Directory.CreateDirectory(fileDir);
+        }
+        else
+        {
+            Debug.Log("Error: That directory already exists!");
         }
 
         // Convert audio clip to wav encoded bytes
@@ -486,6 +506,12 @@ public static class FileAccessUtil
 
     private static bool SaveDLCAudioToDir(byte[] audiofile, string fileName, string fileDir)
     {
+        if (!Directory.Exists(Application.persistentDataPath + "/WordAudio"))
+        {
+            Debug.Log("Creating the /WordAudio directory");
+            Directory.CreateDirectory(Application.persistentDataPath + "/WordAudio");
+        }
+
         if (!Directory.Exists(fileDir))
         {
             Directory.CreateDirectory(fileDir);
