@@ -519,20 +519,39 @@ public class VW_PlayList : MonoBehaviour
     /// <param name="wordInt"></param>
     private void CreateWordLists(int wordInt)
     {
-        List<int> AutoWordIds = new List<int>();
 
+        //Create the single word word list for the flashcard, wordscramble, and keyboard games
+        List<int> AutoWordIds = new List<int>();
+        AutoWordIds.Clear();
         AutoWordIds.Add(wordInt);
 
-        List<int> AutoWordIdsMatchingGame = new List<int>();
-
-        List<int> AutoWordIdsMemoryGame = new List<int>();
-
         // Create AutoWordIds for the matching game, with the current word and two additional random words.
-        AutoWordIdsMatchingGame.Add(wordInt);        
+        List<int> AutoWordIdsMatchingGame = new List<int>();
+        AutoWordIdsMatchingGame.Clear();
+        AutoWordIdsMatchingGame.Add(wordInt);
         AutoWordIdsMatchingGame.Add(UnityEngine.Random.Range(1, controller.GetTotalWordsCount()));
+
+        if (AutoWordIdsMatchingGame[1] == AutoWordIdsMatchingGame[0])
+        {
+            AutoWordIdsMatchingGame[1] = UnityEngine.Random.Range(1, controller.GetTotalWordsCount());
+        }
+
         AutoWordIdsMatchingGame.Add(UnityEngine.Random.Range(1, controller.GetTotalWordsCount()));
+
+        if (AutoWordIdsMatchingGame[2] == AutoWordIdsMatchingGame[1] || AutoWordIdsMatchingGame[2] == AutoWordIdsMatchingGame[0])
+        {
+            AutoWordIdsMatchingGame[2] = UnityEngine.Random.Range(1, controller.GetTotalWordsCount());
+        }
+
+        Debug.Log("Matching Game autoplaylist words set to:");
+        foreach (int id in AutoWordIdsMatchingGame)
+        {
+            Debug.Log(id);
+        }
 
         // Create AutoWordIds for the memory game, with the current word and one additional random word.
+        List<int> AutoWordIdsMemoryGame = new List<int>();
+        AutoWordIdsMemoryGame.Clear();
         AutoWordIdsMemoryGame.Add(wordInt);
         AutoWordIdsMemoryGame.Add(UnityEngine.Random.Range(1, controller.GetTotalWordsCount()));  
 
@@ -598,6 +617,8 @@ public class VW_PlayList : MonoBehaviour
         //controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
 
         AutoWordIds.Clear();
+        AutoWordIdsMatchingGame.Clear();
+        AutoWordIdsMemoryGame.Clear();
         tempFlash = null;
         tempKeyboard = null;
         tempScramble = null;

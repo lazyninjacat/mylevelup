@@ -150,10 +150,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909c7d6b260256042b9652f2657bacac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
+  playIndex: 0
+  totalRoundCount: 0
+  currentRound: 0
+  loopIterations: 0
+  roundsTillReward: 0
+  newPart: 1
+  totalRoundsThisPart: 0
   audioSource: {fileID: 746015793}
   continueModal: {fileID: 449211661}
   passCodeModal: {fileID: 726906389}
   quitModal: {fileID: 2067845337}
+  activeCanvas: {fileID: 0}
+  activeTypeId: -1
   invalidPinModal: {fileID: 717220395}
   canvasContainer: {fileID: 783264559}
   roundCounter: {fileID: 1893229461}

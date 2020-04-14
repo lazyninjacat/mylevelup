@@ -10,13 +10,16 @@ public class VW_StartMenu : MonoBehaviour {
     [SerializeField] GameObject noAccessPrompt;
     [SerializeField] Button startButton;
     [SerializeField] Text timeText;
-    public Text childnameText;
-    private CON_AdminMenu controller;
+    [SerializeField] Text childnameText;
+    private CON_AdminMenu adminController;
     private IEnumerator timerCoroutine;
     private bool isLockOn;
     private DateTime current;
     private DateTime lockOutFrom;
     private DateTime lockOutTo;
+    private int checkIfNewInstall;
+
+    private DataService dataService;
 
 
     void Start () {
@@ -24,9 +27,9 @@ public class VW_StartMenu : MonoBehaviour {
         // Preload the Masters if they are not loaded
         COM_Director.InitData();
 
-        MAS_Admin tempMaster = (MAS_Admin)COM_Director.GetMaster("MAS_Admin");
+        MAS_Admin tempMasterAdmin = (MAS_Admin)COM_Director.GetMaster("MAS_Admin");
 
-        controller = (CON_AdminMenu)tempMaster.GetController("CON_AdminMenu");
+        adminController = (CON_AdminMenu)tempMasterAdmin.GetController("CON_AdminMenu");
 
         isLockOn = (PlayerPrefs.GetInt("lockOnOff") == 1);
 
@@ -41,7 +44,10 @@ public class VW_StartMenu : MonoBehaviour {
         timeText.text = (PlayerPrefs.GetString("LockoutToTimeString"));
 
         DateTime lockOutToOvernight = new DateTime(current.Year, current.Month, current.Day, ((PlayerPrefs.GetInt("LockoutToTimeInt")) + 1), 0, 0);
-        
+
+        dataService = StartupScript.ds;
+
+
         //Display ChildName Key saved in PlayerPref in the ChildNameText game object in scene, or display "My" if the childnamekey is blank or null
         if ((PlayerPrefs.GetString("ChildNameKey") == "") || (PlayerPrefs.GetString("ChildNameKey") == null))
         {
@@ -76,6 +82,9 @@ public class VW_StartMenu : MonoBehaviour {
                 }
             }
         }
+
+        CheckIfFirstOpenAfterInstall();
+
     }
 
     private void Update()
@@ -135,4 +144,31 @@ public class VW_StartMenu : MonoBehaviour {
         // Switch the start button interactable
         startButton.interactable = !startButton.IsInteractable();
     }
+
+    // Create a bool to keep track of whether or not this is the first open after install.
+    private void CheckIfFirstOpenAfterInstall()
+    {
+        checkIfNewInstall = PlayerPrefs.GetInt("isFirstKey");
+        Debug.Log("isFirst = " + checkIfNewInstall);
+
+        if (checkIfNewInstall == 0)
+        {
+            dataService.DeleteAllPlaylist();
+            PlayerPrefs.SetInt("isFirstKey", 1);
+            checkIfNewInstall = PlayerPrefs.GetInt("isFirstKey");
+            Debug.Log("First open after install detected. isFirstKey is now set to : " + PlayerPrefs.GetInt("isFirstKey"));
+        }
+        else
+        {
+            Debug.Log("Not first open after install.");
+        }
+
+    }
+
+
+    // Check if this is the first open after install
+
+
+    // If it is the first open, then reset the playlist to blank
+
 }
