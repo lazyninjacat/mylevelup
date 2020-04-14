@@ -571,7 +571,7 @@ public class VW_PlayList : MonoBehaviour
 
         DO_CountingGame countingGame = new DO_CountingGame(AutoWordIdsMatchingGame, 3, 10, true, true, true, false);
 
-        foreach (int wordID in AutoWordIds) { Debug.Log(wordID); }
+        // foreach (int wordID in AutoWordIds) { Debug.Log(wordID); }
 
         controller.CreatingNew();
         controller.AddOrEditEntry("Flash Card", 1, tempFlash);
