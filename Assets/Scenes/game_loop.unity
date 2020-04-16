@@ -6549,9 +6549,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37450f159f3eacd41b788738b739503e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wordimage1: {fileID: 971893032}
-  wordimage2: {fileID: 103161186}
-  wordimage3: {fileID: 1864712910}
+  wordimage1: {fileID: 971893030}
+  wordimage2: {fileID: 103161184}
+  wordimage3: {fileID: 1864712908}
   wordImage1Container: {fileID: 351841172}
   wordImage2Container: {fileID: 453183664}
   wordImage3Container: {fileID: 205366333}
@@ -6575,6 +6575,7 @@ MonoBehaviour:
   word1Errors: 0
   word2Errors: 0
   word3Errors: 0
+  test1RawImg: {fileID: 0}
 --- !u!114 &973595126
 MonoBehaviour:
   m_ObjectHideFlags: 0

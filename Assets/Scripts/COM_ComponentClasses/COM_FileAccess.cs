@@ -162,14 +162,17 @@ public static class FileAccessUtil
     /// <returns>byte array</returns>
     private static byte[] LoadRandomPic(string fileName, string directory)
     {
-        // Create a directory path of blahdirectory/<word>/ to access that word's image dir
+        // Create a directory path of directory/<word>/ to access that word's image dir
         directory = directory + "/" + fileName.ToLower() + "/";
         //int x = 1;
         //bool moreEntries = true;
 
+        Debug.Log("COM: created image path for word:" + fileName + ". Path of directory = ");
+
+
         if (!Directory.Exists(directory))
         {
-            //TODO: User feedback of failed attempt
+            Debug.Log("COM: Trying to load images, but directory doesn't exist.");
             return null;
         }
 
@@ -209,6 +212,10 @@ public static class FileAccessUtil
     
         // Grab all the paths of the .png files in the current word image directory
         string[] tempList = Directory.GetFiles(directory, "*.png");
+        foreach (string filename in tempList)
+        {
+            Debug.Log("COM: Found " + filename + " and added to templist");
+        }
 
         // Create a new system random object
         System.Random rand = new System.Random();
@@ -216,9 +223,10 @@ public static class FileAccessUtil
         // Choose a random .png file to read bytes from
         byte[] bytes = File.ReadAllBytes(tempList[rand.Next(0, tempList.Length - 1)]);
 
+
         if (bytes.Length == 0)
         {
-            Debug.Log("*******************************************\nCOM: BYTES LEN WAS 0!!!!!!!!!\n********************************************");
+            Debug.Log("COM: BYTES LENGTH WAS 0!");
             bytes = null;
         }
 

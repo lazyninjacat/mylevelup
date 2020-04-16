@@ -181,6 +181,7 @@ public class DataService  {
     public int DeleteAllPlaylist()
     {
         string query = "DELETE FROM Play_List";
+        UpdatePlayListAutoIds();
         return _connection.Execute(query);
     }
 

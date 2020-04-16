@@ -53,7 +53,10 @@ public class VW_GameLoop : MonoBehaviour {
     private double gameTimer = 0.0;
     private const string CANVAS = "Canvas_";
     private const int XY_DIMENSION = 300;
-    private Texture2D customTexture;
+    private Texture2D customTexture1;
+    private Texture2D customTexture2;
+    private Texture2D customTexture3;
+
 
     // Get all scene game objects
     [SerializeField] GameObject invalidPinModal;
@@ -74,11 +77,11 @@ public class VW_GameLoop : MonoBehaviour {
 
         if (controller == null)
         {
-            Debug.Log("****************************\n LOOP: controller was NULL!!!! \n ************************");
+            Debug.Log("LOOP: controller was NULL!!!!");
         }
         else
         {
-            Debug.Log("****************************\n LOOP: controller is GOOD! \n ************************");
+            Debug.Log("LOOP: controller is GOOD!");
         }
 
         // Hide the empty playlist panel
@@ -91,7 +94,10 @@ public class VW_GameLoop : MonoBehaviour {
         loopIterations = STARTING_ITERATION;
         passLocked = controller.IsPassLocked();
         maxIterations = controller.GetIterationNumber();
-        customTexture = new Texture2D(XY_DIMENSION, XY_DIMENSION);
+        customTexture1 = new Texture2D(XY_DIMENSION, XY_DIMENSION);
+        customTexture2 = new Texture2D(XY_DIMENSION, XY_DIMENSION);
+        customTexture3 = new Texture2D(XY_DIMENSION, XY_DIMENSION);
+
 
         Debug.Log(string.Format("Pass locked is {0} and loop iterations are {1} and infinite loop is {2}", passLocked, maxIterations, infiniteLoop));
 
@@ -153,7 +159,6 @@ public class VW_GameLoop : MonoBehaviour {
                 break;
             }
         }
-        Debug.Log("Done For loop");
         roundsTillReward = roundsTillRewardList.Count;
         Debug.Log("Round till reward = " + roundsTillReward);
         if (newPart == true)
@@ -258,24 +263,24 @@ public class VW_GameLoop : MonoBehaviour {
     /// <param name="xDelta"></param>
     /// <param name="yDelta"></param>
     public void SetManualImage(string imageName, GameObject obj, int imgNum, int xDelta = XY_DIMENSION, int yDelta = XY_DIMENSION) {
-        Debug.Log("*******************************************\nIMG: IMAGE NAME IS " + imageName + imgNum);
+        Debug.Log("nIMG: IMAGE NAME IS " + imageName + imgNum);
         int xVect = xDelta, yVect = yDelta;
 
         //bool success = true;
         byte[] bytes = null;
 
-        Debug.Log("*******************************************\nIMG: RANDO WAS 1 grabbing from assets \n********************************************");
+        Debug.Log("IMG: RANDO WAS 1 grabbing from assets");
 
         // Grab a stock texture
         Texture2D tempTex = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + imgNum);
 
         // If the stock texture is not null use it else grab a random user image
         if (tempTex != null) {
-            Debug.Log("*******************************************\nIMG: ASSET RESOURCE WAS GOOD! appyling \n********************************************");
+            Debug.Log("IMG: ASSET RESOURCE WAS GOOD! appyling");
             obj.GetComponent<RawImage>().texture = tempTex;
         } else {
-            Debug.Log("*******************************************\nIMG: COULD NOT LOAD FROM assets! Grabbing random image  \n********************************************");
-            SetRandomImage(bytes, obj, imageName);
+            Debug.Log("IMG: COULD NOT LOAD FROM assets! Grabbing random image");
+            SetRandomImage1(bytes, obj, imageName);
         }
 
         RectTransform rt = obj.GetComponent<RectTransform>();
@@ -294,7 +299,7 @@ public class VW_GameLoop : MonoBehaviour {
     /// <param name="yDelta"></param>
     public void SetImage(string imageName, GameObject obj/*, int xDelta = XY_DIMENSION, int yDelta = XY_DIMENSION*/)
     {
-        Debug.Log("*******************************************\nIMG: IMAGE NAME IS " + imageName);
+        Debug.Log("IMG: IMAGE NAME IS " + imageName);
         //int xVect = xDelta, yVect = yDelta;
         System.Random rand = new System.Random();
 
@@ -311,7 +316,7 @@ public class VW_GameLoop : MonoBehaviour {
             // Choose randomly whether stock image will be used or not. Weight it towards non stock
             if (rand.Next(RAND_LOWER_BOUND, RAND_UPPER_BOUND) == 1)
             {
-                Debug.Log("*******************************************\nIMG: RANDO WAS 1 grabbing from assets \n********************************************");
+                Debug.Log("IMG: RANDO WAS 1 grabbing from assets");
 
                 // Grab a stock texture
                 Texture2D tempTex = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + UnityEngine.Random.Range(1,6));
@@ -319,26 +324,26 @@ public class VW_GameLoop : MonoBehaviour {
                 // If the stock texture is not null use it else grab a random user image
                 if (tempTex != null)
                 {
-                    Debug.Log("*******************************************\nIMG: ASSET RESOURCE WAS GOOD! appyling \n********************************************");
+                    Debug.Log("IMG: ASSET RESOURCE WAS GOOD! appyling");
                     obj.GetComponent<RawImage>().texture = tempTex;
                 }
                 else
                 {
-                    Debug.Log("*******************************************\nIMG: COULD NOT LOAD FROM assets! Grabbing random image  \n********************************************");
-                    SetRandomImage(bytes, obj, imageName);
+                    Debug.Log("IMG: COULD NOT LOAD FROM assets! Grabbing random image");
+                    SetRandomImage1(bytes, obj, imageName);
                 }
             }
             else
             {
                 // Grab a random user image
-                SetRandomImage(bytes, obj, imageName);
+                SetRandomImage1(bytes, obj, imageName);
             }
         }
         else
         {
             if (activeTypeId == 1)
             {
-                Debug.Log("*******************************************\nIMG: ACTIVE TYPE WAS REWARD \n********************************************");
+                Debug.Log("IMG: ACTIVE TYPE WAS REWARD");
                 bytes = FileAccessUtil.LoadRewardPic(imageName);
             }
             else
@@ -348,21 +353,21 @@ public class VW_GameLoop : MonoBehaviour {
 
             if (bytes != null)
             {
-                Debug.Log("*******************************************\nIMG: bYTES ARE GOOD! \n********************************************");
+                Debug.Log("IMG: bYTES ARE GOOD!");
 
-                if (customTexture.LoadImage(bytes))
+                if (customTexture1.LoadImage(bytes))
                 {
-                    obj.GetComponent<RawImage>().texture = customTexture;
+                    obj.GetComponent<RawImage>().texture = customTexture1;
                 }
                 else
                 {
-                    // TODO: Add some sort of error. Blah.
+                    Debug.Log("Error: could not load image");
                     return;
                 }
             }
             else
             {
-                Debug.Log("*******************************************\nIMG: BYTES WERE NULL \n********************************************");
+                Debug.Log("IMG: BYTES WERE NULL");
                 obj.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + UnityEngine.Random.Range(1, 6));
                 //customTexture = Resources.Load<Texture2D>("WordPictures/" + imageName);
             }
@@ -373,6 +378,190 @@ public class VW_GameLoop : MonoBehaviour {
         //rt.sizeDelta = new Vector2(xVect, yVect);
     }
 
+
+
+    /// <summary>
+    /// This function takes the name of an image (usually the word itself), a RawImage Game Object, 
+    /// and some optional XY dimensions. The imageName is used to recover a byte array and load 
+    /// a png from it for display. Otherwise, it will attempt to load from assets. The optional
+    /// dimensions are for the resizing of the image.
+    /// </summary>
+    /// <param name="imageName2"></param>
+    /// <param name="obj2"></param>
+    /// <param name="xDelta"></param>
+    /// <param name="yDelta"></param>
+    public void SetImage2(string imageName2, GameObject obj2/*, int xDelta = XY_DIMENSION, int yDelta = XY_DIMENSION*/)
+    {
+        Debug.Log("IMG 2: IMAGE NAME IS " + imageName2);
+        //int xVect = xDelta, yVect = yDelta;
+        System.Random rand = new System.Random();
+
+        //TEMP CODE
+        bool isRandom = true;
+        //REMOVE LATER
+
+        //bool success = true;
+        byte[] bytes2 = null;
+
+        // Check if load random option is checked
+        if (isRandom)
+        {
+            // Choose randomly whether stock image will be used or not. Weight it towards non stock
+            if (rand.Next(RAND_LOWER_BOUND, RAND_UPPER_BOUND) == 1)
+            {
+                Debug.Log("IMG: RANDO WAS 1 grabbing from assets");
+
+                // Grab a stock texture
+                Texture2D tempTex = Resources.Load<Texture2D>("WordPictures/" + imageName2 + "/" + imageName2 + UnityEngine.Random.Range(1, 6));
+
+                // If the stock texture is not null use it else grab a random user image
+                if (tempTex != null)
+                {
+                    Debug.Log("IMG: ASSET RESOURCE WAS GOOD! appyling");
+                    obj2.GetComponent<RawImage>().texture = tempTex;
+                }
+                else
+                {
+                    Debug.Log("IMG: COULD NOT LOAD FROM assets! Grabbing random image");
+                    SetRandomImage2(bytes2, obj2, imageName2);
+                }
+            }
+            else
+            {
+                // Grab a random user image
+                SetRandomImage2(bytes2, obj2, imageName2);
+            }
+        }
+        else
+        {
+            if (activeTypeId == 1)
+            {
+                Debug.Log("IMG: ACTIVE TYPE WAS REWARD");
+                bytes2 = FileAccessUtil.LoadRewardPic(imageName2);
+            }
+            else
+            {
+                bytes2 = FileAccessUtil.LoadWordPic(imageName2);
+            }
+
+            if (bytes2 != null)
+            {
+                Debug.Log("IMG: bYTES ARE GOOD!");
+
+                if (customTexture2.LoadImage(bytes2))
+                {
+                    obj2.GetComponent<RawImage>().texture = customTexture2;
+                }
+                else
+                {
+                    Debug.Log("Error: could not load image");
+                    return;
+                }
+            }
+            else
+            {
+                Debug.Log("IMG: BYTES WERE NULL");
+                obj2.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName2 + "/" + imageName2 + UnityEngine.Random.Range(1, 6));
+                //customTexture = Resources.Load<Texture2D>("WordPictures/" + imageName);
+            }
+        }
+
+        //obj.GetComponent<RawImage>().texture = customTexture;
+        RectTransform rt = obj2.GetComponent<RectTransform>();
+        //rt.sizeDelta = new Vector2(xVect, yVect);
+    }
+
+
+    /// <summary>
+    /// This function takes the name of an image (usually the word itself), a RawImage Game Object, 
+    /// and some optional XY dimensions. The imageName is used to recover a byte array and load 
+    /// a png from it for display. Otherwise, it will attempt to load from assets. The optional
+    /// dimensions are for the resizing of the image.
+    /// </summary>
+    /// <param name="imageName3"></param>
+    /// <param name="obj3"></param>
+    /// <param name="xDelta"></param>
+    /// <param name="yDelta"></param>
+    public void SetImage3(string imageName3, GameObject obj3/*, int xDelta = XY_DIMENSION, int yDelta = XY_DIMENSION*/)
+    {
+        Debug.Log("IMG 2: IMAGE NAME IS " + imageName3);
+        //int xVect = xDelta, yVect = yDelta;
+        System.Random rand = new System.Random();
+
+        //TEMP CODE
+        bool isRandom = true;
+        //REMOVE LATER
+
+        //bool success = true;
+        byte[] bytes3 = null;
+
+        // Check if load random option is checked
+        if (isRandom)
+        {
+            // Choose randomly whether stock image will be used or not. Weight it towards non stock
+            if (rand.Next(RAND_LOWER_BOUND, RAND_UPPER_BOUND) == 1)
+            {
+                Debug.Log("IMG: RANDO WAS 1 grabbing from assets");
+
+                // Grab a stock texture
+                Texture2D tempTex = Resources.Load<Texture2D>("WordPictures/" + imageName3 + "/" + imageName3 + UnityEngine.Random.Range(1, 6));
+
+                // If the stock texture is not null use it else grab a random user image
+                if (tempTex != null)
+                {
+                    Debug.Log("IMG: ASSET RESOURCE WAS GOOD! appyling");
+                    obj3.GetComponent<RawImage>().texture = tempTex;
+                }
+                else
+                {
+                    Debug.Log("IMG: COULD NOT LOAD FROM assets! Grabbing random image");
+                    SetRandomImage3(bytes3, obj3, imageName3);
+                }
+            }
+            else
+            {
+                // Grab a random user image
+                SetRandomImage3(bytes3, obj3, imageName3);
+            }
+        }
+        else
+        {
+            if (activeTypeId == 1)
+            {
+                Debug.Log("IMG: ACTIVE TYPE WAS REWARD");
+                bytes3 = FileAccessUtil.LoadRewardPic(imageName3);
+            }
+            else
+            {
+                bytes3 = FileAccessUtil.LoadWordPic(imageName3);
+            }
+
+            if (bytes3 != null)
+            {
+                Debug.Log("IMG: bYTES ARE GOOD!");
+
+                if (customTexture3.LoadImage(bytes3))
+                {
+                    obj3.GetComponent<RawImage>().texture = customTexture3;
+                }
+                else
+                {
+                    Debug.Log("Error: could not load image");
+                    return;
+                }
+            }
+            else
+            {
+                Debug.Log("IMG: BYTES WERE NULL");
+                obj3.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName3 + "/" + imageName3 + UnityEngine.Random.Range(1, 6));
+                //customTexture = Resources.Load<Texture2D>("WordPictures/" + imageName);
+            }
+        }
+
+        //obj.GetComponent<RawImage>().texture = customTexture;
+        RectTransform rt = obj3.GetComponent<RectTransform>();
+        //rt.sizeDelta = new Vector2(xVect, yVect);
+    }
 
 
     /// <summary>
@@ -415,9 +604,7 @@ public class VW_GameLoop : MonoBehaviour {
 
         roundCounter.gameObject.SetActive(true);
         UpdateProgressBar(CalculateRoundsTillReward());
-
-
-        
+                
 
         // Check if we have completed the playlist
         if (controller.PlayListCompleted(playIndex))
@@ -452,14 +639,12 @@ public class VW_GameLoop : MonoBehaviour {
             newPart = true;
             roundCounter.fillAmount = 1;
 
-        }
-    
+        }    
 
         ActivateDeactivateCanvass(nextTypeId);
     }
 
-
-
+    
 
     /// <summary>
     /// Returns true if the script attached to the canvas is still active.
@@ -590,29 +775,97 @@ public class VW_GameLoop : MonoBehaviour {
     /// <param name="bytes"></param>
     /// <param name="obj"></param>
     /// <param name="imageName"></param>
-    private void SetRandomImage(byte[] bytes, GameObject obj, string imageName)
+    private void SetRandomImage1(byte[] bytes, GameObject obj, string imageName)
     {
         bytes = controller.LoadRandomWordPic(imageName.ToLower());
 
         if (bytes != null)
         {
-            Debug.Log("*******************************************\nIMG: bYTES ARE GOOD! \n********************************************");
+            Debug.Log("IMG: bYTES ARE GOOD!");
 
-            if (customTexture.LoadImage(bytes))
+            if (customTexture1.LoadImage(bytes))
             {
-                Debug.Log("*******************************************\nIMG: LOADED IMAGE!!!!\n********************************************");
-                obj.GetComponent<RawImage>().texture = customTexture;
+                Debug.Log("IMG: LOADED IMAGE!!!!");
+                obj.GetComponent<RawImage>().texture = customTexture1;
             }
             else
             {
-                Debug.Log("*******************************************\nIMG: COULD NOT LOAD IMAGE SEARCHING FOR DEFAULT \n********************************************");
+                Debug.Log("IMG: COULD NOT LOAD IMAGE SEARCHING FOR DEFAULT");
 
                 obj.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + UnityEngine.Random.Range(1,6));
             }
         }
         else
         {
-            Debug.Log("*******************************************\nIMG: COULD NOT LOAD IMAGE SEARCHING FOR DEFAULT \n********************************************");
+            Debug.Log("IMG: COULD NOT LOAD IMAGE SEARCHING FOR DEFAULT");
+
+            obj.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + UnityEngine.Random.Range(1, 6));
+        }
+    }
+
+    /// <summary>
+    /// Grabs a byte array and if it is not null creates an image to use.
+    /// </summary>
+    /// <param name="bytes"></param>
+    /// <param name="obj"></param>
+    /// <param name="imageName"></param>
+    private void SetRandomImage2(byte[] bytes, GameObject obj, string imageName)
+    {
+        bytes = controller.LoadRandomWordPic(imageName.ToLower());
+
+        if (bytes != null)
+        {
+            Debug.Log("IMG: bYTES ARE GOOD!");
+
+            if (customTexture2.LoadImage(bytes))
+            {
+                Debug.Log("IMG: LOADED IMAGE!!!!");
+                obj.GetComponent<RawImage>().texture = customTexture2;
+            }
+            else
+            {
+                Debug.Log("IMG: COULD NOT LOAD IMAGE SEARCHING FOR DEFAULT");
+
+                obj.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + UnityEngine.Random.Range(1, 6));
+            }
+        }
+        else
+        {
+            Debug.Log("IMG: COULD NOT LOAD IMAGE SEARCHING FOR DEFAULT");
+
+            obj.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + UnityEngine.Random.Range(1, 6));
+        }
+    }
+
+    /// <summary>
+    /// Grabs a byte array and if it is not null creates an image to use.
+    /// </summary>
+    /// <param name="bytes"></param>
+    /// <param name="obj"></param>
+    /// <param name="imageName"></param>
+    private void SetRandomImage3(byte[] bytes, GameObject obj, string imageName)
+    {
+        bytes = controller.LoadRandomWordPic(imageName.ToLower());
+
+        if (bytes != null)
+        {
+            Debug.Log("IMG: bYTES ARE GOOD!");
+
+            if (customTexture3.LoadImage(bytes))
+            {
+                Debug.Log("IMG: LOADED IMAGE!!!!");
+                obj.GetComponent<RawImage>().texture = customTexture3;
+            }
+            else
+            {
+                Debug.Log("IMG: COULD NOT LOAD IMAGE SEARCHING FOR DEFAULT");
+
+                obj.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + UnityEngine.Random.Range(1, 6));
+            }
+        }
+        else
+        {
+            Debug.Log("IMG: COULD NOT LOAD IMAGE SEARCHING FOR DEFAULT");
 
             obj.GetComponent<RawImage>().texture = Resources.Load<Texture2D>("WordPictures/" + imageName + "/" + imageName + UnityEngine.Random.Range(1, 6));
         }
