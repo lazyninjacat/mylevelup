@@ -258,6 +258,12 @@ public class DataService  {
         return _connection.Execute(query, word, wordData.StockCustom, wordData.WordTags);
     }
 
+    public int ResetWordsTable()
+    {
+        string query = "DELETE from Words WHERE stock_custom = custom";
+        return _connection.Execute(query);
+    }
+
     public int DeleteFromWords(int wordId)
     {
         string query = "DELETE FROM Words WHERE word_id = ?";

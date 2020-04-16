@@ -43,8 +43,10 @@ public class MOD_WordEditing : AB_Model
         wordImageNames = new List<string>();
         lastPlayEntryId = dataService.GetLastPlayEntryId();
 
-        if (wordList == null || wordList.Count == 0) {
-            LoadWordList(); }
+        if (wordList == null || wordList.Count == 0)
+        {
+            LoadWordList();
+        }
     }
 
     public override void GetCoworkers(MasterClass master) {}
@@ -144,7 +146,7 @@ public class MOD_WordEditing : AB_Model
         }
         else
         {
-            Debug.Log("****************************\n EDITDB: AUDIO OR PHOTO SUCCESS NOT SUCCESS\n*************************");
+            Debug.Log("EDITDB: AUDIO OR PHOTO SUCCESS NOT SUCCESS");
         }
 
         return false;

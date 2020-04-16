@@ -121,7 +121,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.37
+  bundleVersion: 1.38
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -168,7 +168,7 @@ PlayerSettings:
     Android: com.MyLevelUPLearningTechnologies.MyLevelUP
     iPhone: com.mylevelup.mylevelup
   buildNumber: {}
-  AndroidBundleVersionCode: 137
+  AndroidBundleVersionCode: 138
   AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

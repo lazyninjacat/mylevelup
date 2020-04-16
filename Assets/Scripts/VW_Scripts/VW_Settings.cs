@@ -16,16 +16,36 @@ public class VW_Settings : MonoBehaviour
     //Child Name string
     private string childName;
 
+    private DataService dataService;
+
+
     [SerializeField] Toggle onOffToggle;
     [SerializeField] Dropdown fromTimeDropdown;
     [SerializeField] Dropdown toTimeDropdown;
+    [SerializeField] GameObject confirmResetModal;
+    [SerializeField] GameObject pleaseWaitModal;
 
     private int fromTime;
     private int toTime;
 
+    private Dictionary<string, WordDO> wordList;
+    private List<int> wordIDsForDelete;
+
+
+
 
     void Start()
     {
+        dataService = StartupScript.ds;
+        wordList = new Dictionary<string, WordDO>();
+        wordIDsForDelete = new List<int>();
+
+
+        if (wordList == null || wordList.Count == 0)
+        {
+            LoadWordList();
+        }
+
         //Display ChildName Key saved to PlayerPrefs in console
         Debug.Log("Child name set to : " + PlayerPrefs.GetString("ChildNameKey").ToString());
 
@@ -39,9 +59,34 @@ public class VW_Settings : MonoBehaviour
             childnameText.text = (PlayerPrefs.GetString("ChildNameKey"));
         } 
    
-        SetupToggles();        
+        SetupToggles();
+
+
     }
 
+
+    /// <summary>
+    /// Loads the word list from the data base into the class word list. 
+    /// </summary>
+    private void LoadWordList()
+    {
+        WordDO tempObject;
+        IEnumerable<Words> words = dataService.GetWordsTable();
+
+        foreach (var row in words)
+        {
+            tempObject = new WordDO(
+                row.word_id,
+                row.word_name,
+                row.stock_custom,
+                row.word_tags,
+                row.word_sound,
+                row.word_image
+                );
+
+            wordList.Add(row.word_name, tempObject);
+        }
+    }
 
     private void Update()
     {
@@ -122,5 +167,63 @@ public class VW_Settings : MonoBehaviour
             toTimeDropdown.value = (PlayerPrefs.GetInt("LockoutToTimeInt"));
         }
     }
+    
+    public void OpenConfirmResetModal()
+    {
+        confirmResetModal.SetActive(true);
+    }
+
+    public void CloseConfirmResetModal()
+    {
+        confirmResetModal.SetActive(false);
+    }
+
+    public void OpenPleaseWaitModal()
+    {
+        pleaseWaitModal.SetActive(true);
+    }
+
+    public void ClosePleaseWaitModal()
+    {
+        pleaseWaitModal.SetActive(false);
+    }
+
+    public void Reset()
+    {
+        CloseConfirmResetModal();
+        OpenPleaseWaitModal();
+        
+        // Delete all non stock words       
+        foreach (var row in wordList)
+        {
+            if (row.Value.StockCustom == "custom")
+            {
+                wordIDsForDelete.Add(row.Value.IdNum);
+            }
+        }        
+        foreach (int id in wordIDsForDelete)
+        {
+            dataService.DeleteFromWords(id);
+        }
+        dataService.ReseedTable("words", 10);
+        wordList.Clear();
+        wordIDsForDelete.Clear();
+
+
+        // Clear playlist table and reset auto increment to 0
+        dataService.DeleteAllPlaylist();
+        dataService.ReseedTable("playlist", 0);
+
+        // Clear existing mastery database records
+
+        // Reset all Playerprefs
+
+        // Reset all rewards
+
+        ClosePleaseWaitModal();
+    }
+
+
+
 
 }
