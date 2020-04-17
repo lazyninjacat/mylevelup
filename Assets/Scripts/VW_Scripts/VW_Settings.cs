@@ -24,6 +24,9 @@ public class VW_Settings : MonoBehaviour
     [SerializeField] Dropdown toTimeDropdown;
     [SerializeField] GameObject confirmResetModal;
     [SerializeField] GameObject pleaseWaitModal;
+    [SerializeField] GameObject ResetCompleteModal;
+
+    
 
     private int fromTime;
     private int toTime;
@@ -244,10 +247,18 @@ public class VW_Settings : MonoBehaviour
 
 
         // Reset all Playerprefs
+        PlayerPrefs.SetInt("isFirstKey", 0);
+        PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 0);
 
         // Reset all rewards
 
         ClosePleaseWaitModal();
+        OpenResetCompleteModal();
+    }
+
+    private void OpenResetCompleteModal()
+    {
+        ResetCompleteModal.SetActive(true);
     }
 
 

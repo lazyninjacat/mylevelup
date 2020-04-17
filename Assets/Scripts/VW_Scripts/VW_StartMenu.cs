@@ -11,6 +11,7 @@ public class VW_StartMenu : MonoBehaviour {
     [SerializeField] Button startButton;
     [SerializeField] Text timeText;
     [SerializeField] Text childnameText;
+    [SerializeField] GameObject FirstInstallPanel;
     private CON_AdminMenu adminController;
     private IEnumerator timerCoroutine;
     private bool isLockOn;
@@ -157,12 +158,18 @@ public class VW_StartMenu : MonoBehaviour {
             PlayerPrefs.SetInt("isFirstKey", 1);
             checkIfNewInstall = PlayerPrefs.GetInt("isFirstKey");
             Debug.Log("First open after install detected. isFirstKey is now set to : " + PlayerPrefs.GetInt("isFirstKey"));
+            FirstInstallPanel.SetActive(true);
         }
         else
         {
             Debug.Log("Not first open after install.");
         }
 
+    }
+
+    public void CloseFirstInstallPanel()
+    {
+        FirstInstallPanel.SetActive(false);
     }
 
 
