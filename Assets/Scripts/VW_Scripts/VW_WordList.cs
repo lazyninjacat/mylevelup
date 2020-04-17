@@ -52,21 +52,19 @@ public class VW_WordList : MonoBehaviour
 
     private List<string> WordsForDeleteList = new List<string>();
 
-
     private MOD_WordEditing model;
     private CON_WordEditing controller;
 
     // bool to keep track for the WordsTagsToggle
     private bool isWords = true;
 
+    // bool to keep track of scrollview state words/tags view
+    private bool isTagsView;
 
-    // TODO: Finish stats so we can reactivate the button
-    public Button statsButton;
-    //***************
-
-    // Use this for initialization
     void Start()
     {
+        Debug.Log("VW: Starting the word list view!");
+
         MAS_WordEditing tempMaster = (MAS_WordEditing)COM_Director.GetMaster("MAS_WordEditing");
 
         model = (MOD_WordEditing)tempMaster.GetModel("MOD_WordEditing");
@@ -77,11 +75,7 @@ public class VW_WordList : MonoBehaviour
         controller.PopulateInUseSet();
         //////////////////////////////////////////////////////////////////////////////////
 
-        Debug.Log("VW: Starting the word list view!");
-
-
         DisplayScrollViewWords();
-
     }
 
 
@@ -92,17 +86,16 @@ public class VW_WordList : MonoBehaviour
     public void CloseFilterTagsPanel()
     {
         filterTagsPanel.SetActive(false);
-
     }
 
     private void DisplayScrollViewWords()
     {
+        isTagsView = false;
         Debug.Log("Begin DisplayScrollViewWords method");
         foreach (Transform child in contentRect.transform)
         {
             Destroy(child.gameObject);
         }
-
 
         GameObject tempPanel;
         contentTransform = contentRect.GetComponent<RectTransform>();
@@ -113,11 +106,8 @@ public class VW_WordList : MonoBehaviour
 
         List<string> tempScrollviewList = new List<string>();
 
-
-
         foreach (var entry in sortedWordList)
         {
-
             List<string> wordTagsList = new List<string>();
             List<string> filterTagsList = new List<string>();
 
@@ -126,9 +116,6 @@ public class VW_WordList : MonoBehaviour
                 wordTagsList = entry.Value.WordTags.Split(',').ToList();
                 filterTagsList = filterTags.Split(',').ToList();
             }
-           
-
-
 
             if (filterTags == "" || filterTags == null)
             {
@@ -142,12 +129,13 @@ public class VW_WordList : MonoBehaviour
                 }
 
 
-
+                //Disable the delete button for stock words
                 if (!entry.Value.StockCustom.Equals("custom"))
                 {
                     tempPanel.transform.GetChild(4).GetComponent<Button>().interactable = false;
                 }
 
+                //enable the stats button
                 tempPanel.transform.GetChild(3).GetComponent<Button>().interactable = true;
 
                 tempPanel.name = entry.Key;
@@ -385,6 +373,8 @@ public class VW_WordList : MonoBehaviour
     {
         Debug.Log("Begin DisplayScrollViewTags method");
 
+        isTagsView = true;
+
         // Clear the scroll view
         foreach (Transform child in contentRect.transform)
         {
@@ -509,7 +499,7 @@ public class VW_WordList : MonoBehaviour
     {
         DeleteTagWordsModal.SetActive(true);
         DeleteTagWordsModalMessageText.text = "Are you sure you want to delete all words with the tag '" + EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(0).GetComponent<Text>().text.ToString() + "'?";
-        tagWordsToDelete = EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(1).GetComponent<Text>().text.ToString();
+        tagWordsToDelete = EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(1).GetComponent<Text>().text.ToString().Replace(" ", "");
         Debug.Log("Pressed delete button on tag: " + EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(1).GetComponent<Text>().text.ToString());
     }
 
@@ -526,12 +516,17 @@ public class VW_WordList : MonoBehaviour
         {
             if (word.Contains(" "))
             {
-                Debug.Log("space detected in word");
+                Debug.Log("space detected in " + word);
                 word.Replace(" ", "");
             }
             if (word.Contains(" "))
             {
-                Debug.Log("space detected in word");
+                Debug.Log("space detected in " + word);
+                word.Replace(" ", "");
+            }
+            if (word.Contains(" "))
+            {
+                Debug.Log("space detected in " + word);
                 word.Replace(" ", "");
             }
             Debug.Log("Deleting " + word);
@@ -689,7 +684,14 @@ public class VW_WordList : MonoBehaviour
 
     private void ResetScrollView()
     {
-        DisplayScrollViewWords();
+        if (isTagsView)
+        {
+            DisplayScrollViewTags();
+        }
+        else
+        {
+            DisplayScrollViewWords();
+        }
         DLCPanel.SetActive(false);
     }
 

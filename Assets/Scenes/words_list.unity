@@ -1548,7 +1548,6 @@ MonoBehaviour:
   DownloadProgressBar: {fileID: 1953190862}
   DeleteTagWordsModal: {fileID: 2023539218}
   DeleteTagWordsModalMessageText: {fileID: 1125690121}
-  statsButton: {fileID: 879203856}
 --- !u!1 &245426212
 GameObject:
   m_ObjectHideFlags: 0
@@ -3877,7 +3876,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 669911757}
   m_OnClick:
     m_PersistentCalls:
