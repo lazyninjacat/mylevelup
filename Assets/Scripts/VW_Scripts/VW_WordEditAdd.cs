@@ -233,7 +233,6 @@ public class VW_WordEditAdd : MonoBehaviour
     {
         CleanUpScroll();
         controller.ClearData();
-        // controller.SceneChange("words_list");
     }
 
     public void NavigateToRecord()
@@ -300,7 +299,7 @@ public class VW_WordEditAdd : MonoBehaviour
             {
                 // Call for deletion of any word pictures using the word and current integer
                 //controller.DeleteWordImage(controller.IsEditSettings ? wordText.GetComponent<Text>().text : wordFieldText.text, x);
-                Debug.Log("******************************************\n VWREMOVE: TOGGLE ON! THE INDICE TO DELETE IS :" + x + "\n******************************************");
+                Debug.Log("VWREMOVE: TOGGLE ON! THE INDICE TO DELETE IS :" + x);
 
                 indicesToDelete.Add(x);
                 Destroy(child.gameObject);
@@ -319,7 +318,7 @@ public class VW_WordEditAdd : MonoBehaviour
 
         if (indicesToDelete.Count > 0)
         {
-            Debug.Log("******************************************\n indicesToDelete count is " + indicesToDelete.Count + " \n******************************************");
+            Debug.Log("indicesToDelete count is " + indicesToDelete.Count);
             controller.DeleteWordImages(indicesToDelete, controller.IsEditSettings ? wordText.GetComponent<Text>().text : wordFieldText.text);
             imageDeleted = true;
             saveButton.interactable = true;
@@ -357,8 +356,8 @@ public class VW_WordEditAdd : MonoBehaviour
   //  public void ToggleParent(GameObject parent)
     public void ToggleImageButton(GameObject toggle)
     {
-        Debug.Log("**************************\n ATTEMPTING TO TOGGLE PARENT " + toggle.name + "\n********************************");
-        Debug.Log("**************************\n TOGGLE OF THE CHILD IS " + toggle.GetComponent<Toggle>().isOn.ToString() + "\n********************************");
+        Debug.Log("ATTEMPTING TO TOGGLE PARENT " + toggle.name);
+        Debug.Log("TOGGLE OF THE CHILD IS " + toggle.GetComponent<Toggle>().isOn.ToString());
 
         // Change the color of the toggle's background to mirror its on/off status
         toggle.transform.GetChild(0).GetComponent<Image>().color = toggle.GetComponent<Toggle>().isOn ? onColor : offColor;
@@ -410,7 +409,7 @@ public class VW_WordEditAdd : MonoBehaviour
         // Check if there is a new stored texture and add if so.
         if (controller.IsTextureSet()) controller.AddNewTexture();
 
-        Debug.Log("++++++++++++++++++++++++++++++++\n Past the first check in DISPLAY GALLERY \n ****************************");
+        Debug.Log("Past the first check in DISPLAY GALLERY");
 
         bool texturesLoaded = false;
 
@@ -418,7 +417,7 @@ public class VW_WordEditAdd : MonoBehaviour
         {
             if (controller.IsEditSettings)
             {
-                Debug.Log("++++++++++++++++++++++++++++++++\n IS EDIT WORD IS " + wordText.GetComponent<Text>().text + " \n ****************************");
+                Debug.Log("IS EDIT WORD IS " + wordText.GetComponent<Text>().text);
                 texturesLoaded = controller.RetrievePictures(wordText.GetComponent<Text>().text);
             }
             else
@@ -429,7 +428,7 @@ public class VW_WordEditAdd : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("++++++++++++++++++++++++++++++++\n ADDING NEW WORD IS " + wordFieldText.text + " \n ****************************");
+                    Debug.Log("ADDING NEW WORD IS " + wordFieldText.text);
                     texturesLoaded = controller.RetrievePictures(placeHolderText.text);
                 }
             }
@@ -438,20 +437,19 @@ public class VW_WordEditAdd : MonoBehaviour
         if (texturesLoaded || controller.AreTexturesPresent())
         {
 
-            Debug.Log("*****\n Passed the IF statement\n*****");
 
             GameObject tempToggle;
             RawImage tempImage;
 
             customList = new List<Texture2D>(controller.GetImages());
 
-            Debug.Log("*****\n customList count is: " + customList.Count.ToString() + "\n*****");
+            Debug.Log("customList count is: " + customList.Count.ToString());
 
             // Check if the customList entry count is greater than zero before trying the loop.
             if (customList.Count > 0)
             {
 
-                Debug.Log("*****\n Passed the IF statement\n*****");
+                Debug.Log("Passed the IF statement");
 
                 foreach (Texture2D tex in customList)
                 {
@@ -599,7 +597,7 @@ public class VW_WordEditAdd : MonoBehaviour
     {
         galleryCameraModal.SetActive(false);
         Media.Gallery.Pick(PickFromGalleryCallback);
-        Debug.Log("gallery button ///////////////////************************************");
+        Debug.Log("gallery button");
 
     }
 
@@ -620,7 +618,7 @@ public class VW_WordEditAdd : MonoBehaviour
                 Media.Gallery.LoadImage(result, LoadImageCallback);
             }
         }
-        Debug.Log("pick image from gallery callback///////////////////************************************");
+        Debug.Log("pick image from gallery callback");
 
     }
 
@@ -640,7 +638,7 @@ public class VW_WordEditAdd : MonoBehaviour
         CleanUpScroll();
         DisplayGallery();
 
-        Debug.Log("loadimagecallback///////////////////************************************");
+        Debug.Log("loadimagecallback");
     }
 
     public void OnCameraButton()

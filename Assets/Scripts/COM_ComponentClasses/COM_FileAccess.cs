@@ -575,9 +575,16 @@ public static class FileAccessUtil
     /// <param name="fileName"></param>
     private static void DeleteImageFromDir(string fileName, string fileDir)
     {
+        Debug.Log("Attempting to delete " + fileName + " from " + fileDir);
+
         string filePath = string.Format("{0}/{1}.png", fileDir, fileName.ToLower());
 
-        if (File.Exists(filePath)) File.Delete(filePath);
+        if (File.Exists(filePath))
+        {
+            Debug.Log("Confirmed file exists. Now deleting " + fileName);
+            File.Delete(filePath);
+        }
+        else { Debug.Log("Could not delete because file does not exist as specified"); }
     }
 
     private static int CreateUniqueSuffix(int x) { return (currentTime.Month * x) + (currentTime.Day * x) + (currentTime.Hour * x) + (currentTime.Minute * x) + (currentTime.Second * x); }

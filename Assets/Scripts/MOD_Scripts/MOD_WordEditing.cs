@@ -69,7 +69,7 @@ public class MOD_WordEditing : AB_Model
             success = !success;
             wordList.Remove(key);
             FileAccessUtil.DeleteWordAudio(key);
-            //FileAccessUtil.DeleteWordPic(key);
+            FileAccessUtil.DeleteWordPic(key);
             FileAccessUtil.DeleteWordImageDir(key.ToLower());
         }
         else
@@ -265,16 +265,16 @@ public class MOD_WordEditing : AB_Model
     /// </summary>
     public void DeleteInvalidPlayEntries()
     {
-        Debug.Log("*************************************\n MOD: Trying to validate! \n ********************************");
+        Debug.Log("MOD: Trying to validate!");
 
 
         foreach (DO_PlayListObject entry in dataService.GetPlayList())
         {
-            Debug.Log("*************************************\n MOD: Trying to validate type: " + entry.type_id.ToString() + "\n ********************************");
+            Debug.Log("MOD: Trying to validate type: " + entry.type_id.ToString());
 
             if (!entry.ValidateChild(dataService) && entry.type_id != 1)
             {
-                Debug.Log("*************************************\n MOD: NON VALID ENTRY FOUND DELETING! \n ********************************");
+                Debug.Log("MOD: NON VALID ENTRY FOUND DELETING!");
 
                 dataService.DeleteFromPlayList(entry.id);
             }
@@ -350,7 +350,7 @@ public class MOD_WordEditing : AB_Model
     {
         foreach (int idx in deleteIndices)
         {
-            Debug.Log("**********************\n Index number is " + idx + "\n*********************************");
+            Debug.Log("Index number is " + idx);
 
             if (idx < wordImageNames.Capacity && wordImageNames[idx] != null)
             {
@@ -363,7 +363,7 @@ public class MOD_WordEditing : AB_Model
                 imagesForDelete.Add(textureList[idx]);
             }
 
-            Debug.Log("**********************\n removed from TEXTURELIST\n*********************************");
+            Debug.Log("removed from TEXTURELIST");
         }
         if (toDelete.Count > 0)
         {
@@ -373,7 +373,7 @@ public class MOD_WordEditing : AB_Model
                 textureList.Remove(imagesForDelete[x]);
             }
 
-            Debug.Log("**********************\n to DELETE WAS NOT COUNT ZERO\n*********************************");
+            Debug.Log("to DELETE WAS NOT COUNT ZERO");
             FileAccessUtil.DeleteWordPictures(toDelete, word);
 
             //Clear the the temporary delete lists
@@ -393,7 +393,7 @@ public class MOD_WordEditing : AB_Model
     /// <returns>bool</returns>
     public bool RetrieveSavedPics(string word)
     {
-        Debug.Log("++++++++++++++++++++++++++++++++\n MOD: trying to retirieve pictures for word " + word + " \n ****************************");
+        Debug.Log("MOD: trying to retirieve pictures for word " + word);
         int x = 1;
 
         List<byte[]> tempList = FileAccessUtil.RetrieveWordPics(word);
@@ -427,7 +427,6 @@ public class MOD_WordEditing : AB_Model
             }
             
         }
-        /***************************************************************/
 
 
         if (tempList != null && tempList.Count > 0)
@@ -436,10 +435,10 @@ public class MOD_WordEditing : AB_Model
             {
                 if (bytes == null || bytes.Length <= 0)
                 {
-                    Debug.Log("++++++++++++++++++++++++++++++++\n MOD: BYTES ARE NO GOOOOOOD \n &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+                    Debug.Log("MOD: BYTES ARE NO GOOOOOOD");
                 }
 
-                Debug.Log("++++++++++++++++++++++++++++++++\n MOD: IN FOR EACH x IS " + x.ToString() + " \n ****************************");
+                Debug.Log("MOD: IN FOR EACH x IS " + x.ToString());
 
                 Texture2D tempTex = new Texture2D(SAVED_PIC_XY, SAVED_PIC_XY);
                 tempTex.LoadImage(bytes);
@@ -457,7 +456,7 @@ public class MOD_WordEditing : AB_Model
         foreach (string fileName in FileAccessUtil.GetWordImagePaths(word))
         {
             isolatedName = Regex.Split(fileName, PNG_PATTERN);
-            Debug.Log("*******************************\nREGEX: isolated name is " + isolatedName[1] + "\n ########################## ");
+            Debug.Log("REGEX: isolated name is " + isolatedName[1]);
             if (!wordImageNames.Contains(isolatedName[1]))
             {
                 wordImageNames.Add(isolatedName[1]);
@@ -466,14 +465,15 @@ public class MOD_WordEditing : AB_Model
 
         foreach (string fileName in wordImageNames)
         {
-            Debug.Log("*****\n Next word image name is " + fileName + "\n*****");
+            Debug.Log("Next word image name is " + fileName);
         }
 
 
 
-        Debug.Log("++++++++++++++++++++++++++++++++\n MOD: TEX LIST COUNT IS " + textureList.Count.ToString() + " \n ****************************");
+        Debug.Log("MOD: TEX LIST COUNT IS " + textureList.Count.ToString());
         return true;
     }
+
 
     public bool AreTexturesPresent() { return textureList.Count > 0 ? true : false; }
     public void AddNewTexture() { if (!textureList.Contains(CurrentTexture)) textureList.Add(CurrentTexture); }

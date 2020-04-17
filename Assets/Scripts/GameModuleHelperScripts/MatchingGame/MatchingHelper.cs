@@ -113,6 +113,7 @@ public class MatchingHelper : AB_GameHelper
 
         foreach (int id in matchingGameDataObject.wordIdList)
         {
+            Debug.Log("Sending wordID " + id + " to gameloop controller getwordbyid");
             words.Add(gameLoop.controller.GetWordById(id));
             wordIDs.Add(id);
         }

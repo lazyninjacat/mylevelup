@@ -85,30 +85,22 @@ public class DataService  {
 		return _connection.Table<Words>();
 	}
 
-	///<summary>Gets all word id's and word name's of all the words in the Words_List table</summary>
-	///<returns>IEnumerable object of the Words type</returns>
-	public IEnumerable<Words> GetWordsInWordsList(){
-		string q = "SELECT Words.word_name, Words.word_image, Words.word_sound FROM Words INNER JOIN Words_List ON Words.word_id = Words_List.word_id";
-		return _connection.Query<Words>(q);
-	}	
 
-	///<summary>Inserts a word into the Words_List table</summary>
-	///<param name="wordId">the word_id fk of the word</param>
-	///<param name="wlId">the word_list_id to add the word to
-	///<returns>an int value of how many rows were successfully inserted</returns>
-	public int InsertIntoWordList(int wordId, int wlId){
-		string query = "INSERT INTO Words_List (word_id, word_list_id) VALUES(?, ?)";
-		return _connection.Execute(query, wordId, wlId);
-	}
+    /// <summary>
+    /// Resets the target word's word_id to the given value "newID".
+    /// </summary>
+    /// <param name="wordName"></param>
+    /// <param name="NewID"></param>
+    /// <returns></returns>
+    public int SetWordID(string wordName, int NewID)
+    {
+        string q = "UPDATE Words SET word_id = ?, WHERE word_name = ?";
+        return _connection.Execute(q, NewID, wordName);
+    }
+
+
+
 	
-	///<summary>Deletes a word from the Words_List table</summary>
-	///<param name="wordId">the word_id of the word to be deleted</param>
-	///<param name="wlId">the word_list_id that the word is to be removed from</param>
-	///<returns>an int value of how many rows were successfully deleted</returns>
-	public int DeleteFromWordList(int wordId, int wlId){
-		string query = "DELETE FROM Words_List WHERE word_id = ? AND word_list_id = ?";
-		return _connection.Execute(query, wordId, wlId);
-	}
 
 	///<summary>SQL query to reset the auto increment sequence number back to the value given</summary>
 	///<param name="tableName">the name of the table to reset the sequence number</param>
@@ -183,6 +175,14 @@ public class DataService  {
         string query = "DELETE FROM Play_List";
         UpdatePlayListAutoIds();
         return _connection.Execute(query);
+    }
+
+    public int DeleteAllMastery()
+    {
+        string query = "DELETE FROM Mastery";
+        ReseedTable("Mastery", 0);
+        return _connection.Execute(query);
+        
     }
 
     public int UpdatePlayListAutoIds()

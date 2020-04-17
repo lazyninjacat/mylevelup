@@ -259,7 +259,7 @@ public class VW_WordList : MonoBehaviour
         {
             if (inUse)
             {
-                Debug.Log("*************************************\n DELETE: Deleting a word in use! \n ********************************");
+                Debug.Log("DELETE: Deleting a word in use!");
                 controller.DeleteInvalidPlayEntries();
             }
 

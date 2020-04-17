@@ -192,29 +192,56 @@ public class VW_Settings : MonoBehaviour
     {
         CloseConfirmResetModal();
         OpenPleaseWaitModal();
-        
+        // Clear playlist table and reset auto increment to 0
+        dataService.DeleteAllPlaylist();
+        dataService.ReseedTable("playlist", 0);
+
         // Delete all non stock words       
         foreach (var row in wordList)
         {
             if (row.Value.StockCustom == "custom")
             {
+                Debug.Log("Adding to wordlist to delete: " + row.Value.Word_name);
                 wordIDsForDelete.Add(row.Value.IdNum);
+                FileAccessUtil.DeleteWordAudio(row.Value.Word_name);
+
+                List<string> existingPicsFiles = new List<string>();
+                string[] temparr = System.IO.Directory.GetFiles(Application.persistentDataPath + "/WordPictures/" + row.Value.Word_name);
+
+                foreach (string path in temparr)
+                {
+                    existingPicsFiles.Add(path);
+                }
+
+                Debug.Log("existingPicsFiles array length = " + existingPicsFiles.Count);
+
+
+                foreach (string path in existingPicsFiles)                    
+                {
+                    Debug.Log("existingPicsFiles array element recorded as: " + path);
+                    System.IO.File.Delete(path);
+
+                }
+                Debug.Log("Done deleting pics for " + row.Value.Word_name);
+                System.IO.Directory.Delete(Application.persistentDataPath + "/WordPictures/" + row.Value.Word_name);
+                Debug.Log("Done deleting directory for " + row.Value.Word_name);
+                temparr = null;
+                existingPicsFiles.Clear();
             }
         }        
         foreach (int id in wordIDsForDelete)
         {
+            Debug.Log(" deleting word ID: " + id);
             dataService.DeleteFromWords(id);
         }
-        dataService.ReseedTable("words", 10);
+        dataService.ReseedTable("Words", 10);
         wordList.Clear();
         wordIDsForDelete.Clear();
 
 
-        // Clear playlist table and reset auto increment to 0
-        dataService.DeleteAllPlaylist();
-        dataService.ReseedTable("playlist", 0);
-
         // Clear existing mastery database records
+        dataService.DeleteAllMastery();
+
 
         // Reset all Playerprefs
 
