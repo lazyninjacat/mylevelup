@@ -69,12 +69,31 @@ public class MOD_WordEditing : AB_Model
             success = !success;
             wordList.Remove(key);
             FileAccessUtil.DeleteWordAudio(key);
-            FileAccessUtil.DeleteWordPic(key);
-            FileAccessUtil.DeleteWordImageDir(key.ToLower());
+            List<string> existingPicsFiles = new List<string>();
+            string[] temparr = Directory.GetFiles(Application.persistentDataPath + "/WordPictures/" + key);
+
+            foreach (string path in temparr)
+            {
+                existingPicsFiles.Add(path);
+            }
+
+            Debug.Log("existingPicsFiles array length = " + existingPicsFiles.Count);
+
+            foreach (string path in existingPicsFiles)
+            {
+                Debug.Log("existingPicsFiles array element recorded as: " + path);
+                File.Delete(path);
+            }
+
+            Debug.Log("Done deleting pics for " + key);
+            Directory.Delete(Application.persistentDataPath + "/WordPictures/" + key);
+            Debug.Log("Done deleting directory for " + key);
+            temparr = null;
+            existingPicsFiles.Clear();
         }
         else
         {
-            // TODO: Add error 
+            Debug.Log("Error trying to delete " + key); 
         }
 
         return success;

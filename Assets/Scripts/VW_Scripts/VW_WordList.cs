@@ -524,6 +524,7 @@ public class VW_WordList : MonoBehaviour
         WordsForDeleteList = tagWordsToDelete.Split(',').ToList();
         foreach (string word in WordsForDeleteList)
         {
+            word.Replace(" ", "");
             Debug.Log("Deleting " + word);
             controller.DeleteWord(word);
         }
