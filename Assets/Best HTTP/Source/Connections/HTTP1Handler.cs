@@ -52,6 +52,8 @@ namespace BestHTTP.Connections
                 if (this.conn.CurrentRequest.IsCancellationRequested)
                     return;
 
+                this.conn.CurrentRequest.OnCancellationRequested += OnCancellationRequested;
+
                 // Receive response from the server
                 bool received = Receive(this.conn.CurrentRequest);
 
@@ -132,6 +134,8 @@ namespace BestHTTP.Connections
             }
             finally
             {
+                this.conn.CurrentRequest.OnCancellationRequested -= OnCancellationRequested;
+
                 // Exit ASAP
                 if (this.ShutdownType != ShutdownTypes.Immediate)
                 {
@@ -176,6 +180,12 @@ namespace BestHTTP.Connections
                     ConnectionEventHelper.EnqueueConnectionEvent(new ConnectionEventInfo(this.conn, proposedConnectionState));
                 }
             }
+        }
+
+        private void OnCancellationRequested(HTTPRequest obj)
+        {
+            if (this.conn != null && this.conn.connector != null)
+                this.conn.connector.Dispose();
         }
 
         private bool Receive(HTTPRequest request)

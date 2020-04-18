@@ -42,7 +42,10 @@ public class VW_StartMenu : MonoBehaviour {
 
         DateTime lockOutTo = new DateTime(current.Year, current.Month, current.Day, (PlayerPrefs.GetInt("LockoutToTimeInt")), 0, 0);
 
-        timeText.text = (PlayerPrefs.GetString("LockoutToTimeString"));
+        if (PlayerPrefs.GetString("LockoutToTimeString") != null && PlayerPrefs.GetString("LockoutToTimeString") != "")
+        {
+            timeText.text = (PlayerPrefs.GetString("LockoutToTimeString"));
+        }
 
         DateTime lockOutToOvernight = new DateTime(current.Year, current.Month, current.Day, ((PlayerPrefs.GetInt("LockoutToTimeInt")) + 1), 0, 0);
 

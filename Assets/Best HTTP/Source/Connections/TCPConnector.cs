@@ -182,15 +182,21 @@ namespace BestHTTP.Connections
             {
                 try
                 {
-                    Client.Close();
+                    Stream.Close();
                 }
-                catch
-                {
-
-                }
+                catch { }
                 finally
                 {
                     Stream = null;
+                }
+
+                try
+                {
+                    Client.Close();
+                }
+                catch { }
+                finally
+                {                  
                     Client = null;
                 }
             }

@@ -61,6 +61,8 @@ public class UniWebViewInterface {
     public static void SetSupportMultipleWindows(string name, bool flag) { CheckPlatform(); }
     public static void SetDragInteractionEnabled(string name, bool flag) { CheckPlatform(); }
     public static void ScrollTo(string name, int x, int y, bool animated) { CheckPlatform(); }
+    public static float NativeScreenWidth() { CheckPlatform(); return 0.0f; }
+    public static float NativeScreenHeight() { CheckPlatform(); return 0.0f; }
 
     public static void CheckPlatform() {
         if (!alreadyLoggedWarning) {

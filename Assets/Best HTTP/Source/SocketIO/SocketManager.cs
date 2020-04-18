@@ -326,6 +326,7 @@ namespace BestHTTP.SocketIO
             State = States.Closed;
 
             LastHeartbeat = DateTime.MinValue;
+            IsWaitingPong = false;
 
             if (removeSockets && OfflinePackets != null)
                 OfflinePackets.Clear();

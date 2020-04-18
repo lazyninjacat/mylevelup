@@ -264,10 +264,13 @@ public class UniWebView: MonoBehaviour {
                     break;
             }
 
-            float x = topLeft.x;
-            float y = Screen.height - topLeft.y;
-            float width = bottomRight.x - topLeft.x;
-            float height = topLeft.y - bottomRight.y;
+            float widthFactor = (float)UniWebViewInterface.NativeScreenWidth() / (float)Screen.width;
+            float heightFactor = (float)UniWebViewInterface.NativeScreenHeight() / (float)Screen.height;
+
+            float x = topLeft.x * widthFactor;
+            float y = (Screen.height - topLeft.y) * heightFactor;
+            float width = (bottomRight.x - topLeft.x) * widthFactor;
+            float height = (topLeft.y - bottomRight.y) * heightFactor;
             return new Rect(x, y, width, height);
         }
     }
@@ -959,6 +962,22 @@ public class UniWebView: MonoBehaviour {
     }
 
     /// <summary>
+    /// Sets the visibility of navigation buttons, such as "Go Back" and "Go Forward", on toolbar.
+    /// 
+    /// By default, UniWebView will show the "Go Back" and "Go Forward" navigation buttons on the toolbar.
+    /// Users can use these buttons to perform go back or go forward action just like in a browser. If the navigation
+    /// model is not for your case, call this method with `false` as `show` parameter to hide them.
+    /// 
+    /// This method is only for iOS, since there is no toolbar on Android.
+    /// </summary>
+    /// <param name="show">Whether the navigation buttons on the toolbar should show or hide.</param>
+    public void SetShowToolbarNavigationButtons(bool show) {
+        #if (UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IOS) && !UNITY_EDITOR_WIN
+        UniWebViewInterface.SetShowToolbarNavigationButtons(listener.Name, show);
+        #endif
+    }
+
+    /// <summary>
     /// Enables debugging of web contents. You could inspect of the content of a 
     /// web view by using a browser development tool of Chrome for Android or Safari for macOS.
     /// 
@@ -1066,6 +1085,23 @@ public class UniWebView: MonoBehaviour {
     /// </param>
     public void SetSupportMultipleWindows(bool enabled) {
         UniWebViewInterface.SetSupportMultipleWindows(listener.Name, enabled);
+    }
+
+    /// <summary>
+    /// Sets the default font size used in the web view.
+    /// 
+    /// On Android, the web view font size can be affected by the system font scale setting. Use this method to set the 
+    /// font size in a more reasonable way, by giving the web view another default font size with the system font scale 
+    /// considered. It can removes or reduces the effect of system font scale when displaying the web content.
+    /// 
+    /// This method only works on Android. On iOS, this method does nothing since the web view will respect the font 
+    /// size setting in your CSS styles.
+    /// </summary>
+    /// <param name="size">The target default font size set to the web view.</param>
+    public void SetDefaultFontSize(int size) {
+        #if UNITY_ANDROID && !UNITY_EDITOR
+        UniWebViewInterface.SetDefaultFontSize(listener.Name, size);
+        #endif
     }
 
     /// <summary>

@@ -142,7 +142,7 @@ namespace BestHTTP.Connections.HTTP2
             if (this.AssignedRequest.IsCancellationRequested && !this.isRSTFrameSent)
             {
                 this.AssignedRequest.Response = null;
-                this.AssignedRequest.State = HTTPRequestStates.Aborted;
+                this.AssignedRequest.State = this.AssignedRequest.IsTimedOut ? HTTPRequestStates.TimedOut : HTTPRequestStates.Aborted;
 
                 this.outgoing.Clear();
                 if (this.State != HTTP2StreamStates.Idle)
@@ -195,7 +195,7 @@ namespace BestHTTP.Connections.HTTP2
             else if (this.AssignedRequest.IsCancellationRequested)
             {
                 this.AssignedRequest.Response = null;
-                this.AssignedRequest.State = HTTPRequestStates.Aborted;
+                this.AssignedRequest.State = this.AssignedRequest.IsTimedOut ? HTTPRequestStates.TimedOut : HTTPRequestStates.Aborted;
 
                 this.State = HTTP2StreamStates.Closed;
             }
@@ -483,7 +483,7 @@ namespace BestHTTP.Connections.HTTP2
                     break;
 
                 case HTTP2StreamStates.HalfClosedLocal:
-                    if (this.TimeSpentInCurrentState >= CloseStreamAfter)
+                    if (this.TimeSpentInCurrentState >= CloseStreamAfter && !this.isStreamedDownload)
                         this.State = HTTP2StreamStates.Closed; 
                     break;
 
@@ -553,7 +553,7 @@ namespace BestHTTP.Connections.HTTP2
             else
             {
                 if (req.State == HTTPRequestStates.Processing && req.IsCancellationRequested)
-                    req.State = HTTPRequestStates.Aborted;
+                    req.State = req.IsTimedOut ? HTTPRequestStates.TimedOut : HTTPRequestStates.Aborted;
             }
         }
 

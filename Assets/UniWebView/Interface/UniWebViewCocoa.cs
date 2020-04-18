@@ -422,6 +422,13 @@ public class UniWebViewInterface {
     }
 
     [DllImport(DllLib)]
+    private static extern void uv_setShowToolbarNavigationButtons(string name, bool show);
+    public static void SetShowToolbarNavigationButtons(string name, bool show) {
+        CheckPlatform();
+        uv_setShowToolbarNavigationButtons(name, show);
+    }
+
+    [DllImport(DllLib)]
     private static extern void uv_setToolbarDoneButtonText(string name, string text);
     public static void SetToolbarDoneButtonText(string name, string text) {
         CheckPlatform();
@@ -489,6 +496,26 @@ public class UniWebViewInterface {
     public static void SetDragInteractionEnabled(string name, bool flag) {
         CheckPlatform();
         uv_setDragInteractionEnabled(name, flag);
+    }
+
+    [DllImport(DllLib)]
+    private static extern float uv_nativeScreenWidth();
+    public static float NativeScreenWidth() {
+        #if UNITY_EDITOR_OSX
+        return Screen.width;
+        #else
+        return uv_nativeScreenWidth();
+        #endif
+    }
+
+    [DllImport(DllLib)]
+    private static extern float uv_nativeScreenHeight();
+    public static float NativeScreenHeight() {
+        #if UNITY_EDITOR_OSX
+        return Screen.height;
+        #else
+        return uv_nativeScreenHeight();
+        #endif
     }
 
     public static void CheckPlatform() {

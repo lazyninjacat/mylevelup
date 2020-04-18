@@ -235,7 +235,7 @@ namespace BestHTTP
         /// <summary>
         /// User-agent string that will be sent with each requests.
         /// </summary>
-        public static string UserAgent = "BestHTTP 2.0.5";
+        public static string UserAgent = "BestHTTP/2 v2.0.6";
 
 #endregion
 

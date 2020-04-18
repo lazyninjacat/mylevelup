@@ -1422,7 +1422,21 @@ namespace BestHTTP
             // If processing of the request isn't started yet, set its state.
             if (this.State < HTTPRequestStates.Processing)
                 this.State = this.IsTimedOut ? HTTPRequestStates.TimedOut : HTTPRequestStates.Aborted;
+            else
+                if (this.OnCancellationRequested != null)
+                {
+                    try
+                    {
+                        this.OnCancellationRequested(this);
+                    }
+                    catch { }
+                }
         }
+
+        /// <summary>
+        /// This action is called when a user calls the Abort function. Do not use it outside of the plugin!
+        /// </summary>
+        internal Action<HTTPRequest> OnCancellationRequested;
 
         /// <summary>
         /// Resets the request for a state where switching MethodType is possible.

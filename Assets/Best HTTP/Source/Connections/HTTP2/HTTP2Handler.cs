@@ -387,9 +387,7 @@ namespace BestHTTP.Connections.HTTP2
             }
             finally
             {
-                // First thread closing notifies the ConnectionEventHelper
-                if (Interlocked.Increment(ref this.threadExitCount) == 1)
-                    ConnectionEventHelper.EnqueueConnectionEvent(new ConnectionEventInfo(this.conn, HTTPConnectionStates.Closed));
+                TryToCleanup();
 
                 HTTPManager.Logger.Information("HTTP2Handler", "Sender thread closing - cleaning up remaining request...");
 
@@ -492,15 +490,27 @@ namespace BestHTTP.Connections.HTTP2
                 //HTTPManager.Logger.Exception("HTTP2Handler", "", ex);
 
                 this.isRunning = false;
-                this.newFrameSignal.Set();
             }
             finally
             {
-                // First thread closing notifies the ConnectionEventHelper
-                if (Interlocked.Increment(ref this.threadExitCount) == 1)
-                    ConnectionEventHelper.EnqueueConnectionEvent(new ConnectionEventInfo(this.conn, HTTPConnectionStates.Closed));
-
+                TryToCleanup();
                 HTTPManager.Logger.Information("HTTP2Handler", "Reader thread closing");
+            }
+        }
+
+        private void TryToCleanup()
+        {
+            // First thread closing notifies the ConnectionEventHelper
+            int counter = Interlocked.Increment(ref this.threadExitCount);
+            if (counter == 1)
+                ConnectionEventHelper.EnqueueConnectionEvent(new ConnectionEventInfo(this.conn, HTTPConnectionStates.Closed));
+
+            // Last thread closes the AutoResetEvent
+            if (counter == 2)
+            {
+                if (this.newFrameSignal != null)
+                    this.newFrameSignal.Close();
+                this.newFrameSignal = null;
             }
         }
 
@@ -554,9 +564,6 @@ namespace BestHTTP.Connections.HTTP2
 
         private void Dispose(bool disposing)
         {
-            if (this.newFrameSignal != null)
-                this.newFrameSignal.Close();
-            this.newFrameSignal = null;
         }
 
         ~HTTP2Handler()

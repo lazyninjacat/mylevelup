@@ -1,4 +1,4 @@
-﻿#if (!UNITY_WEBGL || UNITY_EDITOR) && !BESTHTTP_DISABLE_ALTERNATE_SSL && !BESTHTTP_DISABLE_HTTP2
+#if (!UNITY_WEBGL || UNITY_EDITOR) && !BESTHTTP_DISABLE_ALTERNATE_SSL && !BESTHTTP_DISABLE_HTTP2
 
 using System;
 using System.Collections.Generic;
@@ -136,6 +136,9 @@ namespace BestHTTP.Connections.HTTP2
 
         public void Merge(List<KeyValuePair<HTTP2Settings, UInt32>> settings)
         {
+            if (settings == null)
+                return;
+
             for (int i = 0; i < settings.Count; ++i)
             {
                 HTTP2Settings setting = settings[i].Key;

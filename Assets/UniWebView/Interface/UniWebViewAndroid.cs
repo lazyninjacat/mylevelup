@@ -303,6 +303,21 @@ public class UniWebViewInterface {
         plugin.CallStatic("setSupportMultipleWindows", name, flag);
     }
 
+    public static void SetDefaultFontSize(string name, int size) {
+        CheckPlatform();
+        plugin.CallStatic("setDefaultFontSize", name, size);
+    }
+
+    public static float NativeScreenWidth() {
+        CheckPlatform();
+        return plugin.CallStatic<float>("screenWidth");
+    }
+
+    public static float NativeScreenHeight() {
+        CheckPlatform();
+        return plugin.CallStatic<float>("screenHeight");
+    }
+
     public static void CheckPlatform() {
         if (!correctPlatform) {
             throw new System.InvalidOperationException("Method can only be performed on Android.");
