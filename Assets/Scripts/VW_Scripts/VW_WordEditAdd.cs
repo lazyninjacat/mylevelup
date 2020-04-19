@@ -29,8 +29,13 @@ public class VW_WordEditAdd : MonoBehaviour
     private bool imageDeleted = false;
     private string wordTags;
     private string wordTagsOriginal;
+    private bool isRecording = false;
+    private const int RECORD_LENGTH = 3;
+    private string micName;
+    private AudioSource sourceAudio;
+    private AudioClip clip;
 
-
+    public GameObject components;
 
     [SerializeField] Text titleLabel;
     [SerializeField] Text wordFieldText;
@@ -54,8 +59,12 @@ public class VW_WordEditAdd : MonoBehaviour
     [SerializeField] GameObject loadingAnimPanel;
     [SerializeField] Text wordTagsText;
     [SerializeField] InputField wordTagsInputField;
+    [SerializeField] Button saveAudioClipButton;
+    [SerializeField] GameObject RecordAudioPanel;
+    [SerializeField] GameObject recordIcon;
+    [SerializeField] GameObject stopRecordIcon;
 
-
+    
 
     void Start()
     {
@@ -69,6 +78,16 @@ public class VW_WordEditAdd : MonoBehaviour
         DisplayGallery();
         SetUpWordTags();
         wordTagsOriginal = wordTags;
+        sourceAudio = components.GetComponent<AudioSource>();
+
+        if (Microphone.devices.Length < 0)
+        {
+            micName = Microphone.devices[0];
+        }
+        else
+        {
+            Debug.Log("*****\n Could not find any microphone devices*****\n");
+        }
     }
 
     void Update()
@@ -112,7 +131,6 @@ public class VW_WordEditAdd : MonoBehaviour
         wordTagsText.text = wordTags;
         Debug.Log("word tags = " + wordTagsText.text);
     }
-
 
     public void OnAddNewWordTagButton()
     {
@@ -163,8 +181,7 @@ public class VW_WordEditAdd : MonoBehaviour
             if (controller.GetCurrentClip() == null && controller.GetImages().Count == 0 && !imageDeleted && (wordTags == wordTagsOriginal))
             {
                 loadingAnimPanel.SetActive(false);
-                textModal.transform.GetChild(0).GetComponent<Text>().text = MODAL_NO_EDITS;   
-
+                textModal.transform.GetChild(0).GetComponent<Text>().text = MODAL_NO_EDITS;
                 EnableErrorModal();
                 return;
             }
@@ -175,9 +192,7 @@ public class VW_WordEditAdd : MonoBehaviour
             {
                 textModal.transform.GetChild(0).GetComponent<Text>().text = string.Format(MODAL_EDIT_TEXT, TidyCase(word));
                 loadingAnimPanel.SetActive(false);
-
                 EnableEditModal();
-
             }
             else
             {
@@ -221,9 +236,7 @@ public class VW_WordEditAdd : MonoBehaviour
     {
         controller.ClearData();
         wordFieldText.text = "";
-        placeHolderText.text = "";
-        //imageText.text = "No Image";
-        //audioText.text = "No Audio";
+        placeHolderText.text = "";       
         saveButton.interactable = false;
         textModal.SetActive(false);
         CleanUpScroll();
@@ -234,86 +247,28 @@ public class VW_WordEditAdd : MonoBehaviour
         CleanUpScroll();
         controller.ClearData();
     }
-
-    public void NavigateToRecord()
-    {
-
-        if (controller.IsEditSettings == false)
-        {
-            if (wordFieldText.text != "")
-            {
-                controller.SetTargetWord(wordFieldText.text);
-
-            }
-            else if (placeHolderText.text != "")
-            {
-                controller.SetTargetWord(placeHolderText.text);
-            }
-        }
-
-        //Debug.Log("VW: Naving to record");
-        CleanUpScroll();
-        // controller.SceneChange("record_audio");
-    }
-
-    public void NavigateToCamera()
-    {
-        galleryCameraModal.SetActive(false);
-
-
-        if (controller.IsEditSettings == false)
-        {
-            if (wordFieldText.text != "")
-            {
-                controller.SetTargetWord(wordFieldText.text);
-            }
-            else if (placeHolderText.text != "")
-            {
-                controller.SetTargetWord(placeHolderText.text);
-            }
-        }
-
-        CleanUpScroll();
-        controller.SceneChange("image_camera");
-    }
-
-
+       
 
     public void DeletePictures()
     {
         int x = 0;
-
-        Debug.Log("******************************************\n IN DELETE \n******************************************");
-
-       /*
-       for (int x = 0; x < imagesPanel.transform.childCount; x++)
-       {
-
-       }
-       */
-
 
         foreach (Transform child in imagesPanel.transform)
         {
             if ((child.gameObject.GetComponent<Toggle>().isOn))
             {
                 // Call for deletion of any word pictures using the word and current integer
-                //controller.DeleteWordImage(controller.IsEditSettings ? wordText.GetComponent<Text>().text : wordFieldText.text, x);
                 Debug.Log("VWREMOVE: TOGGLE ON! THE INDICE TO DELETE IS :" + x);
-
                 indicesToDelete.Add(x);
                 Destroy(child.gameObject);
-
-                // Decrement the customNumLoaded value to reflect the change
             }
+
             x += 1;
 
             if (x >= imagesPanel.transform.childCount)
             {
                 break;
-            }
-
-
+            }            
         }
 
         if (indicesToDelete.Count > 0)
@@ -322,8 +277,8 @@ public class VW_WordEditAdd : MonoBehaviour
             controller.DeleteWordImages(indicesToDelete, controller.IsEditSettings ? wordText.GetComponent<Text>().text : wordFieldText.text);
             imageDeleted = true;
             saveButton.interactable = true;
-
         }
+
         saveButton.interactable = true;
     }
 
@@ -353,7 +308,6 @@ public class VW_WordEditAdd : MonoBehaviour
     /// Finds the toggle in the parent gameObject and toggles it.
     /// </summary>
     /// <param name="parent"></param>
-  //  public void ToggleParent(GameObject parent)
     public void ToggleImageButton(GameObject toggle)
     {
         Debug.Log("ATTEMPTING TO TOGGLE PARENT " + toggle.name);
@@ -436,26 +390,20 @@ public class VW_WordEditAdd : MonoBehaviour
 
         if (texturesLoaded || controller.AreTexturesPresent())
         {
-
-
             GameObject tempToggle;
             RawImage tempImage;
-
             customList = new List<Texture2D>(controller.GetImages());
-
             Debug.Log("customList count is: " + customList.Count.ToString());
 
             // Check if the customList entry count is greater than zero before trying the loop.
             if (customList.Count > 0)
             {
-
                 Debug.Log("Passed the IF statement");
 
                 foreach (Texture2D tex in customList)
                 {
                     tempToggle = GameObject.Instantiate(imageToggleCopy, imagesPanel.transform, false);
                     tempImage = tempToggle.transform.GetChild(0).Find("RawImage").GetComponent<RawImage>();
-                    //tempImage.GetComponent<RectTransform>().sizeDelta = new Vector2(XY_VECTOR, XY_VECTOR);
                     tempImage.texture = tex;
                     tempToggle.SetActive(true);
                 }
@@ -464,9 +412,7 @@ public class VW_WordEditAdd : MonoBehaviour
 
         GameObject tempStockToggle;
         RawImage tempStockImage;
-
         stockList = new List<Texture2D>(controller.GetStockImages());
-
 
         if(stockList.Count > 0)
         {
@@ -478,8 +424,6 @@ public class VW_WordEditAdd : MonoBehaviour
                 tempStockToggle.SetActive(true);
             }
         }
-             
-
     }
 
     public void CleanUpScroll()
@@ -488,7 +432,6 @@ public class VW_WordEditAdd : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-
     }
 
     private void EditOrAdd()
@@ -515,11 +458,8 @@ public class VW_WordEditAdd : MonoBehaviour
                 CleanUpScroll();
             }
 
-            string word = controller.GetTargetWord();
-
-
+            string word = controller.GetTargetWord();            
             Debug.Log("Inside edit. word is = " + word);
-
             Debug.Log("Inside edit. word tags are: " + wordTags);
 
             if (word != null || word != "")
@@ -548,25 +488,19 @@ public class VW_WordEditAdd : MonoBehaviour
                 //TODO: THROW AN ERROR 
                 Debug.Log("Error, wordtags is null or blank. Wordtags = " + wordTags);
             }
-
         }
         else
         {
             Debug.Log("VW: In ADD");
-
             titleLabel.text = TITLE_ADD;
-
             string word = controller.GetTargetWord();
             string wordTags = controller.GetTargetWordTags();
 
             // Enable word field and disable word text
             wordField.SetActive(true);
             wordText.SetActive(false);
-
             wordTagsText.text = wordTags;
-
-
-
+                       
             if (controller.GetTargetWord() == null || !controller.IsTextureSet())
             {
                 saveButton.interactable = false;
@@ -583,8 +517,7 @@ public class VW_WordEditAdd : MonoBehaviour
                 Debug.Log("VW: Setting text to " + controller.GetTargetWord());
                 wordFieldText.text = word;
                 placeHolderText.text = word;
-            }
-           
+            }           
         }
     }
 
@@ -598,10 +531,7 @@ public class VW_WordEditAdd : MonoBehaviour
         galleryCameraModal.SetActive(false);
         Media.Gallery.Pick(PickFromGalleryCallback);
         Debug.Log("gallery button");
-
     }
-
-
 
     private void PickFromGalleryCallback(string error, MediaResult[] results)
     {
@@ -619,7 +549,6 @@ public class VW_WordEditAdd : MonoBehaviour
             }
         }
         Debug.Log("pick image from gallery callback");
-
     }
 
     private void LoadImageCallback(string error, Texture2D image)
@@ -637,14 +566,12 @@ public class VW_WordEditAdd : MonoBehaviour
         saveButton.interactable = true;
         CleanUpScroll();
         DisplayGallery();
-
         Debug.Log("loadimagecallback");
     }
 
     public void OnCameraButton()
     {
         galleryCameraModal.SetActive(false);
-
         EasyMobile.CameraType cameraType = EasyMobile.CameraType.Front;
         Media.Camera.TakePicture(cameraType, TakePictureCallback);
     }
@@ -653,7 +580,7 @@ public class VW_WordEditAdd : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(error))
         {
-            // TODO: show the error to them.
+            // TODO: show the error to the user.
             Debug.Log("Error on take picture with native camera app");
         }
         else
@@ -697,8 +624,75 @@ public class VW_WordEditAdd : MonoBehaviour
         return sourceStr;
     }
 
+    // Audio Stuff
+    public void OpenRecordAudioPanel()
+    {
+        RecordAudioPanel.SetActive(true);
+        controller.SetTargetWord(wordFieldText.text);
+    }
 
+    public void CloseRecordAudioPanel()
+    {
+        RecordAudioPanel.SetActive(false);
+    }
 
+    /// <summary>
+    /// Starts recording audio.
+    /// </summary>
+    public void StartRecording()
+    {
+        if (isRecording)
+        {         
+            StopRecording();                   
+        }
+        else
+        {
+            recordIcon.SetActive(false);
+            stopRecordIcon.SetActive(true);
+            isRecording = true;
+            clip = Microphone.Start(micName, false, RECORD_LENGTH, 44100);           
+        }               
+    }
 
+    /// <summary>
+    /// Stops audio recording and sets the source audio clip to the newly made clip.
+    /// </summary>
+    public void StopRecording()
+    {
+        Microphone.End(micName);
 
+        if (clip != null)
+        {
+            stopRecordIcon.SetActive(false);
+            recordIcon.SetActive(true);
+            isRecording = false;
+        }
+        else
+        {
+            Debug.Log("Error recording audio clip");
+            return;
+        }
+
+        saveAudioClipButton.interactable = true;
+        sourceAudio.clip = clip;
+    }
+
+    /// <summary>
+    /// Plays recorded audio.
+    /// </summary>
+    public void PlayAudio()
+    {
+        sourceAudio.Play();
+    }
+
+    /// <summary>
+    /// Calls the controller to save the currently recorded clip.
+    /// </summary>
+    public void SaveClip()
+    {
+        controller.SetCurrentClip(clip);
+        CloseRecordAudioPanel();
+    }  
 }
+
+

@@ -18,7 +18,7 @@ public class VW_WordMic : MonoBehaviour
     public Button applyButton;
     public Text recordingText;
 
-    // Get the component's container
+    // Get the components container
     public GameObject components;
 
     private bool inputFieldFilled, isRecording;
