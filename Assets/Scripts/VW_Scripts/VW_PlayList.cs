@@ -371,12 +371,12 @@ public class VW_PlayList : MonoBehaviour
 
         Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>();
 
-        int tempOrderInt = 0;
+        int tempOrderInt = 1;
 
         foreach (int id in tempFilteredWordIds)
         {
+            Debug.Log("adding " + id + " to Ordered Filtered Word IDs Dict with tempOrderInt:" + tempOrderInt);
             OrderedFilteredWordIdsDict.Add(tempOrderInt, id);
-
             tempOrderInt++;
         }
 
@@ -406,6 +406,7 @@ public class VW_PlayList : MonoBehaviour
                     if ((selectedWordTagsList.Contains(tg)) || (selectedWordTagsList.Contains(" " + entry.Value)))
                     {
                         filteredWordIntList.Add(entry.Key);
+                        Debug.Log("Adding " + entry.Key + " to filteredWordIntList");
                     }
                 }                
             }   
@@ -431,12 +432,13 @@ public class VW_PlayList : MonoBehaviour
         {
             int tempint = 0;
 
-            for (int i = ((wordsPerReward * part) + 1); i <= filteredWordIDListCount; i++)
+            for (int i = ((wordsPerReward * part)); i <= filteredWordIDListCount; i++)
             {
                 foreach (var entry in OrderedFilteredWordIdsDict)
                 {
                     if (entry.Key == i)
                     {
+                        Debug.Log("sending " + i + " to CreateWordLists");
                         CreateWordLists(entry.Value);
                     }
                 }
@@ -452,6 +454,8 @@ public class VW_PlayList : MonoBehaviour
                 {
                     if (entry.Key == i)
                     {
+                        Debug.Log("sending " + i + " to CreateWordLists");
+
                         CreateWordLists(entry.Value);
                     }
                 }
@@ -467,6 +471,8 @@ public class VW_PlayList : MonoBehaviour
                 {
                     if (entry.Key == i)
                     {
+                        Debug.Log("sending " + i + " to CreateWordLists");
+
                         CreateWordLists(entry.Value);
                     }
                 }
@@ -480,6 +486,8 @@ public class VW_PlayList : MonoBehaviour
                 {
                     if (entry.Key == i)
                     {
+                        Debug.Log("sending " + i + " to CreateWordLists");
+
                         CreateWordLists(entry.Value);
                     }
                 }
@@ -523,6 +531,7 @@ public class VW_PlayList : MonoBehaviour
         //Create the single word word list for the flashcard, wordscramble, and keyboard games
         List<int> AutoWordIds = new List<int>();
         AutoWordIds.Clear();
+        Debug.Log("adding " + wordInt + " to AutoWordIDs list");
         AutoWordIds.Add(wordInt);
 
         // Create AutoWordIds for the matching game, with the current word and two additional random words.

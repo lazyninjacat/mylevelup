@@ -542,7 +542,9 @@ public class VW_WordList : MonoBehaviour
 
     public void OpenDLCPanel()
     {
+        DownloadWordSetsList();
         DLCPanel.SetActive(true);
+
     }
     public void CloseDLCPanel()
     {
@@ -556,13 +558,51 @@ public class VW_WordList : MonoBehaviour
     // DLC 
  
 
-    public void DLCButton(string wordset)
+    public void DLCButton()
     {
         DownloadProgressPanel.SetActive(true);
         CloseDLCPanel();
         DownloadProgressBar.fillAmount = 0;
-        StartCoroutine(DownloadWordSet(wordset));
+        StartCoroutine(DownloadWordSet(gameObject.name));
     }
+
+    private void DownloadWordSetsList()
+    {
+        HTTPRequest requestWordSetData = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/wordsetslist.txt"), OnRequestDownloadWordSetsListFinished);
+        requestWordSetData.Send();
+    }
+
+    private List<string> wordSetsList;
+    private bool isDoneDownloadWordSetsList;
+    [SerializeField] GameObject DlcCopyButton;
+    [SerializeField] GameObject DlcButtonContainer;
+
+
+    private void OnRequestDownloadWordSetsListFinished(HTTPRequest request, HTTPResponse response)
+    {
+        List<string> wordSetsList = new List<string>();
+        Debug.Log("RequestWordSetData Finished! Text received: " + response.DataAsText);
+        //create the word set array from the comma seperated list in the word set data textfile.
+        wordSetsList = response.DataAsText.Split(',').ToList();
+        Debug.Log("wordSetstList count = " + wordSetsList.Count);
+        isDoneDownloadWordSetsList = true;
+        CreateDLCButtons();
+    }
+
+    private void CreateDLCButtons()
+    {
+        Debug.Log("start Create dlc buttons");
+        GameObject tempButton;
+
+        foreach (string wordSet in wordSetsList)
+        {
+            Debug.Log("Add " + wordSet + " from wordSetsList to button container");
+            tempButton = GameObject.Instantiate(DlcCopyButton, DlcButtonContainer.transform, false);
+            tempButton.name = wordSet;
+            tempButton.GetComponentInChildren<Text>().text = wordSet;
+        }
+    }
+ 
 
     private IEnumerator DownloadWordSet(string wordSetName)
     {

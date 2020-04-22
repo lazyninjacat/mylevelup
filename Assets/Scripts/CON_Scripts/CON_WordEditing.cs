@@ -85,6 +85,12 @@ public class CON_WordEditing : AB_Controller
     /// <returns>AudioClip</returns>
     public AudioClip GetCurrentClip() { return model.CurrentClip; }
 
+    public AudioClip GetExistingAudioClip()
+    {
+        Debug.Log("Getting existing audioclip with target word: " + GetTargetWord());
+        return model.ExistingAudioClip(GetTargetWord());
+    }
+
     /// <summary>
     /// Returns true if the current clip value is set.
     /// </summary>

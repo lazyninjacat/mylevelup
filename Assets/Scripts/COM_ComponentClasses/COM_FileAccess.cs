@@ -542,15 +542,18 @@ public static class FileAccessUtil
     /// <returns>AudioClip</returns>
     private static AudioClip LoadAudioByDir(string fileName, string fileDir)
     {
+        Debug.Log("File access util: attempting to load existing audio clip: " + fileName);
         AudioClip clip = null;
         string filePath = string.Format("{0}/{1}", fileDir, fileName.ToLower());
         
         if (File.Exists(filePath))
         {
+            Debug.Log("existing audioclip found! Returning");
             clip = WavEncoder.ToAudioClip(filePath);
         }
         else
         {
+            Debug.Log("No existing audioclip found. Returning null");
             return null;
         }
 

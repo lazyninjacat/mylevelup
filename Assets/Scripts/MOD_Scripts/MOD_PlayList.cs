@@ -395,6 +395,7 @@ public class MOD_PlayList : AB_Model
 
         foreach (var row in GetWordsTable())
         {
+            Debug.Log("Adding " + row.word_name + " to tagsDict");
             tagsDict.Add(row.word_id, row.word_tags);
         }
     }

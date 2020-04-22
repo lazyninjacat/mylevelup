@@ -507,6 +507,32 @@ public class MOD_WordEditing : AB_Model
     private void AddEditValues(string key, WordDO value) { wordList[key] = value; }
     private bool SaveTexture() { return FileAccessUtil.SaveWordPic(CurrentTexture, WordName); }
 
+    public AudioClip ExistingAudioClip(string fileName)
+    {
+        Debug.Log("MOD getting existing audioclip from file access util with filename: " + fileName);
+        AudioClip tempClip;
+        tempClip = FileAccessUtil.LoadWordAudio(fileName + ".wav");
+        if (tempClip != null)
+        {
+            return tempClip;
+        }
+        else
+        {
+            Debug.Log("No audioclip found in wordaudio folder. Attempting to load from resources.");
+            tempClip = Resources.Load<AudioClip>("Sound/" + fileName);
+            if (tempClip != null)
+            {
+                Debug.Log("Found stock audio clip in resources. returning");
+                return tempClip;
+            }
+            else
+            {
+                Debug.Log("ERROR: No stock audioclip found in resource. returning null");
+                return null;
+            }
+        }   
+    }
+
     public int SaveTextures(string word)
     {
         int x = 0;

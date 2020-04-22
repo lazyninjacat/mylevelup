@@ -15,9 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/statistics.unity
     guid: 744ac9a1c8c5e42849ac360707842777
   - enabled: 1
-    path: Assets/Scenes/record_audio.unity
-    guid: ec0d571abe894e8459f0eeaea9c55351
-  - enabled: 1
     path: Assets/Scenes/words_list.unity
     guid: 10694c4fcfb7c7349b01a226a7f68674
   - enabled: 1

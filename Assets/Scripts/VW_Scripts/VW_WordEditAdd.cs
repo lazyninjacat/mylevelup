@@ -32,10 +32,10 @@ public class VW_WordEditAdd : MonoBehaviour
     private bool isRecording = false;
     private const int RECORD_LENGTH = 3;
     private string micName;
-    private AudioSource sourceAudio;
+    [SerializeField] AudioSource sourceAudio;
     private AudioClip clip;
 
-    public GameObject components;
+    [SerializeField] GameObject components;
 
     [SerializeField] Text titleLabel;
     [SerializeField] Text wordFieldText;
@@ -78,7 +78,11 @@ public class VW_WordEditAdd : MonoBehaviour
         DisplayGallery();
         SetUpWordTags();
         wordTagsOriginal = wordTags;
-        sourceAudio = components.GetComponent<AudioSource>();
+
+        clip = controller.GetExistingAudioClip();
+        sourceAudio.clip = clip;
+   
+
 
         if (Microphone.devices.Length < 0)
         {
@@ -86,7 +90,7 @@ public class VW_WordEditAdd : MonoBehaviour
         }
         else
         {
-            Debug.Log("*****\n Could not find any microphone devices*****\n");
+            Debug.Log("Could not find any microphone devices");
         }
     }
 
@@ -682,7 +686,28 @@ public class VW_WordEditAdd : MonoBehaviour
     /// </summary>
     public void PlayAudio()
     {
-        sourceAudio.Play();
+        if (sourceAudio.clip != null)
+        {
+            Debug.Log("Playing audio");
+            sourceAudio.Play();
+        }
+        else
+        {
+            Debug.Log("No audioclip currently exists. opening no audio panel.");
+            OpenNoAudioPanel();
+        }
+
+    }
+
+    [SerializeField] GameObject noAudioPanel;
+
+    public void OpenNoAudioPanel()
+    {
+        noAudioPanel.SetActive(true);
+    }
+    public void CloseNoAudioPanel()
+    {
+        noAudioPanel.SetActive(false);
     }
 
     /// <summary>
