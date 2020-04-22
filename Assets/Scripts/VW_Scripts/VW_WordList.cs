@@ -61,6 +61,15 @@ public class VW_WordList : MonoBehaviour
     // bool to keep track of scrollview state words/tags view
     private bool isTagsView;
 
+
+    private List<string> wordSetsList;
+    private bool isDoneDownloadWordSetsList;
+    [SerializeField] GameObject DlcCopyButton;
+    [SerializeField] GameObject DlcButtonContainer;
+
+
+
+
     void Start()
     {
         Debug.Log("VW: Starting the word list view!");
@@ -68,6 +77,9 @@ public class VW_WordList : MonoBehaviour
         MAS_WordEditing tempMaster = (MAS_WordEditing)COM_Director.GetMaster("MAS_WordEditing");
 
         model = (MOD_WordEditing)tempMaster.GetModel("MOD_WordEditing");
+
+        List<string> wordSetsList = new List<string>();
+
         controller = (CON_WordEditing)tempMaster.GetController("CON_WordEditing");
 
         // TODO: Remove this when DomainShift functionality is in both the MasterClass and
@@ -572,27 +584,28 @@ public class VW_WordList : MonoBehaviour
         requestWordSetData.Send();
     }
 
-    private List<string> wordSetsList;
-    private bool isDoneDownloadWordSetsList;
-    [SerializeField] GameObject DlcCopyButton;
-    [SerializeField] GameObject DlcButtonContainer;
 
 
     private void OnRequestDownloadWordSetsListFinished(HTTPRequest request, HTTPResponse response)
     {
-        List<string> wordSetsList = new List<string>();
         Debug.Log("RequestWordSetData Finished! Text received: " + response.DataAsText);
         //create the word set array from the comma seperated list in the word set data textfile.
         wordSetsList = response.DataAsText.Split(',').ToList();
         Debug.Log("wordSetstList count = " + wordSetsList.Count);
         isDoneDownloadWordSetsList = true;
-        CreateDLCButtons();
+        StartCoroutine(CreateDLCButtons());
+
     }
 
-    private void CreateDLCButtons()
+    private IEnumerator CreateDLCButtons()
     {
         Debug.Log("start Create dlc buttons");
+
+        yield return new WaitUntil(() => isDoneDownloadWordSetsList);
+
         GameObject tempButton;
+        
+
 
         foreach (string wordSet in wordSetsList)
         {
@@ -600,7 +613,10 @@ public class VW_WordList : MonoBehaviour
             tempButton = GameObject.Instantiate(DlcCopyButton, DlcButtonContainer.transform, false);
             tempButton.name = wordSet;
             tempButton.GetComponentInChildren<Text>().text = wordSet;
+            tempButton.gameObject.SetActive(true);
         }
+
+        isDoneDownloadWordSetsList = false;
     }
  
 
@@ -645,7 +661,7 @@ public class VW_WordList : MonoBehaviour
     {
         isDoneWordSetDataDownload = false;
         isWordSetArrayFinished = false;
-        Debug.Log("Starting download word set data text coroutine");
+        Debug.Log("Starting download word set data text coroutine for wordset: " + wordSetName.ToLower());
         HTTPRequest requestWordSetData = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/WordSets/" + wordSetName + ".txt"), OnRequestWordSetDataFinished);
         requestWordSetData.Send();
         yield return new WaitUntil(() => isDoneWordSetDataDownload);
