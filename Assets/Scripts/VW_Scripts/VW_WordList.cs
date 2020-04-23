@@ -88,6 +88,11 @@ public class VW_WordList : MonoBehaviour
         //////////////////////////////////////////////////////////////////////////////////
 
         DisplayScrollViewWords();
+
+        StartCoroutine(CreateDLCButtons());
+        DownloadWordSetsList();
+
+
     }
 
 
@@ -275,6 +280,7 @@ public class VW_WordList : MonoBehaviour
         {
             deleteModal.SetActive(false);
             //TODO: THROW AN ERROR
+            Debug.Log("ERROR: delete word failed");
         }
     }
 
@@ -489,8 +495,17 @@ public class VW_WordList : MonoBehaviour
 
                     }
                 }
-                tempPanel.transform.GetChild(1).GetComponent<Text>().text = tempTagWords;                
+                tempPanel.transform.GetChild(1).GetComponent<Text>().text = tempTagWords;
+
+             
+
                 tempPanel.name = entry.Key;
+                if (entry.Key == "animal")
+                {
+                    tempPanel.transform.GetChild(3).GetComponent<Button>().interactable = false;
+                    tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key) + " - Stock (cannot delete)";
+
+                }
                 tempPanel.SetActive(true);
                 entryNum += 1;
                 tempScrollviewList.Add(entry.Key);
@@ -528,19 +543,10 @@ public class VW_WordList : MonoBehaviour
         {
             if (word.Contains(" "))
             {
-                Debug.Log("space detected in " + word);
+                Debug.Log("space detected in " + word + ". removing.");
                 word.Replace(" ", "");
             }
-            if (word.Contains(" "))
-            {
-                Debug.Log("space detected in " + word);
-                word.Replace(" ", "");
-            }
-            if (word.Contains(" "))
-            {
-                Debug.Log("space detected in " + word);
-                word.Replace(" ", "");
-            }
+       
             Debug.Log("Deleting " + word);
             controller.DeleteWord(word);
         }
@@ -550,11 +556,12 @@ public class VW_WordList : MonoBehaviour
         isWords = false;
         controller.ClearData();
         DisplayScrollViewTags();
+
+        successModal.SetActive(true);
     }
 
     public void OpenDLCPanel()
     {
-        DownloadWordSetsList();
         DLCPanel.SetActive(true);
 
     }
@@ -575,7 +582,8 @@ public class VW_WordList : MonoBehaviour
         DownloadProgressPanel.SetActive(true);
         CloseDLCPanel();
         DownloadProgressBar.fillAmount = 0;
-        StartCoroutine(DownloadWordSet(gameObject.name));
+        Debug.Log("DLC button: " + EventSystem.current.currentSelectedGameObject.transform.gameObject.name);
+        StartCoroutine(DownloadWordSet(EventSystem.current.currentSelectedGameObject.transform.gameObject.name));
     }
 
     private void DownloadWordSetsList()
@@ -593,7 +601,6 @@ public class VW_WordList : MonoBehaviour
         wordSetsList = response.DataAsText.Split(',').ToList();
         Debug.Log("wordSetstList count = " + wordSetsList.Count);
         isDoneDownloadWordSetsList = true;
-        StartCoroutine(CreateDLCButtons());
 
     }
 

@@ -150,7 +150,12 @@ public class CON_WordEditing : AB_Controller
     /// </summary>
     /// <param name="word"></param>
     /// <returns>bool</returns>
-    public bool DeleteWord(string word) { return model.RemoveWordListEntry(word); }
+    public bool DeleteWord(string word)
+    {
+        return model.RemoveWordListEntry(word);
+    }
+
+
 
     /// <summary>
     /// Returns a copy of the word list dictionary from the model.

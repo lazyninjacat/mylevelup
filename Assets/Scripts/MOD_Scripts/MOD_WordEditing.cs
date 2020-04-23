@@ -50,6 +50,7 @@ public class MOD_WordEditing : AB_Model
     }
 
     public override void GetCoworkers(MasterClass master) {}
+
     public void DeleteWordImage(string word) { FileAccessUtil.DeleteWordPic(word);  }
     //public bool ImageDeleteCleanup(string word) { return FileAccessUtil.WordImageDirRepair(word); }
 
@@ -64,8 +65,12 @@ public class MOD_WordEditing : AB_Model
     {
         bool success = false;
 
+        wordList.Clear();
+        LoadWordList();
+
         if (dataService.DeleteFromWords(wordList[key].IdNum) > 0)
         {
+            
             success = !success;
             wordList.Remove(key);
             FileAccessUtil.DeleteWordAudio(key);
@@ -95,6 +100,8 @@ public class MOD_WordEditing : AB_Model
         {
             Debug.Log("Error trying to delete " + key); 
         }
+
+        dataService.RebaseAllWordIDs();
 
         return success;
     }
@@ -559,6 +566,7 @@ public class MOD_WordEditing : AB_Model
     /// </summary>
     private void LoadWordList()
     {
+
         WordDO tempObject;
         IEnumerable<Words> words = dataService.GetWordsTable();
 

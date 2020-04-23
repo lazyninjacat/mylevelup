@@ -86,6 +86,37 @@ public class DataService  {
 	}
 
 
+
+    public void RebaseAllWordIDs()
+    {
+        IEnumerable<Words> words = GetWordsTable();
+        int rebaseCounter = 1;
+        foreach (var row in words)
+        {
+            Debug.Log(row.word_name);
+        }
+        
+   
+        foreach (var row in words)
+        {
+            Debug.Log("rebase counter = " + rebaseCounter);
+            Debug.Log("sending word for rebase:" + row.word_name);
+
+            SetWordID(row.word_name, rebaseCounter);
+            rebaseCounter++;
+        }
+
+        ReseedTable("Words", rebaseCounter-1);
+
+
+        Debug.Log("Word table rebase complete. Now clearing playlist.");
+        DeleteAllPlaylist();
+        rebaseCounter = 1;
+
+    }
+
+
+
     /// <summary>
     /// Resets the target word's word_id to the given value "newID".
     /// </summary>
@@ -94,7 +125,7 @@ public class DataService  {
     /// <returns></returns>
     public int SetWordID(string wordName, int NewID)
     {
-        string q = "UPDATE Words SET word_id = ?, WHERE word_name = ?";
+        string q = "UPDATE Words SET word_id = ? WHERE word_name = ?";
         return _connection.Execute(q, NewID, wordName);
     }
 
