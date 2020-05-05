@@ -184,6 +184,12 @@ public class VW_PlayList : MonoBehaviour
         wordsPerReward = rewardTime;
     }
 
+    //TODO: FIX THIS!!!
+    public void OnMinLearningRewardRatioSliderChange()
+    {
+        wordsPerReward = Mathf.RoundToInt(rewardTimeSlider.value);
+    }
+
     // All the open/close methods for the autoplaylist popup modals sequence.
     public void OpenSetRewardTimePanel()
     {
