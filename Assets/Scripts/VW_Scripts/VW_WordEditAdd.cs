@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using EasyMobile;
-using BestHTTP;
+//using BestHTTP;
 
 public class VW_WordEditAdd : MonoBehaviour
 {
@@ -110,21 +110,21 @@ public class VW_WordEditAdd : MonoBehaviour
         wordTags = wordTagsText.text;
     }
 
-    public void DLCButton()
-    {       
-        HTTPRequest request = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/test.png"), OnRequestFinished);
-        request.Send();        
-    }
+    //public void DLCButton()
+    //{       
+    //    HTTPRequest request = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/test.png"), OnRequestFinished);
+    //    request.Send();        
+    //}
 
-    void OnRequestFinished(HTTPRequest request, HTTPResponse response)
-    {
-        Debug.Log("Request Finished! Text received: " + response.DataAsText);
-        controller.SetCurrentTexture(response.DataAsTexture2D);
-        galleryCameraModal.SetActive(false);
-        saveButton.interactable = true;
-        CleanUpScroll();
-        DisplayGallery(); 
-    }
+    //void OnRequestFinished(HTTPRequest request, HTTPResponse response)
+    //{
+    //    Debug.Log("Request Finished! Text received: " + response.DataAsText);
+    //    controller.SetCurrentTexture(response.DataAsTexture2D);
+    //    galleryCameraModal.SetActive(false);
+    //    saveButton.interactable = true;
+    //    CleanUpScroll();
+    //    DisplayGallery(); 
+    //}
 
     private void SetUpWordTags()
     {
