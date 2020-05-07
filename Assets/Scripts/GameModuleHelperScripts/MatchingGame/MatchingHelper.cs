@@ -44,18 +44,9 @@ public class MatchingHelper : AB_GameHelper
     public int word3Errors = 0;
 
 
-    private const int XY_DIMENSION = 300;
-    private Texture2D customTexture1;
-    private Texture2D customTexture2;
-    private Texture2D customTexture3;
-
-
-
-
     private void Start()
     {
         Debug.Log("matching start method");
-
     }
 
     public override void Resume()
@@ -130,21 +121,12 @@ public class MatchingHelper : AB_GameHelper
             Debug.Log(id);
         }
         Debug.Log("End Set Game Data");
-
     }
-
-
-    [SerializeField] GameObject test1RawImg;
-
 
     // Set Images
     private void SetImages()
     {
-        Debug.Log("Start Set Images");
-
-        //byte[] bytes1 = null;
-        //byte[] bytes2 = null;
-        //byte[] bytes3 = null;
+        Debug.Log("Start Set Images");          
 
         if (words.Count == 1)
         {
@@ -159,40 +141,29 @@ public class MatchingHelper : AB_GameHelper
             wordimage1.gameObject.name = words[0];
             wordImage1StartPosition = wordimage1.transform.position;
 
-
             gameLoop.SetImage(words[1], wordimage2.gameObject);
             wordimage2.gameObject.name = words[1];
             wordImage2StartPosition = wordimage2.transform.position;
-
-
         }
         else if (words.Count == 3)
-        {
-            //bytes1 = FileAccessUtil.LoadWordPic(words[0]);
-            //customTexture1 = new Texture2D(XY_DIMENSION, XY_DIMENSION);
+        {     
             gameLoop.SetImage(words[0], wordimage1);
             wordimage1.name = words[0];
             wordImage1StartPosition = wordimage1.transform.position;
             Debug.Log("wordimage1 set. word = " + words[0]);
-
-            //bytes2 = FileAccessUtil.LoadWordPic(words[1]);
-            //customTexture2 = new Texture2D(XY_DIMENSION, XY_DIMENSION);
+                
             gameLoop.SetImage2(words[1], wordimage2);
             wordimage2.name = words[1];
             wordImage2StartPosition = wordimage2.transform.position;
             Debug.Log("wordimage2 set. word = " + words[1]);
-
-            //bytes3 = FileAccessUtil.LoadWordPic(words[2]);
-            //customTexture3 = new Texture2D(XY_DIMENSION, XY_DIMENSION);
+                
             gameLoop.SetImage3(words[2], wordimage3);
             wordimage3.name = words[2];
             wordImage3StartPosition = wordimage3.transform.position;
             Debug.Log("wordimage3 set. word = " + words[2]);
-
         }
 
         Debug.Log("End Set Images");
-
     }
 
 

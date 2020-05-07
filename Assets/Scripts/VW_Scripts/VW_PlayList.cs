@@ -6,13 +6,14 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
 using System.Text;
-
+//using UnityEngine.UIElements;
 
 public class VW_PlayList : MonoBehaviour
 {
     // GameObjects
     [SerializeField] private GameObject addNewPanel;
     [SerializeField] private GameObject buttonCopyPanel;
+
     [SerializeField] private GameObject addNewContent;
     [SerializeField] private GameObject playListContent;
     [SerializeField] private GameObject confirmDeleteModal;
@@ -22,6 +23,7 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private GameObject SetRewardsPanel;
     [SerializeField] private GameObject SetRatioPanel;
     [SerializeField] private GameObject SetWordTagsPanel;
+    [SerializeField] private GameObject SetGamesPanel;
     [SerializeField] private GameObject saveSuccessModal;
     [SerializeField] private GameObject saveErrorModal;
     [SerializeField] private GameObject autoPlaylistEnabledPanel;
@@ -32,9 +34,20 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private GameObject loadingPanel;
     [SerializeField] private GameObject rewardPanel;
     [SerializeField] private GameObject RewardsViewportContent;
-    [SerializeField] private GameObject tagPanel;
+    [SerializeField] private GameObject tagCopyPanel;
+    [SerializeField] private GameObject gameCopyPanel;
+
     [SerializeField] private GameObject tagsViewportContent;
-    [SerializeField] GameObject playlistMissingRewardModal;
+    [SerializeField] private GameObject setGamesContent;
+
+    [SerializeField] private GameObject playlistMissingRewardModal;
+    [SerializeField] private GameObject GamesViewportContent;
+
+
+    // SetGamePanel and tagsPanelAuto/Manual toggle
+    [SerializeField] Toggle autoSetGameToggle;
+    [SerializeField] Toggle autoSetTagsToggle;
+
 
     // Texts
     [SerializeField] private Text rewardTimeText;
@@ -42,6 +55,9 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private Text autoplaylistEnabledRewardsText;
     [SerializeField] private Text tagsText;
     [SerializeField] private Text ratioText;
+    [SerializeField] private Text maxRatioSliderText;
+    [SerializeField] private Text minRatioSliderText;
+
 
     // Buttons
     [SerializeField] private Button addButton;
@@ -54,6 +70,9 @@ public class VW_PlayList : MonoBehaviour
     // Other
     [SerializeField] private InputField loopNumberField;
     [SerializeField] private Slider rewardTimeSlider;
+    [SerializeField] private Slider minRatioSlider;
+    [SerializeField] private Slider maxRatioSlider;
+
 
     // Constants
     private const string SCRAM = "Word_Scramble";
@@ -81,6 +100,7 @@ public class VW_PlayList : MonoBehaviour
     private int maxParts;
     private int toggleCount = 0;
     private int tagToggleCount = 0;
+    private int gameToggleCount = 0;
     public int rewardTime = 10;
     private int filteredWordIDListCount;
 
@@ -90,10 +110,13 @@ public class VW_PlayList : MonoBehaviour
     private List<int> AutoWordIds = new List<int>();
     private List<string> selectedWordTagsList = new List<string>();
     private List<int> filteredWordIntList = new List<int>();
+    private List<string> selectedGamesList = new List<string>();
+
 
     // Dictionaries
     private Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(); // This dictionary contains the wordID int and wordName string from the words table in the database.
     private Dictionary<int, string> wordIdTagDict = new Dictionary<int, string>(); // This dictionary contains the wordID int and wordTags string from the words table in the database.
+    
     // TODO: Replace this dictionary with a simple array or list and just use the index instead of the dictionary key.
     private Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>(); // This dictionary is used to contain the index '0-?' ints and the wordID ints, filtered by wordtag. 
     
@@ -143,6 +166,7 @@ public class VW_PlayList : MonoBehaviour
         Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>();
 
 
+
         if (PlayerPrefs.GetInt("AutoplaylistRewardTimeIntKey") == 0)
         {
             PlayerPrefs.SetInt("AutoplaylistRewardTimeIntKey", 1);
@@ -181,13 +205,21 @@ public class VW_PlayList : MonoBehaviour
 
         rewardTimeText.text = rewardTime.ToString();
 
+        //TODO: remove this when minmax ratio is implemented
         wordsPerReward = rewardTime;
     }
 
-    //TODO: FIX THIS!!!
     public void OnMinLearningRewardRatioSliderChange()
     {
-        wordsPerReward = Mathf.RoundToInt(rewardTimeSlider.value);
+        minRatio = Mathf.RoundToInt(minRatioSlider.value);
+        minRatioSliderText.text = "Minimum " + minRatioSlider.value + " / " + (100 - minRatioSlider.value);
+    }
+
+    public void OnMaxLearningRewardRatioSliderChange()
+    {
+        maxRatio = Mathf.RoundToInt(maxRatioSlider.value);
+        minRatioSliderText.text = "Maximum " + maxRatioSlider.value + " / " + (100 - maxRatioSlider.value);
+
     }
 
     // All the open/close methods for the autoplaylist popup modals sequence.
@@ -207,9 +239,14 @@ public class VW_PlayList : MonoBehaviour
 
     public void OpenSetWordTagsPanel() { SetWordTagsPanel.SetActive(true); }
 
+    public void OpenSetGamesPanel() { SetGamesPanel.SetActive(true); }
+
+    public void CloseSetGamesPanel() { SetGamesPanel.SetActive(false); }
+
     public void CloseSetWordTagsPanel()
     {
         selectedWordTagsList = CreateSelectedWordTagsList();
+        selectedGamesList = CreateSelectedGamesList();
 
         StringBuilder sb = new StringBuilder();
 
@@ -844,6 +881,9 @@ public class VW_PlayList : MonoBehaviour
         addNewTransform.sizeDelta = new Vector2(addNewTransform.rect.width, entryNum * yOffSet);
     }
 
+  
+
+
     private void SetLoopToggleAndValues()
     {
         bool check = controller.CheckIfPassLocked();
@@ -984,7 +1024,7 @@ public class VW_PlayList : MonoBehaviour
         foreach (string entry in listTags)
         {
             //Create a panel
-            GameObject tPanel = GameObject.Instantiate(tagPanel, tagsViewportContent.transform, false);
+            GameObject tPanel = GameObject.Instantiate(tagCopyPanel, tagsViewportContent.transform, false);
 
             tPanel.name = entry;
 
@@ -998,14 +1038,39 @@ public class VW_PlayList : MonoBehaviour
 
             toggleTag.onValueChanged.AddListener(delegate
             {
-                OnToggleTagChange(toggleTag);
+                OnTagToggleChange(toggleTag);
             });
 
             tPanel.SetActive(true);
-        }                     
+        }
+
+        foreach (string entry in controller.GetTypeStrings())
+        {
+            //Create a panel
+            GameObject sgPanel = GameObject.Instantiate(gameCopyPanel, setGamesContent.transform, false);
+
+            sgPanel.name = entry;
+
+            GameObject gameLabel = sgPanel.transform.Find("Label").gameObject;
+
+            gameLabel.GetComponent<Text>().text = entry;
+
+            gameLabel.name = entry;
+
+            Toggle toggleGame = sgPanel.GetComponent<Toggle>();
+
+            toggleGame.onValueChanged.AddListener(delegate
+            {
+                OnGameToggleChange(toggleGame);
+            });
+
+            sgPanel.SetActive(true);
+        }
+
+
     }
 
-    public void OnToggleTagChange(Toggle tagToggleChange)
+    public void OnTagToggleChange(Toggle tagToggleChange)
     {
         if (tagToggleChange.isOn)
         {
@@ -1014,6 +1079,18 @@ public class VW_PlayList : MonoBehaviour
         else
         {
             tagToggleCount--;
+        }
+    }
+
+    public void OnGameToggleChange(Toggle gameToggleChange)
+    {
+        if (gameToggleChange.isOn)
+        {
+            gameToggleCount++;
+        }
+        else
+        {
+            gameToggleCount--;
         }
     }
 
@@ -1029,6 +1106,18 @@ public class VW_PlayList : MonoBehaviour
         }
     }
 
+
+    //////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
+    
+
+
+
+
+    ////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+
+
     private List<string> CreateSelectedWordTagsList()
     {
         List<string> tagStrings = new List<string>();
@@ -1043,6 +1132,22 @@ public class VW_PlayList : MonoBehaviour
         } 
 
         return tagStrings;
+    }
+
+    private List<string> CreateSelectedGamesList()
+    {
+        List<string> gamesStrings = new List<string>();
+
+        foreach (Transform child in setGamesContent.transform)
+        {
+
+            if (child.GetComponent<Toggle>().isOn)
+            {
+                gamesStrings.Add(child.name);
+            }
+        }
+
+        return gamesStrings;
     }
 
     /// <summary>
