@@ -653,6 +653,7 @@ public class VW_WordList : MonoBehaviour
     private IEnumerator DownloadWordSet(string wordSetName)
     {
         Debug.Log("Downloading " + wordSetName);
+        isDoneWordSetDataDownload = false;
 
         //get the word set data
         StartCoroutine(DownloadWordSetDataText(wordSetName));
@@ -734,58 +735,12 @@ public class VW_WordList : MonoBehaviour
         doneImageDownload = false;
         tempWordName = word;
         tempWordTags = tag;
-        yield return new WaitForSeconds(1);
         StartCoroutine(DownloadWordPictures(word));
-
-        // Download this word's images
-        //HTTPRequest request1 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "1.png"), OnRequestFinished1);
-        //request1.Send();
-        //yield return new WaitUntil(() => doneImageDownload);
-        //doneImageDownload = false;
-        //HTTPRequest request2 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "2.png"), OnRequestFinished1);
-        //request2.Send();
-        //yield return new WaitUntil(() => doneImageDownload);
-        //doneImageDownload = false;
-        //HTTPRequest request3 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "3.png"), OnRequestFinished1);
-        //request3.Send();
-        //yield return new WaitUntil(() => doneImageDownload);
-        //doneImageDownload = false;
-        //HTTPRequest request4 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "4.png"), OnRequestFinished1);
-        //request4.Send();
-        //yield return new WaitUntil(() => doneImageDownload);
-        //doneImageDownload = false;
-        //HTTPRequest request5 = new HTTPRequest(new System.Uri("https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "5.png"), OnRequestFinished2);
-        //request5.Send();
-        //yield return new WaitUntil(() => doneImageDownload);
+        yield return new WaitUntil(() => doneImageDownload);
         doneImageDownload = false;
         StartCoroutine(DownloadAudioClip(word));
     }
 
-    //void OnRequestFinished1(HTTPRequest request, HTTPResponse response)
-    //{
-    //    Debug.Log("Request Finished! Text received: " + response.DataAsText);
-    //    controller.SetCurrentTexture(response.DataAsTexture2D);
-    //    if (controller.IsTextureSet()) {
-    //        controller.AddNewTexture();
-    //    }
-    //    doneImageDownload = true;
-    //}
-
-    //void OnRequestFinished2(HTTPRequest request, HTTPResponse response)
-    //{
-    //    Debug.Log("Request Finished! Text received: " + response.DataAsText);
-    //    controller.SetCurrentTexture(response.DataAsTexture2D);
-    //    if (controller.IsTextureSet())
-    //    {
-    //        controller.AddNewTexture();
-    //    }
-    //    controller.SaveNewWord(tempWordName, tempWordTags);
-    //    Debug.Log("Done downloading word: " + tempWordName);
-    //    controller.ClearTextureList();
-    //    doneImageDownload = true;
-
-
-    //}
 
     private void ResetScrollView()
     {
@@ -816,6 +771,7 @@ public class VW_WordList : MonoBehaviour
                 controller.SaveDLCAudioClip(www.downloadHandler.data, file_name);
                 //string savePath = string.Format("{0}/{1}.wav", Application.persistentDataPath + "/WordAudio/", file_name);
                 //System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
+                Debug.Log("Saving " + file_name + " audioclip.");
             }
         }
 
@@ -825,6 +781,7 @@ public class VW_WordList : MonoBehaviour
 
     IEnumerator DownloadWordPictures(string word)
     {
+        Debug.Log("starting picture download for " + word);
         string[] urls =
         {
         "https://matthewriddett.com/static/mludlc/pictures/" + word + "/" + word + "1.png",
