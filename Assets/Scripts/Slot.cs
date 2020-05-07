@@ -6,8 +6,9 @@ using UnityEngine;
 public class Slot : MonoBehaviour , IDropHandler
 {
     private ScrambleHelper helper;
+	private bool snap = true;
 
-    public GameObject letter
+	public GameObject letter
 	{
 		get {
 			// If letter has a child return it otherwise return null
@@ -17,12 +18,6 @@ public class Slot : MonoBehaviour , IDropHandler
 
 			return null;
 		}
-	}
-
-	private bool snap = true;
-
-	void Start(){
-        //snap = gameObject.GetComponent<ScrambleHelper>().snapBack;
 	}
 
 	#region IdropHandler implementation
@@ -49,8 +44,6 @@ public class Slot : MonoBehaviour , IDropHandler
         if (!letter)
         {
             Debug.Log("SLOT: Not letter!");
-         
-
 
             if (snap == false || guessedLetter == correctLetter) {
 				DragHandler.letterBeingDragged.transform.SetParent (transform);

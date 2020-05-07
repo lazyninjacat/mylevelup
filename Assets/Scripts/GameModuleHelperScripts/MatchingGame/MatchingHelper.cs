@@ -142,12 +142,9 @@ public class MatchingHelper : AB_GameHelper
     {
         Debug.Log("Start Set Images");
 
-        byte[] bytes1 = null;
-        byte[] bytes2 = null;
-        byte[] bytes3 = null;
-
-
-
+        //byte[] bytes1 = null;
+        //byte[] bytes2 = null;
+        //byte[] bytes3 = null;
 
         if (words.Count == 1)
         {
