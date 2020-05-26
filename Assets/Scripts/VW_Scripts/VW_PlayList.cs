@@ -13,7 +13,6 @@ public class VW_PlayList : MonoBehaviour
     // GameObjects
     [SerializeField] private GameObject addNewPanel;
     [SerializeField] private GameObject buttonCopyPanel;
-
     [SerializeField] private GameObject addNewContent;
     [SerializeField] private GameObject playListContent;
     [SerializeField] private GameObject confirmDeleteModal;
@@ -36,28 +35,24 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private GameObject RewardsViewportContent;
     [SerializeField] private GameObject tagCopyPanel;
     [SerializeField] private GameObject gameCopyPanel;
-
     [SerializeField] private GameObject tagsViewportContent;
     [SerializeField] private GameObject setGamesContent;
-
     [SerializeField] private GameObject playlistMissingRewardModal;
     [SerializeField] private GameObject GamesViewportContent;
-
 
     // SetGamePanel and tagsPanelAuto/Manual toggle
     [SerializeField] Toggle autoSetGameToggle;
     [SerializeField] Toggle autoSetTagsToggle;
-
 
     // Texts
     [SerializeField] private Text rewardTimeText;
     [SerializeField] private Text autoplaylistEnabledRewardTimeText;
     [SerializeField] private Text autoplaylistEnabledRewardsText;
     [SerializeField] private Text tagsText;
+    [SerializeField] private Text gamesText;    
     [SerializeField] private Text ratioText;
     [SerializeField] private Text maxRatioSliderText;
     [SerializeField] private Text minRatioSliderText;
-
 
     // Buttons
     [SerializeField] private Button addButton;
@@ -72,7 +67,6 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private Slider rewardTimeSlider;
     [SerializeField] private Slider minRatioSlider;
     [SerializeField] private Slider maxRatioSlider;
-
 
     // Constants
     private const string SCRAM = "Word_Scramble";
@@ -112,7 +106,6 @@ public class VW_PlayList : MonoBehaviour
     private List<int> filteredWordIntList = new List<int>();
     private List<string> selectedGamesList = new List<string>();
 
-
     // Dictionaries
     private Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(); // This dictionary contains the wordID int and wordName string from the words table in the database.
     private Dictionary<int, string> wordIdTagDict = new Dictionary<int, string>(); // This dictionary contains the wordID int and wordTags string from the words table in the database.
@@ -130,7 +123,6 @@ public class VW_PlayList : MonoBehaviour
     void Start () {
         // Populate the add new scrollview
         MAS_PlayList tempMaster = (MAS_PlayList)COM_Director.GetMaster("MAS_PlayList");
-
         controller = (CON_PlayList)tempMaster.GetController("CON_PlayList");
         
         // set the playlist has reward bool to false before populating the scroll view. If a reward is present in the playlist it will switch this bool back to true.
@@ -141,31 +133,22 @@ public class VW_PlayList : MonoBehaviour
         if (PlayerPrefs.GetInt("AutoPlaylistOnOffKey") == 0)
         {
             autoPlaylistEnabledPanel.SetActive(false);
-
             SetupPlayAndAddNewLists();
         }
         else
         {
             autoPlaylistEnabledPanel.SetActive(true);
-
             autoplaylistEnabledRewardTimeText.text = PlayerPrefs.GetString("AutoplaylistRewardTimeKey");
-
             autoplaylistEnabledRewardsText.text = PlayerPrefs.GetString("AutoplaylistRewardsKey");
-
             tagsText.text = PlayerPrefs.GetString("CurrentAutoplaylistTags");
-
+            gamesText.text = PlayerPrefs.GetString("CurrentAutoplaylistGames");
             addButton.interactable = false;
         }
 
         Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(controller.GetIdToWordsDict());
-
         Dictionary<int, string> wordIdTagDict = new Dictionary<int, string>(controller.GetIdToWordTagsDict());
-
         List<string> selectedWordTagsList = new List<string>();
-
         Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>();
-
-
 
         if (PlayerPrefs.GetInt("AutoplaylistRewardTimeIntKey") == 0)
         {
@@ -174,7 +157,6 @@ public class VW_PlayList : MonoBehaviour
         else
         {
             rewardTime = PlayerPrefs.GetInt("AutoplaylistRewardTimeIntKey");
-
             wordsPerReward = rewardTime;
         }      
 
@@ -187,14 +169,12 @@ public class VW_PlayList : MonoBehaviour
         else
         {
             loopNumberField.interactable = false;
-
             loopNumberField.text = null;
         }                
         
         if (autoPlaylistEnabledPanel.activeSelf)
         {
             addButton.interactable = false;
-
             passcodePanel.SetActive(false);
         }
     }   
@@ -202,7 +182,6 @@ public class VW_PlayList : MonoBehaviour
     public void OnRewardSliderChange()
     {
         rewardTime = Mathf.RoundToInt(rewardTimeSlider.value);
-
         rewardTimeText.text = rewardTime.ToString();
 
         //TODO: remove this when minmax ratio is implemented
@@ -223,10 +202,8 @@ public class VW_PlayList : MonoBehaviour
     }
 
     // All the open/close methods for the autoplaylist popup modals sequence.
-    public void OpenSetRewardTimePanel()
-    {
-        SetRewardTimePanel.SetActive(true);
-    }
+    public void OpenSetRewardTimePanel() { SetRewardTimePanel.SetActive(true); }
+
     public void CloseSetRewardTimePanel() { SetRewardTimePanel.SetActive(false); }
 
     public void OpenSetRatioPanel() { SetRatioPanel.SetActive(true); }
@@ -241,13 +218,40 @@ public class VW_PlayList : MonoBehaviour
 
     public void OpenSetGamesPanel() { SetGamesPanel.SetActive(true); }
 
-    public void CloseSetGamesPanel() { SetGamesPanel.SetActive(false); }
+    public void CloseSetGamesPanel() {
+        selectedGamesList = CreateSelectedGamesList();
+        StringBuilder sb = new StringBuilder();
+
+        foreach (string str in selectedGamesList)
+        {
+            int tempint = 0;
+
+            if (selectedGamesList.Count == 1)
+            {
+                sb.Append(str);
+            }
+            else
+            {
+                if (tempint != selectedGamesList.Count)
+                {
+                    sb.Append(str + ", ");
+                    tempint++;
+                }
+                else
+                {
+                    sb.Append(str);
+                }
+            }
+        }
+
+        gamesText.text = sb.Replace("_", " ").ToString();
+        PlayerPrefs.SetString("CurrentAutoplaylistGames", gamesText.text);
+        SetGamesPanel.SetActive(false); 
+    }
 
     public void CloseSetWordTagsPanel()
     {
         selectedWordTagsList = CreateSelectedWordTagsList();
-        selectedGamesList = CreateSelectedGamesList();
-
         StringBuilder sb = new StringBuilder();
 
         foreach (string str in selectedWordTagsList)
@@ -263,7 +267,6 @@ public class VW_PlayList : MonoBehaviour
                 if (tempint != selectedWordTagsList.Count)
                 {
                     sb.Append(str + ", ");
-
                     tempint++;
                 }
                 else
@@ -274,9 +277,7 @@ public class VW_PlayList : MonoBehaviour
         }
 
         tagsText.text = sb.ToString();
-
         PlayerPrefs.SetString("CurrentAutoplaylistTags", tagsText.text);
-
         SetWordTagsPanel.SetActive(false);
     }
 
@@ -289,47 +290,36 @@ public class VW_PlayList : MonoBehaviour
     public void CloseConfirmAutoplaylistOnModal()
     {
         confirmAutoplaylistOnModal.SetActive(false);
-
         addButton.interactable = true;
     }
 
     public void OpenRemoveModal()
     {
         activePanelIndex = (EventSystem.current.currentSelectedGameObject.transform.parent.GetSiblingIndex());
-
         activePanel = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
-
         confirmDeleteModal.SetActive(true);
     }
 
     public void OpenAddPanel()
     {
         addButton.interactable = false;
-
         addNewPanel.SetActive(true);
     }
 
     public void CloseAddPanel()
     {
         addButton.interactable = true;
-
         addNewPanel.SetActive(false);
     }
     
     public void TurnOffAutoPlaylist()
     {
         PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 0);
-
         autoPlaylistEnabledPanel.SetActive(false);
-
         confirmAutoplaylistOffModal.SetActive(false);
-
         ClearPlaylist();
-
         addButton.interactable = true;
-
         passcodePanel.SetActive(true);
-
         controller.ClearData();
     }
     
@@ -341,7 +331,6 @@ public class VW_PlayList : MonoBehaviour
     public void OnAutoPlaylistButton()
     {
         addButton.interactable = false;
-
         autoPlaylistButton.interactable = false;
 
         if ((PlayerPrefs.GetInt("AutoPlaylistOnOffKey") == 0))
@@ -363,22 +352,18 @@ public class VW_PlayList : MonoBehaviour
     private IEnumerator BeginCreateAutoplaylistLaunchHelper()
     {
         yield return new WaitForSeconds(2);
-
         CreateAutoPlaylist();
     }
     
     /// <summary>
     /// This method executes the auto playlist creation. 
-    /// It clears the playlist, create the new entries, and displays the new playlist in the scrollview.
+    /// It clears the playlist, creates the new entries, and displays the new playlist in the scrollview.
     /// </summary>
     public void CreateAutoPlaylist()
     {
         addButton.interactable = false;
-
         passcodePanel.SetActive(false);
-
         PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 1);
-
         autoPlaylistEnabledPanel.SetActive(true);
 
         // Clear all existing playlist entries
@@ -388,7 +373,6 @@ public class VW_PlayList : MonoBehaviour
 
         // Create each of the playlist entries one by one, up to the wordsPerReward.
         List<int> tempFilteredWordIds = CreateFilteredWordIdList();
-
         filteredWordIDListCount = tempFilteredWordIds.Count;
 
         if (wordsPerReward > tempFilteredWordIds.Count)
@@ -411,9 +395,7 @@ public class VW_PlayList : MonoBehaviour
     private Dictionary<int, int> CreateOrderedWordIDList()
     {
         List<int> tempFilteredWordIds = CreateFilteredWordIdList();
-
         Dictionary<int, int> OrderedFilteredWordIdsDict = new Dictionary<int, int>();
-
         int tempOrderInt = 1;
 
         foreach (int id in tempFilteredWordIds)
@@ -433,9 +415,7 @@ public class VW_PlayList : MonoBehaviour
     private List<int> CreateFilteredWordIdList()
     {
         List<int> filteredWordIntList = new List<int>();
-
         Dictionary<int, string> wordIdTagDict = new Dictionary<int, string>(controller.GetIdToWordTagsDict());
-
         Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(controller.GetIdToWordsDict());
 
         foreach (var entry in wordIdTagDict)
@@ -462,11 +442,8 @@ public class VW_PlayList : MonoBehaviour
     {
         // Create a choose reward playlist entry, with pre-set reward time (rewardTime) and types (rewardInts)
         List<int> rewardInts = new List<int>();
-
         rewardInts.Add(1);
-
         DO_ChooseReward tempChooseReward = new DO_ChooseReward(CreateRewardIdsList(), rewardTime);
-
         Dictionary<int, int> OrderedFilteredWordIdsDict = CreateOrderedWordIDList();
 
         //TODO: code refactor. Replace these nested for loops below
@@ -538,7 +515,6 @@ public class VW_PlayList : MonoBehaviour
         }             
 
         controller.CreatingNew();
-
         controller.AddOrEditEntry("Choose Reward", rewardTime, tempChooseReward);
     }
 
@@ -556,11 +532,8 @@ public class VW_PlayList : MonoBehaviour
         }
 
         ResetActiveVariables();
-
         SetupPlayAndAddNewLists();
-
         OrderedFilteredWordIdsDict.Clear();
-
         autoPlaylistButton.interactable = true;        
     }
 
@@ -605,105 +578,102 @@ public class VW_PlayList : MonoBehaviour
         List<int> AutoWordIdsMemoryGame = new List<int>();
         AutoWordIdsMemoryGame.Clear();
         AutoWordIdsMemoryGame.Add(wordInt);
-        AutoWordIdsMemoryGame.Add(UnityEngine.Random.Range(1, controller.GetTotalWordsCount()));  
+        AutoWordIdsMemoryGame.Add(UnityEngine.Random.Range(1, controller.GetTotalWordsCount()));
 
         controller.CreatingNew();
+        Debug.Log("games list = ");
+        foreach (string game in selectedGamesList)
+        {
+            Debug.Log(game);
 
-        DO_FlashCard tempFlash = new DO_FlashCard(AutoWordIds);
+        }
 
-        DO_KeyboardGame tempKeyboard = new DO_KeyboardGame(AutoWordIds, true, true, false, true, true);
-
-        DO_WordScramble tempScramble = new DO_WordScramble(AutoWordIds);
-
-        DO_KeyboardGame tempKeyboardTwo = new DO_KeyboardGame(AutoWordIds, true, true, false, true, false);
-
-        DO_MatchingGame matchingGame = new DO_MatchingGame(AutoWordIdsMatchingGame, false, true);
-
-        DO_MemoryCards memoryCards = new DO_MemoryCards(AutoWordIds, true, false, true);
-
-        DO_CountingGame countingGame = new DO_CountingGame(AutoWordIdsMatchingGame, 3, 10, true, true, true, false);
-
-        // foreach (int wordID in AutoWordIds) { Debug.Log(wordID); }
-
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Flash Card", 1, tempFlash);
-
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboard);      
-
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboardTwo);
-
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Matching Game", 1, matchingGame);
-
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboard);
-
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboardTwo);
-
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Word Scramble", 1, tempScramble);
-
-        controller.CreatingNew();
-        controller.AddOrEditEntry("Matching Game", 1, matchingGame);
-
-
-        //controller.CreatingNew();
-        //controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);
-
-        //controller.CreatingNew();
-        //controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
-
-        //controller.CreatingNew();
-        //controller.AddOrEditEntry("Matching Game", AutoWordIdsMatchingGame.Count, matchingGame);
-
-        //controller.CreatingNew();
-        //controller.AddOrEditEntry("Counting Game", AutoWordIds.Count, countingGame);
-
-        //controller.CreatingNew();
-        //controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboard);
-
-        //controller.CreatingNew();
-        //controller.AddOrEditEntry("Keyboard Game", AutoWordIds.Count, tempKeyboardTwo);
+        AutoPlaylistCreateEntry("flash", 0, AutoWordIds);
+        AutoPlaylistCreateEntry("keyboard", 0, AutoWordIds);
+        AutoPlaylistCreateEntry("keyboard", 1, AutoWordIds);
+        AutoPlaylistCreateEntry("matching", 0, AutoWordIdsMatchingGame);
+        AutoPlaylistCreateEntry("keyboard", 0, AutoWordIds);
+        AutoPlaylistCreateEntry("keyboard", 1, AutoWordIds);
+        AutoPlaylistCreateEntry("scramble", 0, AutoWordIds);
+        AutoPlaylistCreateEntry("memory", 0, AutoWordIdsMemoryGame);
+        AutoPlaylistCreateEntry("counting", 0, AutoWordIdsMatchingGame);
+        AutoPlaylistCreateEntry("matching", 0, AutoWordIdsMatchingGame);
 
         AutoWordIds.Clear();
         AutoWordIdsMatchingGame.Clear();
         AutoWordIdsMemoryGame.Clear();
-        tempFlash = null;
-        tempKeyboard = null;
-        tempScramble = null;
-        tempKeyboardTwo = null;
+
+    }
+
+    private void AutoPlaylistCreateEntry(string gameType, int gameConfig, List<int> wordIDsList)
+    {
+        if (gameType == "scramble" && selectedGamesList.Contains("Word_Scramble"))
+        {
+            DO_WordScramble tempScramble = new DO_WordScramble(wordIDsList);
+            controller.CreatingNew();
+            controller.AddOrEditEntry("Word Scramble", 1, tempScramble);
+        }
+        if (gameType == "flash" && selectedGamesList.Contains("Flash_Card"))
+        {
+            DO_FlashCard tempFlash = new DO_FlashCard(wordIDsList);
+            controller.CreatingNew();
+            controller.AddOrEditEntry("Flash Card", 1, tempFlash);
+        }
+        if (gameType == "keyboard" && selectedGamesList.Contains("Keyboard_Game"))
+        {
+            if (gameConfig == 0)
+            {
+                DO_KeyboardGame tempKeyboard = new DO_KeyboardGame(wordIDsList, true, true, false, true, true);
+                controller.CreatingNew();
+                controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboard);
+            }
+            else if (gameConfig == 1)
+            {
+                DO_KeyboardGame tempKeyboardTwo = new DO_KeyboardGame(wordIDsList, true, true, false, true, false);
+                controller.CreatingNew();
+                controller.AddOrEditEntry("Keyboard Game", 1, tempKeyboardTwo);
+            }            
+        }
+        if (gameType == "counting" && selectedGamesList.Contains("Couting_Game"))
+        {
+            DO_CountingGame countingGame = new DO_CountingGame(wordIDsList, 3, 10, true, true, true, false);
+            controller.CreatingNew();
+            controller.AddOrEditEntry("Counting Game", wordIDsList.Count, countingGame);
+        }
+        if (gameType == "matching" && selectedGamesList.Contains("Matching_Game"))
+        {
+            DO_MatchingGame matchingGame = new DO_MatchingGame(wordIDsList, false, true);
+            controller.CreatingNew();
+            controller.AddOrEditEntry("Matching Game", 1, matchingGame);
+        }
+        if (gameType == "memory" && selectedGamesList.Contains("Memory_Cards"))
+        {
+            DO_MemoryCards tempMemory = new DO_MemoryCards(wordIDsList, true, false, true);
+            controller.CreatingNew();
+            controller.AddOrEditEntry("Memory Cards", 1, tempMemory);
+        }
     }
 
     public void AddEntry()
     {
         // Set new entry creation flag to true
         controller.CreatingNew();
-
         EventSystem.current.currentSelectedGameObject.GetComponent<Animation>().Play("ButtonWiggleAnim");
-
         string nextScene =  GetAddNewTypeTextString(EventSystem.current.currentSelectedGameObject);
-
         StartCoroutine(AddEntryHelper(nextScene));
     }
 
     private IEnumerator AddEntryHelper(string nextScene)
     {
         yield return new WaitForSeconds(1);
-
         controller.SceneChange(nextScene);
     }
 
     public void EditEntry()
     {
         GameObject currentObj = EventSystem.current.currentSelectedGameObject;
-
         controller.EditingEntry();
-
         controller.SetActiveEntryIndex(currentObj.transform.parent.GetSiblingIndex());
-
         controller.SceneChange(GetTypeTextString(currentObj));
     }
 
@@ -714,13 +684,9 @@ public class VW_PlayList : MonoBehaviour
             if (controller.RemoveEntryData(activePanelIndex))
             {
                 confirmDeleteModal.SetActive(false);
-
                 deleteSuccessModal.SetActive(true);
-
                 Destroy(activePanel);
-
                 playListTransform.sizeDelta = new Vector2(playListTransform.rect.width, playListTransform.rect.height - (yOffSet));
-
                 ResetActiveVariables();
             }
             else
@@ -737,9 +703,7 @@ public class VW_PlayList : MonoBehaviour
     public void MoveEntryUp()
     {
         Transform panelParent = EventSystem.current.currentSelectedGameObject.transform.parent;
-
         panelParent.gameObject.GetComponent<Animation>().Play();
-
         int currentIndex = panelParent.GetSiblingIndex();
 
         if (currentIndex > (0))
@@ -759,9 +723,7 @@ public class VW_PlayList : MonoBehaviour
     public void MoveEntryDown()
     {
         Transform panelParent = EventSystem.current.currentSelectedGameObject.transform.parent;
-
         panelParent.gameObject.GetComponent<Animation>().Play();
-
         int currentIndex = panelParent.GetSiblingIndex();
 
         if ((currentIndex - 1) < panelParent.parent.childCount)
@@ -787,13 +749,11 @@ public class VW_PlayList : MonoBehaviour
     public void Exit()
     {
         bool success = false;
-
         success = ((controller.SetLoopData(0, infiniteLoopToggle.isOn, loopNumberField.text == "" ? 1 : Int16.Parse(loopNumberField.text), passLocked.isOn)) && (playlistHasReward || ((PlayerPrefs.GetInt("AutoPlaylistOnOffKey")) == 1))) ;
 
         if (!success)
         {
             playlistMissingRewardModal.SetActive(true);
-
             return;
         }
 
@@ -803,7 +763,6 @@ public class VW_PlayList : MonoBehaviour
     private void ResetActiveVariables()
     {
         activePanel = null;
-
         activePanelIndex = -1;
     }
 
@@ -813,15 +772,10 @@ public class VW_PlayList : MonoBehaviour
         
         // Populate the play list scrollview and size it properly
         VerticalLayoutGroup verticalLayout = playListContent.GetComponent<VerticalLayoutGroup>();
-
         GameObject tempPanel;
-
         playListTransform = playListContent.GetComponent<RectTransform>();
-
         float entryNum = 0;
-
-        yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
-        
+        yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;        
         List<DO_PlayListObject> playList = controller.GetPlayList();
 
         if (playList.Count == 0) { PlaylistEmptyPanel.SetActive(true); }
@@ -854,9 +808,7 @@ public class VW_PlayList : MonoBehaviour
         verticalLayout = addNewContent.GetComponent<VerticalLayoutGroup>();
 
         addNewTransform = addNewContent.GetComponent<RectTransform>();
-
         entryNum = 0;
-
         yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
 
         foreach (string typeStr in controller.GetTypeStrings())
@@ -880,18 +832,13 @@ public class VW_PlayList : MonoBehaviour
         // Resize the content box on the Y
         addNewTransform.sizeDelta = new Vector2(addNewTransform.rect.width, entryNum * yOffSet);
     }
-
-  
-
+    
 
     private void SetLoopToggleAndValues()
     {
         bool check = controller.CheckIfPassLocked();
-
         passLocked.isOn = check;
-
         loopNumberField.interactable = check;
-
         loopNumberField.text = controller.GetLoopNumber().ToString();
     }
 
@@ -916,7 +863,6 @@ public class VW_PlayList : MonoBehaviour
                 case COUNT:
 
                 case MEMORY:
-
                     return true;
 
                 default:
@@ -965,25 +911,17 @@ public class VW_PlayList : MonoBehaviour
     private void RequestData()
     {
         Dictionary<int, string> rewardDict = controller.RequestRewards();
-
         List<string> listTags = controller.GetWordTagsList();
-
         Dictionary<int, string> tagsDict = controller.GetIdToWordTagsDict();
-
 
         foreach (var reward in rewardDict)
         {
             //Create a panel
             GameObject panel = GameObject.Instantiate(rewardPanel, RewardsViewportContent.transform, false);
-
             panel.name = reward.Key.ToString();
-
             GameObject label = panel.transform.Find("Label").gameObject;
-
             label.GetComponent<Text>().text = reward.Value;
-
             label.name = reward.Value.ToString();
-
             Toggle t = panel.GetComponent<Toggle>();
 
             t.onValueChanged.AddListener(delegate
@@ -992,13 +930,9 @@ public class VW_PlayList : MonoBehaviour
             });
 
             panel.SetActive(true);
-
             GameObject panelImage = panel.transform.Find("Image").gameObject;
-
             RawImage img = panelImage.GetComponent<RawImage>();
-
             Texture2D tx = new Texture2D(PIC_WIDTH, PIC_HEIGHT);
-
             byte[] rewardPic = FileAccessUtil.LoadRewardPic(reward.Value);
 
             //If not a custom reward
@@ -1025,15 +959,10 @@ public class VW_PlayList : MonoBehaviour
         {
             //Create a panel
             GameObject tPanel = GameObject.Instantiate(tagCopyPanel, tagsViewportContent.transform, false);
-
             tPanel.name = entry;
-
             GameObject tagLabel = tPanel.transform.Find("Label").gameObject;
-
             tagLabel.GetComponent<Text>().text = entry;
-
             tagLabel.name = entry;
-
             Toggle toggleTag = tPanel.GetComponent<Toggle>();
 
             toggleTag.onValueChanged.AddListener(delegate
@@ -1046,28 +975,25 @@ public class VW_PlayList : MonoBehaviour
 
         foreach (string entry in controller.GetTypeStrings())
         {
-            //Create a panel
-            GameObject sgPanel = GameObject.Instantiate(gameCopyPanel, setGamesContent.transform, false);
-
-            sgPanel.name = entry;
-
-            GameObject gameLabel = sgPanel.transform.Find("Label").gameObject;
-
-            gameLabel.GetComponent<Text>().text = entry;
-
-            gameLabel.name = entry;
-
-            Toggle toggleGame = sgPanel.GetComponent<Toggle>();
-
-            toggleGame.onValueChanged.AddListener(delegate
+            // TODO: Remove negative ref to memory cards once it has been debugged.
+            if (entry != "Choose_Reward" && entry != "Memory_Cards")
             {
-                OnGameToggleChange(toggleGame);
-            });
+                //Create a panel
+                GameObject sgPanel = GameObject.Instantiate(gameCopyPanel, setGamesContent.transform, false);
+                sgPanel.name = entry;
+                GameObject gameLabel = sgPanel.transform.Find("Label").gameObject;
+                gameLabel.GetComponent<Text>().text = entry;
+                gameLabel.name = entry;
+                Toggle toggleGame = sgPanel.GetComponent<Toggle>();
 
-            sgPanel.SetActive(true);
+                toggleGame.onValueChanged.AddListener(delegate
+                {
+                    OnGameToggleChange(toggleGame);
+                });
+
+                sgPanel.SetActive(true);
+            }           
         }
-
-
     }
 
     public void OnTagToggleChange(Toggle tagToggleChange)
@@ -1107,17 +1033,6 @@ public class VW_PlayList : MonoBehaviour
     }
 
 
-    //////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////
-    
-
-
-
-
-    ////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////
-
-
     private List<string> CreateSelectedWordTagsList()
     {
         List<string> tagStrings = new List<string>();
@@ -1140,13 +1055,13 @@ public class VW_PlayList : MonoBehaviour
 
         foreach (Transform child in setGamesContent.transform)
         {
-
+            Debug.Log("found " + child.name + " in setGamesContent.transform");
             if (child.GetComponent<Toggle>().isOn)
             {
                 gamesStrings.Add(child.name);
             }
         }
-
+        Debug.Log("Creating selectedGamesList. gamesStrings count = " + gamesStrings.Count);
         return gamesStrings;
     }
 
@@ -1181,18 +1096,12 @@ public class VW_PlayList : MonoBehaviour
             }
         }
 
-        string combindedString = string.Join(",", rewardStrings.ToArray());
-
+        string combindedString = string.Join(", ", rewardStrings.ToArray());
         autoplaylistEnabledRewardTimeText.text = rewardTime.ToString();
-
         PlayerPrefs.SetString("AutoplaylistRewardTimeKey", rewardTime.ToString());
-
         PlayerPrefs.SetInt("AutoplaylistRewardTimeIntKey", rewardTime);
-
         autoplaylistEnabledRewardsText.text = combindedString;
-
         PlayerPrefs.SetString("AutoplaylistRewardsKey", combindedString);
-
         return list;
     }
 }
