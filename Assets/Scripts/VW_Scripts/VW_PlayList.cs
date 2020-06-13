@@ -87,8 +87,8 @@ public class VW_PlayList : MonoBehaviour
     private static int activePanelIndex = -1;
     
     // Ints
-    private int minRatio;
-    private int maxRatio;
+    public float minRatio;
+    public float maxRatio;
     public int wordsPerReward = 10;
     private int wordLevel;
     private int maxParts;
@@ -371,19 +371,13 @@ public class VW_PlayList : MonoBehaviour
 
         PlaylistEmptyPanel.SetActive(false);
 
-        // Create each of the playlist entries one by one, up to the wordsPerReward.
         List<int> tempFilteredWordIds = CreateFilteredWordIdList();
         filteredWordIDListCount = tempFilteredWordIds.Count;
 
-        if (wordsPerReward > tempFilteredWordIds.Count)
-        {
-            maxParts = 0;
-        }
-        else
-        {
-            maxParts = ((tempFilteredWordIds.Count / wordsPerReward));
-        } 
+        // Calculate the max parts of the playlist
+        maxParts = (wordsPerReward > tempFilteredWordIds.Count) ? 0 : (tempFilteredWordIds.Count / wordsPerReward);
 
+        // Create each of the playlist entries one by one, up to the wordsPerReward, then repeat up to maxParts.
         for (int i = 0; i <= maxParts; i++)
         {          
             CreateAutoPlaylistEntries(i);
@@ -391,6 +385,7 @@ public class VW_PlayList : MonoBehaviour
 
         loadingPanel.SetActive(false);
     }
+
 
     private Dictionary<int, int> CreateOrderedWordIDList()
     {
@@ -409,7 +404,7 @@ public class VW_PlayList : MonoBehaviour
     }
 
     /// <summary>
-    /// This method creates a filtered word list consisting of the word ID ints from the existing word database 
+    /// This method creates a filtered word list consisting of the word IDs (int) from the existing word database 
     /// entries that contain one or more of the word tags specified by the user in the SetWordTags panel.
     /// </summary>
     private List<int> CreateFilteredWordIdList()
@@ -446,11 +441,11 @@ public class VW_PlayList : MonoBehaviour
         DO_ChooseReward tempChooseReward = new DO_ChooseReward(CreateRewardIdsList(), rewardTime);
         Dictionary<int, int> OrderedFilteredWordIdsDict = CreateOrderedWordIDList();
 
-        //TODO: code refactor. Replace these nested for loops below
 
         if (part == maxParts)
         {
             int tempint = 0;
+     
 
             for (int i = ((wordsPerReward * part)); i <= filteredWordIDListCount; i++)
             {
@@ -485,7 +480,9 @@ public class VW_PlayList : MonoBehaviour
         }
         else if (part == 0 && part != maxParts)
         {
-            for (int i = 1; i <= wordsPerReward; i++)
+          
+            //////////////////////////////////////////////////////// TESTING NEW CODE HERE
+            for (int i = 1; i <= (wordsPerReward); i++) //TEST CODE
             {
                 foreach (var entry in OrderedFilteredWordIdsDict)
                 {

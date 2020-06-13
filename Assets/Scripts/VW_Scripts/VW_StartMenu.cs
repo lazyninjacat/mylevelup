@@ -12,6 +12,7 @@ public class VW_StartMenu : MonoBehaviour {
     [SerializeField] Text timeText;
     [SerializeField] Text childnameText;
     [SerializeField] GameObject FirstInstallPanel;
+    [SerializeField] GameObject GettingStartedPanel;
     private CON_AdminMenu adminController;
     private IEnumerator timerCoroutine;
     private bool isLockOn;
@@ -168,6 +169,12 @@ public class VW_StartMenu : MonoBehaviour {
             Debug.Log("Not first open after install.");
         }
 
+    }
+
+    public void OpenGettingStartedPanel()
+    {
+        GettingStartedPanel.SetActive(true);
+        PlayerPrefs.SetInt("isTutorial", 1);
     }
 
     public void CloseFirstInstallPanel()

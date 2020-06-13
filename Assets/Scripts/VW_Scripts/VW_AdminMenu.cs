@@ -9,9 +9,16 @@ public class VW_AdminMenu : MonoBehaviour {
     private CON_AdminMenu controller;
     private GameObject butt;
 
+    [SerializeField] GameObject gettingStartedPanel;
+
 
     void Start ()
     {
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            gettingStartedPanel.SetActive(true);
+        }
+
         MAS_Admin tempMaster = (MAS_Admin)COM_Director.GetMaster("MAS_Admin");
         controller = (CON_AdminMenu)tempMaster.GetController("CON_AdminMenu");
 	}    

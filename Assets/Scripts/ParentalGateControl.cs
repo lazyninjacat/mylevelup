@@ -13,8 +13,12 @@ public class ParentalGateControl : MonoBehaviour {
     private bool firstTry;
 	Delegate callback;
 
+    [SerializeField] GameObject gettingStartedPanel;
+
     private void Start()
     {
+        if (PlayerPrefs.GetInt("isTutorial") == 1) { gettingStartedPanel.SetActive(true); }
+        
         firstTry = true;
 
         GenerateAndShowTask();

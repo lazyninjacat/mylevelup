@@ -34,6 +34,12 @@ public class VW_WordList : MonoBehaviour
 
     [SerializeField] Text DeleteTagWordsModalMessageText;
 
+    [SerializeField] GameObject gettingStartedPanel;
+    [SerializeField] GameObject gettingStartedTagsPanel;
+    [SerializeField] GameObject gettingStartedDlcPanel;
+
+
+
 
     private string tagWordsToDelete = "";
 
@@ -94,6 +100,10 @@ public class VW_WordList : MonoBehaviour
 
         StartCoroutine(DownloadWordSetsList());
 
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            gettingStartedPanel.SetActive(true);
+        }
 
     }
 
@@ -249,10 +259,7 @@ public class VW_WordList : MonoBehaviour
 
     // TODO: Modify DataService to allow for editing of words in DB
     public void EditWord()
-    {
-        // Grab the Game Object of the panel that is parent to the edit button that was touched
-        //CONTROLLER 
-        //sc.LoadSceneByName("word_edit");
+    {       
         controller.SetTargetWord(EventSystem.current.currentSelectedGameObject.transform.parent.gameObject.name);
         controller.SceneChange("word_edit_add", true);
     }
@@ -380,6 +387,13 @@ public class VW_WordList : MonoBehaviour
         {
             DisplayScrollViewTags();
             isWords = false;
+
+
+            if (PlayerPrefs.GetInt("isTutorial") == 1)
+            {
+                gettingStartedTagsPanel.SetActive(true);
+            }
+
         }
         else
         {
@@ -565,6 +579,12 @@ public class VW_WordList : MonoBehaviour
     public void OpenDLCPanel()
     {
         DLCPanel.SetActive(true);
+
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            gettingStartedDlcPanel.SetActive(true);
+        }
+
 
     }
     public void CloseDLCPanel()
