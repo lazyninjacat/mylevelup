@@ -63,6 +63,7 @@ public class VW_WordEditAdd : MonoBehaviour
     [SerializeField] GameObject RecordAudioPanel;
     [SerializeField] GameObject recordIcon;
     [SerializeField] GameObject stopRecordIcon;
+    [SerializeField] GameObject tutorialPanel;
 
     
 
@@ -92,6 +93,12 @@ public class VW_WordEditAdd : MonoBehaviour
         {
             Debug.Log("Could not find any microphone devices");
         }
+
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            tutorialPanel.SetActive(true);
+        }
+
     }
 
     void Update()
@@ -129,11 +136,22 @@ public class VW_WordEditAdd : MonoBehaviour
     private void SetUpWordTags()
     {
         string word = controller.GetTargetWord();
-        WordDO dataObject = controller.GetWordDO(word);
-        wordTags = dataObject.WordTags;
-        Debug.Log("GetTargetWordTags = " + wordTags);
-        wordTagsText.text = wordTags;
-        Debug.Log("word tags = " + wordTagsText.text);
+
+        if (word == "" || word == null)
+        {
+            Debug.Log("no word tags found");
+            wordTags = "";
+            wordTagsText.text = wordTags;
+        }
+        else
+        {
+            WordDO dataObject = controller.GetWordDO(word);
+            wordTags = dataObject.WordTags;
+            Debug.Log("GetTargetWordTags = " + wordTags);
+            wordTagsText.text = wordTags;
+            Debug.Log("word tags = " + wordTagsText.text);
+        }
+    
     }
 
     public void OnAddNewWordTagButton()

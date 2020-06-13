@@ -68,6 +68,9 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private Slider minRatioSlider;
     [SerializeField] private Slider maxRatioSlider;
 
+    // Tutorial
+    [SerializeField] GameObject TutorialPanel;
+
     // Constants
     private const string SCRAM = "Word_Scramble";
     private const string REWARD = "Choose_Reward";
@@ -161,6 +164,12 @@ public class VW_PlayList : MonoBehaviour
         }      
 
         RequestData();
+
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            TutorialPanel.SetActive(true);
+        }
+
     }
 
     private void Update()

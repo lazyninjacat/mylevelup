@@ -2805,6 +2805,7 @@ MonoBehaviour:
   RecordAudioPanel: {fileID: 1191708935}
   recordIcon: {fileID: 596805381}
   stopRecordIcon: {fileID: 571421100}
+  tutorialPanel: {fileID: 1543015269}
   noAudioPanel: {fileID: 783784167}
 --- !u!1 &408140614
 GameObject:
@@ -3551,7 +3552,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: If you want you can add additional pictures or word tags. Tap "Save" or
-    "Cancel" when done.
+    "Cancel" when done to return to the Words screen.
 --- !u!222 &489953925
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7699,7 +7700,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text here
+  m_Text: 'This is the Add/Edit word screen. From here we can add or edit a new word,
+    add pictures, word tags, and record an audio clip.
+
+    (tap to continue)'
 --- !u!222 &1353743685
 CanvasRenderer:
   m_ObjectHideFlags: 0
