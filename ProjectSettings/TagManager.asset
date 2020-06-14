@@ -45,6 +45,7 @@ TagManager:
   - YTPlaylistItem
   - PuzzleButton
   - webview
+  - tutorial
   layers:
   - Default
   - TransparentFX

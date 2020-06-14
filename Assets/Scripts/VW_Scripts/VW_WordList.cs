@@ -34,9 +34,13 @@ public class VW_WordList : MonoBehaviour
 
     [SerializeField] Text DeleteTagWordsModalMessageText;
 
-    [SerializeField] GameObject gettingStartedPanel;
-    [SerializeField] GameObject gettingStartedTagsPanel;
-    [SerializeField] GameObject gettingStartedDlcPanel;
+    [SerializeField] GameObject tutorialPanel1;
+    [SerializeField] GameObject tutorialTagsPanel;
+    [SerializeField] GameObject tutorialDlcPanel;
+
+    [SerializeField] GameObject HelpButtonIconOn;
+    [SerializeField] GameObject HelpButtonIconOff;
+
 
 
 
@@ -73,6 +77,8 @@ public class VW_WordList : MonoBehaviour
     [SerializeField] GameObject DlcCopyButton;
     [SerializeField] GameObject DlcButtonContainer;
 
+    private List<GameObject> tutorialObjects;
+
 
 
 
@@ -85,6 +91,17 @@ public class VW_WordList : MonoBehaviour
         model = (MOD_WordEditing)tempMaster.GetModel("MOD_WordEditing");
 
         List<string> wordSetsList = new List<string>();
+
+        tutorialObjects = new List<GameObject>();
+
+        tutorialObjects = GameObject.FindGameObjectsWithTag("tutorial").ToList();
+
+        Debug.Log("******************************************* tutorial objects = ");
+        foreach (GameObject obj in tutorialObjects)
+        {
+            Debug.Log(obj.name + " found with tutorial tag");
+
+        }
 
         controller = (CON_WordEditing)tempMaster.GetController("CON_WordEditing");
 
@@ -102,9 +119,59 @@ public class VW_WordList : MonoBehaviour
 
         if (PlayerPrefs.GetInt("isTutorial") == 1)
         {
-            gettingStartedPanel.SetActive(true);
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            HelpButtonIconOff.SetActive(true);
+            HelpButtonIconOn.SetActive(false);
+            tutorialPanel1.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            HelpButtonIconOff.SetActive(false);
+            HelpButtonIconOn.SetActive(true);
         }
 
+    }
+
+    private void Update()
+    {
+        if (PlayerPrefs.GetInt("isTutorial") == 0)
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+        }
+    }
+
+    public void ToggleTutorial()
+    {
+        if (PlayerPrefs.GetInt("isTutorial") == 0)
+        {
+            PlayerPrefs.SetInt("isTutorial", 1);
+            tutorialPanel1.SetActive(true);
+            HelpButtonIconOn.SetActive(false);
+            HelpButtonIconOff.SetActive(true);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("isTutorial", 0);
+
+            foreach (GameObject obj in tutorialObjects)
+            {
+                Debug.Log("turning off " + obj.name);
+                obj.SetActive(false);
+            }
+
+            HelpButtonIconOff.SetActive(false);
+            HelpButtonIconOn.SetActive(true);
+        }
     }
 
 
@@ -388,20 +455,34 @@ public class VW_WordList : MonoBehaviour
             DisplayScrollViewTags();
             isWords = false;
 
-
             if (PlayerPrefs.GetInt("isTutorial") == 1)
             {
-                gettingStartedTagsPanel.SetActive(true);
+                foreach (GameObject obj in tutorialObjects)
+                {
+                    obj.SetActive(false);
+                }
+                tutorialTagsPanel.SetActive(true);
             }
+
 
         }
         else
         {
             DisplayScrollViewWords();
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            tutorialTagsPanel.SetActive(false);
+
             isWords = true;
+
+
+
         }
     }
 
+    
 
     private void DisplayScrollViewTags()
     {
@@ -582,7 +663,11 @@ public class VW_WordList : MonoBehaviour
 
         if (PlayerPrefs.GetInt("isTutorial") == 1)
         {
-            gettingStartedDlcPanel.SetActive(true);
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            tutorialDlcPanel.SetActive(true);
         }
 
 
