@@ -89,7 +89,6 @@ GameObject:
   - component: {fileID: 6069844686824598110}
   - component: {fileID: 8199828872532566233}
   - component: {fileID: 692433141431706929}
-  - component: {fileID: 3278265490863070470}
   - component: {fileID: 2848279094282723410}
   - component: {fileID: 840573666274592149}
   m_Layer: 5
@@ -157,30 +156,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3278265490863070470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6061073246682463695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 140, y: 120}
-  m_Spacing: {x: 15, y: 0}
-  m_Constraint: 1
-  m_ConstraintCount: 2
 --- !u!114 &2848279094282723410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,7 +328,6 @@ GameObject:
   - component: {fileID: 8949453239394645826}
   - component: {fileID: 8949453239394645855}
   - component: {fileID: 8949453239394645854}
-  - component: {fileID: 8949453239394645825}
   - component: {fileID: 8949453239394645824}
   - component: {fileID: 8949453239394645827}
   m_Layer: 5
@@ -421,30 +395,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8949453239394645825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8949453239394645829}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 140, y: 120}
-  m_Spacing: {x: 15, y: 0}
-  m_Constraint: 1
-  m_ConstraintCount: 2
 --- !u!114 &8949453239394645824
 MonoBehaviour:
   m_ObjectHideFlags: 0

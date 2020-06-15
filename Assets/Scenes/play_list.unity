@@ -3187,7 +3187,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Choose at least one word category to include in the learning/reward playlist.
+  m_Text: Choose at least one game type to include in the learning/reward playlist.
 --- !u!222 &292685513
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12641,7 +12641,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1041449473}
   m_HandleRect: {fileID: 1041449472}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -17559,7 +17559,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Tap the "Aut-playlist on/off" button to automatically create a playlist
+  m_Text: Tap the "AutoPlaylist on/off" button to automatically create a playlist
     based on a set of options.
 --- !u!222 &1849968530
 CanvasRenderer:

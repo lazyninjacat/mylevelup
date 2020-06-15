@@ -2656,10 +2656,10 @@ RectTransform:
   m_Father: {fileID: 348913390}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 71.81999, y: -21.700003}
-  m_SizeDelta: {x: 404.9, y: 243.8}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -287.8, y: 141.6}
+  m_SizeDelta: {x: 404.90002, y: 243.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1111855849
 MonoBehaviour:
@@ -3877,7 +3877,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 47.200005, y: -2.5000076}
+  m_AnchoredPosition: {x: 47.199997, y: -2.5}
   m_SizeDelta: {x: -244.39998, y: -145}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1536038657
@@ -4801,9 +4801,9 @@ RectTransform:
   m_Father: {fileID: 348913390}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -117.7, y: -21.7}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 282.3, y: 147}
   m_SizeDelta: {x: 404.9, y: 243.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1783879933
@@ -5751,8 +5751,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -16.591309}
-  m_SizeDelta: {x: -350, y: -76.81749}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -100, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!111 &7208946637243598179
 Animation:
@@ -5908,8 +5908,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -7.5}
-  m_SizeDelta: {x: -150, y: -135}
+  m_AnchoredPosition: {x: 0, y: 4.75}
+  m_SizeDelta: {x: -300, y: -133.90002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7208946638390831887
 MonoBehaviour:
@@ -5943,7 +5943,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "This is the Administrator Menu. \n\nFrom here you can access everything
+  m_Text: "This is the Administrator Menu. \nFrom here you can access everything
     you need to set up and managing your child's personalized learning/reward playlist.\n\n(tap
     to cloud pop-ups to continue)"
 --- !u!224 &7239001175969990164
