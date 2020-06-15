@@ -28,9 +28,29 @@ public class VW_WordScramble : MonoBehaviour
     private List<Transform> availableWordList = new List<Transform>();
     private List<int> wordIdsToSave = new List<int>();
 
+
+    // TUTORIAL STUFF
+    [SerializeField] GameObject tutorialPanel1;
+    [SerializeField] GameObject helpButtonIconOn;
+    [SerializeField] GameObject helpButtonIconOff;
+
+    List<GameObject> tutorialObjects;
+
+
     void Start () {
 
         sceneName = SceneManager.GetActiveScene().name;
+
+        tutorialObjects = GameObject.FindGameObjectsWithTag("tutorial").ToList();
+        foreach (GameObject obj in tutorialObjects)
+        {
+            obj.SetActive(false);
+        }
+
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            tutorialPanel1.SetActive(true);
+        }
 
         // Populate the add new scrollview
         MAS_PlayList tempMaster = (MAS_PlayList)COM_Director.GetMaster("MAS_PlayList");
@@ -48,6 +68,41 @@ public class VW_WordScramble : MonoBehaviour
             PopulateBothViews();
         }
      
+    }
+
+    private void Update()
+    {
+        if (PlayerPrefs.GetInt("isTutorial") == 0)
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+        }
+        
+    }
+
+    public void ToggleTutorialButton()
+    {
+        if (PlayerPrefs.GetInt("isTutorial") == 0)
+        {
+            PlayerPrefs.SetInt("isTutorial", 1);
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            tutorialPanel1.SetActive(true);
+            helpButtonIconOn.SetActive(false);
+            helpButtonIconOff.SetActive(true);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("isTutorial", 0);
+            tutorialPanel1.SetActive(false);
+
+            helpButtonIconOn.SetActive(true);
+            helpButtonIconOff.SetActive(false);
+        }
     }
 
     public void CloseErrorModal() { saveErrorModal.SetActive(false); }
