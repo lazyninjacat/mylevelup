@@ -452,8 +452,8 @@ public class VW_WordList : MonoBehaviour
     {
         if (isWords)
         {
-            DisplayScrollViewTags();
             isWords = false;
+            DisplayScrollViewTags();
 
             if (PlayerPrefs.GetInt("isTutorial") == 1)
             {
@@ -468,14 +468,22 @@ public class VW_WordList : MonoBehaviour
         }
         else
         {
-            DisplayScrollViewWords();
-            foreach (GameObject obj in tutorialObjects)
-            {
-                obj.SetActive(false);
-            }
-            tutorialTagsPanel.SetActive(false);
-
             isWords = true;
+            DisplayScrollViewWords();
+
+            if (PlayerPrefs.GetInt("isTutorial") == 1)
+            {
+                foreach (GameObject obj in tutorialObjects)
+                {
+                    obj.SetActive(false);
+                }
+                tutorialPanel1.SetActive(true);
+            }
+
+                
+
+         
+
 
 
 

@@ -68,8 +68,16 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private Slider minRatioSlider;
     [SerializeField] private Slider maxRatioSlider;
 
+    
+
     // Tutorial
-    [SerializeField] GameObject TutorialPanel;
+    [SerializeField] GameObject tutorialPanel1;
+    [SerializeField] GameObject tutorialAddNewPanel;
+    [SerializeField] GameObject tutorialAutoplaylist;
+
+    [SerializeField] GameObject tutorialButtonIconOn;
+    [SerializeField] GameObject tutorialButtonIconOff;
+
 
     // Constants
     private const string SCRAM = "Word_Scramble";
@@ -90,15 +98,15 @@ public class VW_PlayList : MonoBehaviour
     private static int activePanelIndex = -1;
     
     // Ints
-    public float minRatio;
-    public float maxRatio;
-    public int wordsPerReward = 10;
+    private float minRatio;
+    private float maxRatio;
+    private int wordsPerReward = 10;
     private int wordLevel;
     private int maxParts;
     private int toggleCount = 0;
     private int tagToggleCount = 0;
     private int gameToggleCount = 0;
-    public int rewardTime = 10;
+    private int rewardTime = 10;
     private int filteredWordIDListCount;
 
     // Lists
@@ -108,6 +116,7 @@ public class VW_PlayList : MonoBehaviour
     private List<string> selectedWordTagsList = new List<string>();
     private List<int> filteredWordIntList = new List<int>();
     private List<string> selectedGamesList = new List<string>();
+    private List<GameObject> tutorialObjects;
 
     // Dictionaries
     private Dictionary<int, string> wordsDatabase = new Dictionary<int, string>(); // This dictionary contains the wordID int and wordName string from the words table in the database.
@@ -132,6 +141,13 @@ public class VW_PlayList : MonoBehaviour
         playlistHasReward = false;
 
         SetLoopToggleAndValues();
+
+        tutorialObjects = GameObject.FindGameObjectsWithTag("tutorial").ToList();
+
+        foreach (GameObject obj in tutorialObjects)
+        {
+            obj.SetActive(false);
+        }
 
         if (PlayerPrefs.GetInt("AutoPlaylistOnOffKey") == 0)
         {
@@ -167,7 +183,14 @@ public class VW_PlayList : MonoBehaviour
 
         if (PlayerPrefs.GetInt("isTutorial") == 1)
         {
-            TutorialPanel.SetActive(true);
+            tutorialPanel1.SetActive(true);
+            tutorialButtonIconOff.SetActive(true);
+            tutorialButtonIconOn.SetActive(false);
+        }
+        else
+        {
+            tutorialButtonIconOff.SetActive(false);
+            tutorialButtonIconOn.SetActive(true);
         }
 
     }
@@ -186,8 +209,40 @@ public class VW_PlayList : MonoBehaviour
             addButton.interactable = false;
             passcodePanel.SetActive(false);
         }
+        if (PlayerPrefs.GetInt("isTutorial") == 0)
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+        }
     }   
     
+    public void ToggleTutorialButton()
+    {
+        if (PlayerPrefs.GetInt("isTutorial") == 0)
+        {
+            PlayerPrefs.SetInt("isTutorial", 1);
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            tutorialPanel1.SetActive(true);
+            tutorialButtonIconOff.SetActive(true);
+            tutorialButtonIconOn.SetActive(false);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("isTutorial", 0);
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            tutorialButtonIconOff.SetActive(false);
+            tutorialButtonIconOn.SetActive(true);
+        }    
+    }
+
     public void OnRewardSliderChange()
     {
         rewardTime = Mathf.RoundToInt(rewardTimeSlider.value);
@@ -313,12 +368,44 @@ public class VW_PlayList : MonoBehaviour
     {
         addButton.interactable = false;
         addNewPanel.SetActive(true);
+
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);             
+            }
+            tutorialAddNewPanel.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+        }
     }
 
     public void CloseAddPanel()
     {
         addButton.interactable = true;
         addNewPanel.SetActive(false);
+
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            tutorialPanel1.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+        }
     }
     
     public void TurnOffAutoPlaylist()
@@ -342,13 +429,60 @@ public class VW_PlayList : MonoBehaviour
         addButton.interactable = false;
         autoPlaylistButton.interactable = false;
 
+        if (PlayerPrefs.GetInt("isTutorial") == 1)
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+            tutorialAutoplaylist.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject obj in tutorialObjects)
+            {
+                obj.SetActive(false);
+            }
+        }
+
+
         if ((PlayerPrefs.GetInt("AutoPlaylistOnOffKey") == 0))
         {
             confirmAutoplaylistOnModal.SetActive(true);
+            if (PlayerPrefs.GetInt("isTutorial") == 1)
+            {
+                foreach (GameObject obj in tutorialObjects)
+                {
+                    obj.SetActive(false);
+                }
+                tutorialAutoplaylist.SetActive(true);
+            }
+            else
+            {
+                foreach (GameObject obj in tutorialObjects)
+                {
+                    obj.SetActive(false);
+                }
+            }
         }
         else
         {
             confirmAutoplaylistOffModal.SetActive(true);
+            if (PlayerPrefs.GetInt("isTutorial") == 1)
+            {
+                foreach (GameObject obj in tutorialObjects)
+                {
+                    obj.SetActive(false);
+                }
+                tutorialPanel1.SetActive(true);
+            }
+            else
+            {
+                foreach (GameObject obj in tutorialObjects)
+                {
+                    obj.SetActive(false);
+                }
+            }
         }
     }
     
