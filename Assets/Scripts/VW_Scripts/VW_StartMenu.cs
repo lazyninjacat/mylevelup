@@ -171,9 +171,8 @@ public class VW_StartMenu : MonoBehaviour {
 
     }
 
-    public void OpenGettingStartedPanel()
+    public void TurnOnTutorialMode()
     {
-        GettingStartedPanel.SetActive(true);
         PlayerPrefs.SetInt("isTutorial", 1);
     }
 

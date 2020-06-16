@@ -1180,6 +1180,18 @@ public class VW_PlayList : MonoBehaviour
         foreach (Transform child in tagsViewportContent.transform)
         {
             
+            if (autoSetTagsToggle.isOn)
+            {
+                tagStrings.Add(child.name);
+            }
+            else
+            {
+                if (child.GetComponent<Toggle>().isOn)
+                {
+                    tagStrings.Add(child.name);
+                }
+            }
+
             if (child.GetComponent<Toggle>().isOn)
             {
                 tagStrings.Add(child.name);
@@ -1195,11 +1207,21 @@ public class VW_PlayList : MonoBehaviour
 
         foreach (Transform child in setGamesContent.transform)
         {
-            Debug.Log("found " + child.name + " in setGamesContent.transform");
-            if (child.GetComponent<Toggle>().isOn)
+
+            if (autoSetGameToggle.isOn)
             {
                 gamesStrings.Add(child.name);
             }
+            else
+            {
+                Debug.Log("found " + child.name + " in setGamesContent.transform");
+                if (child.GetComponent<Toggle>().isOn)
+                {
+                    gamesStrings.Add(child.name);
+                }
+            }
+
+         
         }
         Debug.Log("Creating selectedGamesList. gamesStrings count = " + gamesStrings.Count);
         return gamesStrings;
