@@ -624,7 +624,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &276508159
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3973,12 +3973,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2079712281}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2079712283 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6637468581324145613, guid: 60e056eb9785c40479e643c067af2fe9,
-    type: 3}
-  m_PrefabInstance: {fileID: 2079712281}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2119636645
 GameObject:
   m_ObjectHideFlags: 0
@@ -5072,8 +5066,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 123.2, y: 0}
-  m_SizeDelta: {x: -311.19998, y: -160.39856}
+  m_AnchoredPosition: {x: 156.44998, y: 0}
+  m_SizeDelta: {x: -377.69998, y: -160.39856}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6537558865998359990
 CanvasRenderer:
@@ -6284,7 +6278,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 2079712283}
+      - m_Target: {fileID: 1003833130}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
@@ -6487,7 +6481,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 149.23, y: 42.30005}
+  m_AnchoredPosition: {x: 133.07, y: 42.30005}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7191174100746671033

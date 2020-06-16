@@ -109,6 +109,17 @@ public class VW_reward_website_edit_add : MonoBehaviour
 
             }
         }
+
+        StartCoroutine(StartWaitHelper());
+
+
+    }
+
+    private IEnumerator StartWaitHelper()
+    {
+        yield return new WaitForSeconds(0.3f);
+        exitWithoutUrlButton.gameObject.SetActive(false);
+        copyCurrentWebsiteUrlButton.gameObject.SetActive(false);
     }
 
 
