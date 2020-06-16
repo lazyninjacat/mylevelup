@@ -54,7 +54,7 @@ public class VW_Settings : MonoBehaviour
 
         if ((PlayerPrefs.GetString("ChildNameKey") == "") || (PlayerPrefs.GetString("ChildNameKey") == null))
         {
-            childnameText.text = "Name not set yet";
+            childnameText.text = "";
         }
         else
         {
@@ -249,7 +249,10 @@ public class VW_Settings : MonoBehaviour
         // Reset all Playerprefs
         PlayerPrefs.SetInt("isFirstKey", 0);
         PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 0);
+        PlayerPrefs.SetInt("isTutorial", 0);
+        PlayerPrefs.SetString("ChildNameKey", "");
 
+        // TODO: reset rewards stuff
         // Reset all rewards
 
         ClosePleaseWaitModal();
