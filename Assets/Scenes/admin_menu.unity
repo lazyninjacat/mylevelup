@@ -3063,8 +3063,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -10}
-  m_SizeDelta: {x: -180, y: -180}
+  m_AnchoredPosition: {x: 0, y: -10.500008}
+  m_SizeDelta: {x: -180, y: -271.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1151601024
 MonoBehaviour:
@@ -3105,11 +3105,7 @@ MonoBehaviour:
     Then, tap the
     "Start" button to start the learning/reward playlist from the beggining. We recommend
     trying a play-through before giving it to your child, just so you know what to
-    expect and can get a sense of the play experience for yourself.
-
-
-    You can
-    watch more in-depth tutorial videos or contact us for help from the "Help" screen.'
+    expect and can get a sense of the play experience for yourself.'
 --- !u!222 &1151601025
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6156,8 +6152,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 4.75}
-  m_SizeDelta: {x: -300, y: -133.90002}
+  m_AnchoredPosition: {x: 0, y: -2.9200134}
+  m_SizeDelta: {x: -300, y: -167.44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7208946638390831887
 MonoBehaviour:
@@ -6191,9 +6187,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "This is the Administrator Menu. \nFrom here you can access everything
-    you need to set up and managing your child's personalized learning/reward playlist.\n\n(tap
-    the cloud pop-ups to continue)"
+  m_Text: 'This is the Administrator Menu. From here you can access everything you
+    need to set up and managing your child''s personalized learning/reward playlist.
+
+    (tap
+    the cloud pop-ups to continue)'
 --- !u!224 &7239001175969990164
 RectTransform:
   m_ObjectHideFlags: 0

@@ -533,18 +533,18 @@ public class VW_WordList : MonoBehaviour
                     if (TagToWordListDictionary.ContainsKey(tag))
                     {
                         Debug.Log("wordTagsDictionary already contains " + tag + ". Adding word to tag dictionary key.");
-                        Debug.Log("before adding, existing tag wordlist count that shouldn't be 0 actually = " + TagToWordListDictionary[tag].Count);
+                        //Debug.Log("before adding, existing tag wordlist count that shouldn't be 0 actually = " + TagToWordListDictionary[tag].Count);
 
-                        foreach (string word in TagToWordListDictionary[tag])
-                        {
-                            Debug.Log("before adding, includes: " + word);
-                        }
+                        //foreach (string word in TagToWordListDictionary[tag])
+                        //{
+                        //    Debug.Log("before adding, includes: " + word);
+                        //}
                         TagToWordListDictionary[tag].Add(entry.Value.Word_name);
-                        Debug.Log("Existing tag's current wordlist count = " + TagToWordListDictionary[tag].Count);
-                        foreach (string word in TagToWordListDictionary[tag])
-                        {
-                            Debug.Log("after adding, includes: " + word);
-                        }                  
+                        //Debug.Log("Existing tag's current wordlist count = " + TagToWordListDictionary[tag].Count);
+                        //foreach (string word in TagToWordListDictionary[tag])
+                        //{
+                        //    Debug.Log("after adding, includes: " + word);
+                        //}                  
                                             
                     }
                     else
@@ -552,24 +552,24 @@ public class VW_WordList : MonoBehaviour
                         Debug.Log("New tag entry for TagToWordListDictionary = " + tag);
                       
                         tempWordsList.Add(entry.Value.Word_name);
-                        Debug.Log("New entry, tempWordsList count that should be 1 actually = " + tempWordsList.Count);
+                        //Debug.Log("New entry, tempWordsList count that should be 1 actually = " + tempWordsList.Count);
                         TagToWordListDictionary.Add(tag, tempWordsList);
-                        Debug.Log("New tag's current wordlist count = " + TagToWordListDictionary[tag].Count);
+                        //Debug.Log("New tag's current wordlist count = " + TagToWordListDictionary[tag].Count);
 
-                        foreach (string word in TagToWordListDictionary[tag])
-                        {
-                            Debug.Log("includes: " + word);
-                        }
+                        //foreach (string word in TagToWordListDictionary[tag])
+                        //{
+                        //    Debug.Log("includes: " + word);
+                        //}
 
                    
 
                     }
 
-                    Debug.Log("TagToWordlist entry count for " + tag + " = " + TagToWordListDictionary[tag].Count);
+                    //Debug.Log("TagToWordlist entry count for " + tag + " = " + TagToWordListDictionary[tag].Count);
               
-                    Debug.Log("Done with tag:" + tag + " in word:" + entry.Value.Word_name);
+                    //Debug.Log("Done with tag:" + tag + " in word:" + entry.Value.Word_name);
                 }
-                Debug.Log("Clearing the tempwordlist and temp wordtaglslist");
+                //Debug.Log("Clearing the tempwordlist and temp wordtaglslist");
                
             }
         }
@@ -608,7 +608,7 @@ public class VW_WordList : MonoBehaviour
                 if (entry.Key == "animal")
                 {
                     tempPanel.transform.GetChild(3).GetComponent<Button>().interactable = false;
-                    tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key) + " - Stock (cannot delete)";
+                    tempPanel.transform.GetChild(0).GetComponent<Text>().text = TidyCase(entry.Key) + " (default)";
 
                 }
                 tempPanel.SetActive(true);

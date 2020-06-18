@@ -38,6 +38,7 @@ public class VW_StartMenu : MonoBehaviour {
         // Create a current time DateTime object
         DateTime current = DateTime.Now;
 
+
         // Create a DateTime object for the FROM and TO lock out times
         DateTime lockOutFrom = new DateTime(current.Year, current.Month, current.Day, (PlayerPrefs.GetInt("LockoutFromTimeInt")), 0, 0);
 
@@ -76,6 +77,7 @@ public class VW_StartMenu : MonoBehaviour {
                 if ((current > lockOutFrom) && (current < lockOutTo))
                 {
                     noAccessPrompt.SetActive(true);
+                    startButton.interactable = false;
                 }
 
             }
@@ -84,6 +86,8 @@ public class VW_StartMenu : MonoBehaviour {
                 if ((current > lockOutFrom) || (current < (lockOutTo)))
                 {
                     noAccessPrompt.SetActive(true);
+                    startButton.interactable = false;
+
                 }
             }
         }
@@ -102,6 +106,7 @@ public class VW_StartMenu : MonoBehaviour {
                 if (!((current > lockOutFrom) && (current < lockOutTo)))
                 {
                     noAccessPrompt.SetActive(false);
+                    startButton.interactable = true;
                 }
 
             }
@@ -110,6 +115,8 @@ public class VW_StartMenu : MonoBehaviour {
                 if (!((current > lockOutFrom) || (current < (lockOutTo))))
                 {
                     noAccessPrompt.SetActive(false);
+                    startButton.interactable = true;
+
                 }
             }
 
