@@ -12,12 +12,12 @@ public class VW_Help : MonoBehaviour
     [SerializeField] GameObject loadingPanel;
 
     // button links
-    private string gettingStarted = "https://mylevelup.app/gettingstarted";
+    private string gettingStarted = "https://mylevelup.app/help";
     private string words = "https://mylevelup.app/words";
     private string rewards = "https://mylevelup.app/rewards";
     private string settings = "https://mylevelup.app/settings";
     private string stats = "https://mylevelup.app/stats";
-    private string contact = "https://mylevelup.app/contactus";
+    private string contact = "https://mylevelup.app/contact";
     private string playlist = "https://mylevelup.app/playlist";
 
 
