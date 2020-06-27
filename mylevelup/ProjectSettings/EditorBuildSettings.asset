@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/startup_menu.unity
+    guid: ad5f1c6af16504d64bfcdf28472d4147
+  - enabled: 1
+    path: Assets/Scenes/admin_menu.unity
+    guid: bf789c253c6314b23be7b974f69ac882
+  - enabled: 1
+    path: Assets/Scenes/statistics.unity
+    guid: 744ac9a1c8c5e42849ac360707842777
+  - enabled: 1
+    path: Assets/Scenes/words_list.unity
+    guid: 10694c4fcfb7c7349b01a226a7f68674
+  - enabled: 1
+    path: Assets/Scenes/word_edit_add.unity
+    guid: e85e80bf6bc93444bbe6afc3904961ff
+  - enabled: 1
+    path: Assets/Scenes/Help.unity
+    guid: 89b8218d742f72c4b84470a32eb7e2e3
+  - enabled: 1
+    path: Assets/Scenes/play_list.unity
+    guid: ce1039c1536311a47b60705b34e18b3c
+  - enabled: 1
+    path: Assets/Scenes/word_scramble.unity
+    guid: 00e622e31850afa4e9b40268c51b272f
+  - enabled: 1
+    path: Assets/Scenes/game_loop.unity
+    guid: 503f71410722a8c4f9ebe9458a9b3c87
+  - enabled: 1
+    path: Assets/Scenes/rewards_list.unity
+    guid: bf87292481e113841934ff276f8573f8
+  - enabled: 1
+    path: Assets/Scenes/reward_edit_add.unity
+    guid: 970e3385f77ddc947a46c16b56110df3
+  - enabled: 1
+    path: Assets/Scenes/flash_card.unity
+    guid: 582f02907f1b0b5429c56ee8322d4cb6
+  - enabled: 1
+    path: Assets/Scenes/admin_login.unity
+    guid: 6cac4e246406cb4459e30ef1bf058678
+  - enabled: 1
+    path: Assets/Scenes/choose_reward.unity
+    guid: 619a73c8c0040574c93e5ebaa124cd5a
+  - enabled: 1
+    path: Assets/Scenes/settings.unity
+    guid: b6ddab3615d536249a299fe625c1022a
+  - enabled: 1
+    path: Assets/Scenes/memory_cards.unity
+    guid: 92b66f8dacdd66a4b9b8fde6b5deeccb
+  - enabled: 1
+    path: Assets/Scenes/keyboard_game.unity
+    guid: 39cc818c91d78694fb9b91851d8cecef
+  - enabled: 1
+    path: Assets/Scenes/counting_game.unity
+    guid: 76811a4305380934babeb77bd30385e3
+  - enabled: 1
+    path: Assets/Scenes/reward_website_edit_add.unity
+    guid: 9391be4e9baba3740a5dd1b7c1f148d7
+  - enabled: 1
+    path: Assets/Scenes/matching_game.unity
+    guid: 304c2b6634b4fe746be785eacb49f659
+  m_configObjects: {}

@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - StartingSlotsGroup
+  - EndingSlotsGroup
+  - MainPicture
+  - RoundCounter
+  - RewardController
+  - ResultPanel
+  - forwardbutton
+  - backbutton
+  - LetterSnapToggle
+  - SearchBarContent
+  - ManualSearch
+  - RewardClock
+  - WordCollection
+  - CurrentList
+  - UserInputField
+  - PassInputField
+  - GameSettingsController
+  - AdminLoginController
+  - CreateAdminController
+  - EmailInputField
+  - WordSettingsController
+  - GHistory
+  - RHistory
+  - TestButton
+  - TestInputField
+  - GameMainImage
+  - TubeController
+  - WordListHandler
+  - WordEditController
+  - MicController
+  - CameraAccess
+  - CopyPanel
+  - WordListContent
+  - WordListDelete
+  - WordListSuccess
+  - TypeText
+  - DurationText
+  - Undefined
+  - YTPlaylistItem
+  - PuzzleButton
+  - webview
+  - tutorial
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0

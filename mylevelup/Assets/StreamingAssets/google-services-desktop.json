@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "430797519976",
+    "firebase_url": "https://mluapp.firebaseio.com",
+    "project_id": "mluapp",
+    "storage_bucket": "mluapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430797519976:android:12c8156ecba50a08104fdd",
+        "android_client_info": {
+          "package_name": "com.MyLevelUpLearningTechnologies.MyLevelUP"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430797519976-pb7jqph9tkn7bftm6kqposkp4ueuao4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLbnpmsx9ZJmBxNP1paj61xt7VmrF9kgs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430797519976-pb7jqph9tkn7bftm6kqposkp4ueuao4t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
