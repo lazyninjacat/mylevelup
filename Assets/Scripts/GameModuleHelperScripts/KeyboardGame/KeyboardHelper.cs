@@ -70,6 +70,8 @@ public class KeyboardHelper : AB_GameHelper, IWordSolved
 
     void Update()
     {
+        
+
         // Disable the picture in word scramble panel if quit modal is open
         picture.GetComponent<RawImage>().enabled = !looper.quitModal.activeSelf;
         //.SetActive(!gameLoop.quitModal.activeSelf);
@@ -322,17 +324,14 @@ public class KeyboardHelper : AB_GameHelper, IWordSolved
         yield return new WaitForSeconds(0.5f);
 
         // IS THIS WHERE WE CAN ADD CODE TO PLAY THE LETTER NAME AUDIO IN SEQUENCE???
-
         currentRound++;
         picture.SetActive(false);
         ClearSlots(startingSlotsGrid);
         ClearSlots(endingSlotsGrid);
-        keyboardObject.SetActive(false);
-
-       
+        keyboardObject.SetActive(false);    
 
 
-        //Check if it is the last round
+        // Check if it is the last round
         if (currentRound > playObj.duration)
         {
 
