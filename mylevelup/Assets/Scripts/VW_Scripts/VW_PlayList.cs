@@ -13,61 +13,305 @@ public class VW_PlayList : MonoBehaviour
 {
     // GameObjects
     [SerializeField] private GameObject addNewPanel;
-    [SerializeField] public GameObject buttonCopyPanel;
-    [SerializeField] public GameObject addNewContent;
-    [SerializeField] public GameObject playListContent;
+    [SerializeField] private GameObject buttonCopyPanel;
+
+    public GameObject ButtonCopyPanel
+    {
+        get
+        {
+            return buttonCopyPanel;
+        }
+
+        set
+        {
+            buttonCopyPanel = value;
+        }
+    }
+        
+    
+    [SerializeField] private GameObject addNewContent;
+
+    public GameObject AddNewContent
+    {
+        get
+        {
+            return addNewContent;
+        }
+
+        set
+        {
+            addNewContent = value;
+        }
+    }
+    [SerializeField] private GameObject playListContent;
+
+    public GameObject PlayListContent
+    {
+        get
+        {
+            return playListContent;
+        }
+
+        set
+        {
+            playListContent = value;
+        }
+    }
     [SerializeField] private GameObject confirmDeleteModal;
-    [SerializeField] public GameObject playCopyPanel;
+    [SerializeField] private GameObject playCopyPanel;
+
+    public GameObject PlayCopyPanel
+    {
+        get
+        {
+            return playCopyPanel;
+        }
+
+        set
+        {
+            playCopyPanel = value;
+        }
+    }
+
     [SerializeField] private GameObject deleteSuccessModal;
-    [SerializeField] private GameObject SetRewardTimePanel;
-    [SerializeField] private GameObject SetRewardsPanel;
-    [SerializeField] private GameObject SetRatioPanel;
-    [SerializeField] public GameObject SetWordTagsPanel;
-    [SerializeField] public GameObject SetGamesPanel;
+    [SerializeField] private GameObject setRewardTimePanel;
+    [SerializeField] private GameObject setRewardsPanel;
+    [SerializeField] private GameObject setRatioPanel;
+    [SerializeField] private GameObject setWordTagsPanel;
+
+    public GameObject SetWordTagsPanel
+    {
+        get
+        {
+            return setWordTagsPanel;
+        }
+
+        set
+        {
+            setWordTagsPanel = value;
+        }
+    }
+
+    [SerializeField] private GameObject setGamesPanel;
     [SerializeField] private GameObject saveSuccessModal;
     [SerializeField] private GameObject saveErrorModal;
-    [SerializeField] public GameObject autoPlaylistEnabledPanel;
-    [SerializeField] public GameObject PlaylistEmptyPanel;
+    [SerializeField] private GameObject autoPlaylistEnabledPanel;
+    [SerializeField] private GameObject playlistEmptyPanel;
+
+    public GameObject PlaylistEmptyPanel
+    {
+        get
+        {
+            return playlistEmptyPanel;
+        }
+
+        set
+        {
+            playlistEmptyPanel = value;
+        }
+    }
+
     [SerializeField] private GameObject confirmAutoplaylistOnModal;
     [SerializeField] private GameObject confirmAutoplaylistOffModal;
-    [SerializeField] public GameObject passcodePanel;
+    [SerializeField] private GameObject passcodePanel;
     [SerializeField] private GameObject loadingPanel;
-    [SerializeField] public GameObject rewardPanel;
-    [SerializeField] public GameObject RewardsViewportContent;
-    [SerializeField] public GameObject tagCopyPanel;
-    [SerializeField] public GameObject gameCopyPanel;
-    [SerializeField] public GameObject tagsViewportContent;
-    [SerializeField] public GameObject setGamesContent;
+    [SerializeField] private GameObject rewardPanel;
+
+    public GameObject RewardPanel
+    {
+        get
+        {
+            return rewardPanel;
+        }
+
+        set
+        {
+            rewardPanel = value;
+        }
+    }
+
+    [SerializeField] private GameObject rewardsViewportContent;
+    public GameObject RewardsViewportContent
+    {
+        get
+        {
+            return rewardsViewportContent;
+        }
+
+        set
+        {
+            rewardsViewportContent = value;
+        }
+    }
+
+    [SerializeField] private GameObject tagCopyPanel;
+    public GameObject TagCopyPanel
+    {
+        get
+        {
+            return tagCopyPanel;
+        }
+
+        set
+        {
+            tagCopyPanel = value;
+        }
+    }
+
+    [SerializeField] private GameObject gameCopyPanel;
+    public GameObject GameCopyPanel
+    {
+        get
+        {
+            return gameCopyPanel;
+        }
+
+        set
+        {
+            gameCopyPanel = value;
+        }
+    }
+
+    [SerializeField] private GameObject tagsViewportContent;
+    public GameObject TagsViewportContent
+    {
+        get
+        {
+            return tagsViewportContent;
+        }
+
+        set
+        {
+            tagsViewportContent = value;
+        }
+    }
+
+    [SerializeField] private GameObject setGamesContent;
+    public GameObject SetGamesContent
+    {
+        get
+        {
+            return setGamesContent;
+        }
+
+        set
+        {
+            setGamesContent = value;
+        }
+    }
+
     [SerializeField] private GameObject playlistMissingRewardModal;
     [SerializeField] private GameObject GamesViewportContent;
 
     // SetGamePanel and tagsPanelAuto/Manual toggle
-    [SerializeField] public Toggle autoSetGameToggle;
-    [SerializeField] public Toggle autoSetTagsToggle;
-
-    // Texts
-    [SerializeField] private Text rewardTimeText;
-    [SerializeField] public Text autoplaylistEnabledRewardTimeText
+    [SerializeField] private Toggle autoSetGameToggle;
+    public Toggle AutoSetGameToggle
     {
         get
         {
-            return autoplaylistEnabledRewardTimeText;
+            return autoSetGameToggle;
+        }
+
+        set
+        {
+            autoSetGameToggle = value;
+        }
+    }
+
+    [SerializeField] private Toggle autoSetTagsToggle;
+    public Toggle AutoSetTagsToggle
+    {
+        get
+        {
+            return autoSetTagsToggle;
+        }
+
+        set
+        {
+            autoSetTagsToggle = value;
+        }
+    }
+
+    // Texts
+    [SerializeField] private Text rewardTimeText;
+    [SerializeField] private Text autoPlaylistEnabledRewardTimeText;
+
+    public Text AutoPlaylistEnabledRewardTimeText
+    {
+        get
+        {
+            return autoPlaylistEnabledRewardTimeText;
         }
         set
         {
-            autoplaylistEnabledRewardTimeText.text = value.ToString();
+            autoPlaylistEnabledRewardTimeText.text = value.ToString();
         }
     }
-    [SerializeField] public Text autoplaylistEnabledRewardsText;
-    [SerializeField] public Text tagsText;
-    [SerializeField] public Text gamesText;
+
+    [SerializeField] private Text autoPlaylistEnabledRewardsText;
+    public Text AutoPlaylistEnabledRewardsText
+    {
+        get
+        {
+            return autoPlaylistEnabledRewardsText;
+        }
+
+        set
+        {
+            autoPlaylistEnabledRewardsText.text = value.ToString();
+        }
+    }
+
+    [SerializeField] private Text tagsText;
+    public Text TagsText
+    {
+        get
+        {
+            return tagsText;
+        }
+
+        set
+        {
+            tagsText.text = value.ToString();
+        }
+    }
+
+    [SerializeField] private Text gamesText;
+    public Text GamesText
+    {
+        get
+        {
+            return gamesText;
+        }
+
+        set
+        {
+            gamesText.text = value.ToString();
+        }
+    }
+
     [SerializeField] private Text ratioText;
     [SerializeField] private Text maxRatioSliderText;
     [SerializeField] private Text minRatioSliderText;
 
     // Buttons
-    [SerializeField] public Button addButton;
-    [SerializeField] public Button autoPlaylistButton;
+    [SerializeField] private Button addButton;
+    public Button AddButton
+    {
+        get
+        {
+            return addButton;
+        }
+    }
+
+    [SerializeField] private Button autoPlaylistButton;
+    public Button AutoPlaylistButton
+    {
+        get
+        {
+            return autoPlaylistButton;
+        }
+    }
 
     // Toggles
     [SerializeField] private Toggle infiniteLoopToggle;
@@ -140,8 +384,8 @@ public class VW_PlayList : MonoBehaviour
         else
         {
             autoPlaylistEnabledPanel.SetActive(true);
-            autoplaylistEnabledRewardTimeText.text = PlayerPrefs.GetString("AutoplaylistRewardTimeKey");
-            autoplaylistEnabledRewardsText.text = PlayerPrefs.GetString("AutoplaylistRewardsKey");
+            autoPlaylistEnabledRewardTimeText.text = PlayerPrefs.GetString("AutoplaylistRewardTimeKey");
+            autoPlaylistEnabledRewardsText.text = PlayerPrefs.GetString("AutoplaylistRewardsKey");
             tagsText.text = PlayerPrefs.GetString("CurrentAutoplaylistTags");
             gamesText.text = PlayerPrefs.GetString("CurrentAutoplaylistGames");
             addButton.interactable = false;
@@ -249,21 +493,21 @@ public class VW_PlayList : MonoBehaviour
     //}
 
     // All the open/close methods for the autoplaylist popup modals sequence.
-    public void OpenSetRewardTimePanel() { SetRewardTimePanel.SetActive(true); }
+    public void OpenSetRewardTimePanel() { setRewardTimePanel.SetActive(true); }
 
-    public void CloseSetRewardTimePanel() { SetRewardTimePanel.SetActive(false); }
+    public void CloseSetRewardTimePanel() { setRewardTimePanel.SetActive(false); }
 
-    public void OpenSetRatioPanel() { SetRatioPanel.SetActive(true); }
+    public void OpenSetRatioPanel() { setRatioPanel.SetActive(true); }
 
-    public void CloseSetRatioPanel() { SetRatioPanel.SetActive(false); }
+    public void CloseSetRatioPanel() { setRatioPanel.SetActive(false); }
 
-    public void OpenSetRewardsPanel() { SetRewardsPanel.SetActive(true); }
+    public void OpenSetRewardsPanel() { setRewardsPanel.SetActive(true); }
 
-    public void CloseSetRewardsPanel() { SetRewardsPanel.SetActive(false); }    
+    public void CloseSetRewardsPanel() { setRewardsPanel.SetActive(false); }    
 
-    public void OpenSetWordTagsPanel() { SetWordTagsPanel.SetActive(true); }
+    public void OpenSetWordTagsPanel() { setWordTagsPanel.SetActive(true); }
 
-    public void ToggleSetGamesPanel(bool active) { SetGamesPanel.SetActive(active); }
+    public void ToggleSetGamesPanel(bool active) { setGamesPanel.SetActive(active); }
 
     public void CloseConfirmAutoplaylistOffModal() { confirmAutoplaylistOffModal.SetActive(false); }
 

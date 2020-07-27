@@ -765,7 +765,7 @@ public class CON_PlayList : MonoBehaviour
     {
         DeleteAllPlaylist();
 
-        foreach (Transform child in view.playListContent.transform)
+        foreach (Transform child in view.PlayListContent.transform)
         {
             Destroy(child.gameObject);
         }
@@ -773,7 +773,7 @@ public class CON_PlayList : MonoBehaviour
         view.ResetActivePanel();
         SetupPlayAndAddNewLists();
         m_OrderedFilteredWordIdsDict.Clear();
-        view.autoPlaylistButton.interactable = true;
+        view.AutoPlaylistButton.interactable = true;
     }
 
     public void RequestData()
@@ -785,7 +785,7 @@ public class CON_PlayList : MonoBehaviour
         foreach (var reward in rewardDict)
         {
             //Create a panel
-            GameObject panel = GameObject.Instantiate(view.rewardPanel, view.RewardsViewportContent.transform, false);
+            GameObject panel = GameObject.Instantiate(view.RewardPanel, view.RewardsViewportContent.transform, false);
             panel.name = reward.Key.ToString();
             GameObject label = panel.transform.Find("Label").gameObject;
             label.GetComponent<Text>().text = reward.Value;
@@ -826,7 +826,7 @@ public class CON_PlayList : MonoBehaviour
         foreach (string entry in listTags)
         {
             //Create a panel
-            GameObject tPanel = GameObject.Instantiate(view.tagCopyPanel, view.tagsViewportContent.transform, false);
+            GameObject tPanel = GameObject.Instantiate(view.TagCopyPanel, view.TagsViewportContent.transform, false);
             tPanel.name = entry;
             GameObject tagLabel = tPanel.transform.Find("Label").gameObject;
             tagLabel.GetComponent<Text>().text = entry;
@@ -847,7 +847,7 @@ public class CON_PlayList : MonoBehaviour
             if (entry != "Choose_Reward" && entry != "Memory_Cards")
             {
                 //Create a panel
-                GameObject sgPanel = GameObject.Instantiate(view.gameCopyPanel, view.setGamesContent.transform, false);
+                GameObject sgPanel = GameObject.Instantiate(view.GameCopyPanel, view.SetGamesContent.transform, false);
                 sgPanel.name = entry;
                 GameObject gameLabel = sgPanel.transform.Find("Label").gameObject;
                 gameLabel.GetComponent<Text>().text = entry;
@@ -868,10 +868,10 @@ public class CON_PlayList : MonoBehaviour
     {
         List<string> tagStrings = new List<string>();
 
-        foreach (Transform child in view.tagsViewportContent.transform)
+        foreach (Transform child in view.TagsViewportContent.transform)
         {
 
-            if (view.autoSetTagsToggle.isOn)
+            if (view.AutoSetTagsToggle.isOn)
             {
                 tagStrings.Add(child.name);
             }
@@ -896,10 +896,10 @@ public class CON_PlayList : MonoBehaviour
     {
         List<string> gamesStrings = new List<string>();
 
-        foreach (Transform child in view.setGamesContent.transform)
+        foreach (Transform child in view.SetGamesContent.transform)
         {
 
-            if (view.autoSetGameToggle.isOn)
+            if (view.AutoSetGameToggle.isOn)
             {
                 gamesStrings.Add(child.name);
             }
@@ -948,10 +948,10 @@ public class CON_PlayList : MonoBehaviour
         }
 
         string combindedString = string.Join(", ", rewardStrings.ToArray());
-        view.autoplaylistEnabledRewardTimeText.text = rewardTime.ToString();
+        view.AutoPlaylistEnabledRewardTimeText.text = rewardTime.ToString();
         PlayerPrefs.SetString("AutoplaylistRewardTimeKey", rewardTime.ToString());
         PlayerPrefs.SetInt("AutoplaylistRewardTimeIntKey", rewardTime);
-        view.autoplaylistEnabledRewardsText.text = combindedString;
+        view.AutoPlaylistEnabledRewardsText.text = combindedString;
         PlayerPrefs.SetString("AutoplaylistRewardsKey", combindedString);
         return list;
     }
@@ -984,8 +984,8 @@ public class CON_PlayList : MonoBehaviour
             }
         }
 
-        view.gamesText.text = sb.Replace("_", " ").ToString();
-        PlayerPrefs.SetString("CurrentAutoplaylistGames", view.gamesText.text);
+        view.GamesText.text = sb.Replace("_", " ").ToString();
+        PlayerPrefs.SetString("CurrentAutoplaylistGames", view.GamesText.text);
         view.ToggleSetGamesPanel(false);
     }
 
@@ -1016,8 +1016,8 @@ public class CON_PlayList : MonoBehaviour
             }
         }
 
-        view.tagsText.text = sb.ToString();
-        PlayerPrefs.SetString("CurrentAutoplaylistTags", view.tagsText.text);
+        view.TagsText.text = sb.ToString();
+        PlayerPrefs.SetString("CurrentAutoplaylistTags", view.TagsText.text);
         view.SetWordTagsPanel.SetActive(false);
 
     }
@@ -1027,9 +1027,9 @@ public class CON_PlayList : MonoBehaviour
         VerifyData();
 
         // Populate the play list scrollview and size it properly
-        VerticalLayoutGroup verticalLayout = view.playListContent.GetComponent<VerticalLayoutGroup>();
+        VerticalLayoutGroup verticalLayout = view.PlayListContent.GetComponent<VerticalLayoutGroup>();
         GameObject tempPanel;
-        playListTransform = view.playListContent.GetComponent<RectTransform>();
+        playListTransform = view.PlayListContent.GetComponent<RectTransform>();
         float entryNum = 0;
         yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
         List<DO_PlayListObject> playList = GetPlayList();
@@ -1040,7 +1040,7 @@ public class CON_PlayList : MonoBehaviour
         for (int idx = 0; idx < playList.Count; idx++)
         {
             // Instantiate the new panel and set its text accordingly
-            tempPanel = GameObject.Instantiate(view.playCopyPanel, view.playListContent.transform, false);
+            tempPanel = GameObject.Instantiate(view.PlayCopyPanel, view.PlayListContent.transform, false);
 
             tempPanel.transform.Find("TypeText").GetComponent<Text>().text = GetTypeString(playList[idx].type_id).Replace("_", " ");
 
@@ -1061,16 +1061,16 @@ public class CON_PlayList : MonoBehaviour
         playListTransform.sizeDelta = new Vector2(playListTransform.rect.width, entryNum * yOffSet);
 
         // Clear values and populate the add new list scrollview and size it properly
-        verticalLayout = view.addNewContent.GetComponent<VerticalLayoutGroup>();
+        verticalLayout = view.AddNewContent.GetComponent<VerticalLayoutGroup>();
 
-        addNewTransform = view.addNewContent.GetComponent<RectTransform>();
+        addNewTransform = view.AddNewContent.GetComponent<RectTransform>();
         entryNum = 0;
         yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
 
         foreach (string typeStr in GetTypeStrings())
         {
             // Instantiate the new panel and set its text accordingly
-            tempPanel = GameObject.Instantiate(view.buttonCopyPanel, view.addNewContent.transform, false);
+            tempPanel = GameObject.Instantiate(view.ButtonCopyPanel, view.AddNewContent.transform, false);
 
             tempPanel.transform.Find("TypeText").GetComponent<Text>().text = typeStr.Replace("_", " ");
 
