@@ -9,7 +9,7 @@ public class VW_Help : MonoBehaviour
 
     [SerializeField] RectTransform webviewTransform;
     [SerializeField] GameObject selectFromLeftText;
-    [SerializeField] GameObject loadingPanel;
+    [SerializeField] public GameObject loadingPanel;
 
     // button links
     private string gettingStarted = "https://mylevelup.app/help";
