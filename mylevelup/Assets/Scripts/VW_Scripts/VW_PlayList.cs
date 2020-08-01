@@ -323,8 +323,6 @@ public class VW_PlayList : MonoBehaviour
     [SerializeField] private Slider minRatioSlider;
     [SerializeField] private Slider maxRatioSlider;
 
-
-
     // Tutorial
     [SerializeField] GameObject tutorialPanel1;
     [SerializeField] GameObject tutorialAddNewPanel;
@@ -339,10 +337,8 @@ public class VW_PlayList : MonoBehaviour
 
     // Ints
     private int wordsPerReward = 10;
-    //private float minRatio;
-    //private float maxRatio;
 
-
+    // Lists
     private List<GameObject> tutorialObjects;
 
     // Dictionaries
@@ -402,8 +398,8 @@ public class VW_PlayList : MonoBehaviour
         }
         else
         {
-            controller.rewardTime = PlayerPrefs.GetInt("AutoplaylistRewardTimeIntKey");
-            wordsPerReward = controller.rewardTime;
+            controller.RewardTime = PlayerPrefs.GetInt("AutoplaylistRewardTimeIntKey");
+            wordsPerReward = controller.RewardTime;
         }      
 
         controller.RequestData();
@@ -472,11 +468,11 @@ public class VW_PlayList : MonoBehaviour
 
     public void OnRewardSliderChange()
     {
-        controller.rewardTime = Mathf.RoundToInt(rewardTimeSlider.value);
-        rewardTimeText.text = controller.rewardTime.ToString();
+        controller.RewardTime = Mathf.RoundToInt(rewardTimeSlider.value);
+        rewardTimeText.text = controller.RewardTime.ToString();
 
         //TODO: remove this when minmax ratio is implemented
-        wordsPerReward = controller.rewardTime;
+        wordsPerReward = controller.RewardTime;
     }
 
     //public void OnMinLearningRewardRatioSliderChange()
@@ -631,18 +627,7 @@ public class VW_PlayList : MonoBehaviour
             }
         }
     }
-    
-    public void BeginCreateAutoplaylist()
-    {
-        StartCoroutine(BeginCreateAutoplaylistLaunchHelper());
 
-        loadingPanel.SetActive(true);
-    }
-    private IEnumerator BeginCreateAutoplaylistLaunchHelper()
-    {
-        yield return new WaitForSeconds(2);
-        controller.CreateAutoPlaylist();
-    }
 
     public void DisableAutoPlaylistPanels()
     {
@@ -743,46 +728,6 @@ public class VW_PlayList : MonoBehaviour
             return new string(allCharacters);
         }
         return sourceStr;
-    }
-    
-    /////////////////////////////// Choose Reward Stuff vvvvvvvvvvvvvvvvvvvvv
-
-    
-
-    public void OnTagToggleChange(Toggle tagToggleChange)
-    {
-        if (tagToggleChange.isOn)
-        {
-            controller.m_toggleCount++;
-        }
-        else
-        {
-            controller.m_toggleCount--;
-        }
-    }
-
-    public void OnGameToggleChange(Toggle gameToggleChange)
-    {
-        if (gameToggleChange.isOn)
-        {
-            controller.gameToggleCount++;
-        }
-        else
-        {
-            controller.gameToggleCount--;
-        }
-    }
-
-    public void OnToggleChange(Toggle change)
-    {
-        if (change.isOn)
-        {
-            controller.toggleCount++;
-        }
-        else
-        {
-            controller.toggleCount--;
-        }
     }
 
     public void SetLoadingPanelActive(bool active)

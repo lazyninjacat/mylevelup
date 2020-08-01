@@ -14,22 +14,32 @@ public class CON_PlayList : MonoBehaviour
     private MAS_PlayList master;
     private VW_PlayList view;
 
-    // member variables from the view
-    private int wordLevel;
-    private int maxParts;
-    public int toggleCount = 0;
-    public int tagToggleCount = 0;
-    public int gameToggleCount = 0;
-    private int filteredWordIDListCount;
+    // Member variables
+    private int m_maxParts;
+    private int m_toggleCount = 0;
+    private int m_tagToggleCount = 0;
+    private int m_gameToggleCount = 0;
+    private int m_filteredWordIDListCount;
+    private int m_wordsPerReward = 10;
+    private int m_rewardTime = 10;
 
-    private int wordsPerReward = 10;
-    public int rewardTime = 10;
-    public int m_toggleCount;
+    public int RewardTime
+    {
+        get
+        {
+            return m_rewardTime;
+        }
 
+        set
+        {
+            m_rewardTime = value;
+        }
+    }
 
-    public static RectTransform playListTransform;
-    private static RectTransform addNewTransform;
-    private static float yOffSet;
+    // Statics
+    private static RectTransform m_playListTransform;
+    private static RectTransform m_addNewTransform;
+    private static float m_yOffSet;
 
     // Lists
     private List<string> words;
@@ -50,8 +60,8 @@ public class CON_PlayList : MonoBehaviour
         }
         else
         {
-            rewardTime = PlayerPrefs.GetInt("AutoplaylistRewardTimeIntKey");
-            wordsPerReward = rewardTime;
+            m_rewardTime = PlayerPrefs.GetInt("AutoplaylistRewardTimeIntKey");
+            m_wordsPerReward = m_rewardTime;
         }
     }
     private string GetTypeTextString(GameObject obj) { return obj.transform.parent.Find("TypeText").gameObject.GetComponent<Text>().text.ToLower().Replace(" ", "_"); }
@@ -231,14 +241,6 @@ public class CON_PlayList : MonoBehaviour
         }       
 
         return builder.ToString();
-         
-            //case 7:
-            //    break;
-            //case 8:
-            //    break;
-            //case 10:
-            //    break;
-            //case 11:
     }
 
     public bool AddOrEditEntry(string typeStr, int duration, object dataObject)
@@ -284,15 +286,6 @@ public class CON_PlayList : MonoBehaviour
         }
 
         return model.AddOrEditEntryData(typeId, duration, json);
-              
-            //case 7:
-            //    break;
-            //case 8:
-            //    break;        
-            //case 10:
-            //    break;
-            //case 11:
-            //    break;         
     }
 
     //########################### Choose Reward Functionality ####################
@@ -344,7 +337,6 @@ public class CON_PlayList : MonoBehaviour
         return sourceStr;
     }
 
-    // Return a copy of the play list
     public int GetDurationByIndex(int idx) { return model.GetDurationValue(idx); }
 
     public string GetJsonByIndex(int idx) { return model.GetJsonData(idx); }
@@ -352,8 +344,6 @@ public class CON_PlayList : MonoBehaviour
     public string[] GetTypeStrings() { return model.GetTypeStrings(); }
 
     public string GetTypeString(int typeId) { return model.GetTypeString(typeId); }
-
-    public List<DO_PlayListObject> GetPlayList() { return model.GetPlayListObjects(); }
 
     public bool CheckIfNewEntry() { return model.creatingNewEntry; }
 
@@ -369,8 +359,6 @@ public class CON_PlayList : MonoBehaviour
 
     public bool RemoveEntryData(int idx) { return model.RemoveEntryData(idx); }
 
-    public bool DeleteAllPlaylist() { return model.DeletePlaylist(); }
-
     public bool CheckIfInfiniteLoop() { return model.infiniteLoops; }
 
     public int GetLoopNumber() { return model.loopIterations; }
@@ -382,29 +370,12 @@ public class CON_PlayList : MonoBehaviour
     public void VerifyData() { model.VerifyData(); }
 
 
-
-
-
-
-
-
-    // *********** METHODS FROM THE VIEW **********//
-
+    /******** PLAYLIST METHODS ********/
 
     /// <summary>
     /// This method executes the auto playlist creation. 
     /// It clears the playlist, creates the new entries, and displays the new playlist in the scrollview.
     /// </summary>
-
-
-    public void TurnOffAutoPlaylist()
-    {
-        PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 0);
-        view.DisableAutoPlaylistPanels();
-        ClearPlaylist();
-        ClearData();
-    }
-
     public void CreateAutoPlaylist()
     {
         PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 1);
@@ -415,13 +386,13 @@ public class CON_PlayList : MonoBehaviour
         view.PlaylistEmptyPanel.SetActive(false);
 
         List<int> tempFilteredWordIds = CreateFilteredWordIdList();
-        filteredWordIDListCount = tempFilteredWordIds.Count;
+        m_filteredWordIDListCount = tempFilteredWordIds.Count;
 
         // Calculate the max parts of the playlist
-        maxParts = (wordsPerReward > tempFilteredWordIds.Count) ? 0 : (tempFilteredWordIds.Count / wordsPerReward);
+        m_maxParts = (m_wordsPerReward > tempFilteredWordIds.Count) ? 0 : (tempFilteredWordIds.Count / m_wordsPerReward);
 
         // Create each of the playlist entries one by one, up to the wordsPerReward, then repeat up to maxParts.
-        for (int i = 0; i <= maxParts; i++)
+        for (int i = 0; i <= m_maxParts; i++)
         {
             CreateAutoPlaylistEntries(i);
         }
@@ -429,6 +400,19 @@ public class CON_PlayList : MonoBehaviour
         view.SetLoadingPanelActive(false);
     }
 
+    public bool DeleteAllPlaylist() { return model.DeletePlaylist(); }
+
+
+    // Return a copy of the play list
+    public List<DO_PlayListObject> GetPlayList() { return model.GetPlayListObjects(); }
+
+    public void TurnOffAutoPlaylist()
+    {
+        PlayerPrefs.SetInt("AutoPlaylistOnOffKey", 0);
+        view.DisableAutoPlaylistPanels();
+        ClearPlaylist();
+        ClearData();
+    }
 
     private Dictionary<int, int> CreateOrderedWordIDList()
     {
@@ -481,16 +465,16 @@ public class CON_PlayList : MonoBehaviour
         // Create a choose reward playlist entry, with pre-set reward time (rewardTime) and types (rewardInts)
         List<int> rewardInts = new List<int>();
         rewardInts.Add(1);
-        DO_ChooseReward tempChooseReward = new DO_ChooseReward(CreateRewardIdsList(), rewardTime);
+        DO_ChooseReward tempChooseReward = new DO_ChooseReward(CreateRewardIdsList(), m_rewardTime);
         Dictionary<int, int> OrderedFilteredWordIdsDict = CreateOrderedWordIDList();
 
 
-        if (part == maxParts)
+        if (part == m_maxParts)
         {
             int tempint = 0;
 
 
-            for (int i = ((wordsPerReward * part)); i <= filteredWordIDListCount; i++)
+            for (int i = ((m_wordsPerReward * part)); i <= m_filteredWordIDListCount; i++)
             {
                 foreach (var entry in OrderedFilteredWordIdsDict)
                 {
@@ -504,7 +488,7 @@ public class CON_PlayList : MonoBehaviour
                 tempint++;
             }
 
-            int remainderInt = wordsPerReward - tempint;
+            int remainderInt = m_wordsPerReward - tempint;
 
             for (int i = 1; i <= remainderInt; i++)
             {
@@ -521,11 +505,11 @@ public class CON_PlayList : MonoBehaviour
                 tempint++;
             }
         }
-        else if (part == 0 && part != maxParts)
+        else if (part == 0 && part != m_maxParts)
         {
 
             //////////////////////////////////////////////////////// TESTING NEW CODE HERE
-            for (int i = 1; i <= (wordsPerReward); i++) //TEST CODE
+            for (int i = 1; i <= (m_wordsPerReward); i++) //TEST CODE
             {
                 foreach (var entry in OrderedFilteredWordIdsDict)
                 {
@@ -540,7 +524,7 @@ public class CON_PlayList : MonoBehaviour
         }
         else
         {
-            for (int i = ((wordsPerReward * part) + 1); i <= (wordsPerReward * (part + 1)); i++)
+            for (int i = ((m_wordsPerReward * part) + 1); i <= (m_wordsPerReward * (part + 1)); i++)
             {
                 foreach (var entry in OrderedFilteredWordIdsDict)
                 {
@@ -555,10 +539,8 @@ public class CON_PlayList : MonoBehaviour
         }
 
         CreatingNew();
-        AddOrEditEntry("Choose Reward", rewardTime, tempChooseReward);
+        AddOrEditEntry("Choose Reward", m_rewardTime, tempChooseReward);
     }
-
-
 
     /// <summary>
     /// This method creates all of the playlist entries programatically for the autoplaylist feature.  
@@ -717,45 +699,48 @@ public class CON_PlayList : MonoBehaviour
         //    //TODO: log an error about active panel index
         //}
     }
+    // ########### THE FOLLOWING TWO METHODS WERE UNUSED AFTER REFACTORING THE VW_PLAYLIST FILE ############## //
 
-    public void MoveEntryUp()
-    {
-        Transform panelParent = EventSystem.current.currentSelectedGameObject.transform.parent;
-        panelParent.gameObject.GetComponent<Animation>().Play();
-        int currentIndex = panelParent.GetSiblingIndex();
+    //public void MoveEntryUp()
+    //{
+    //    Transform panelParent = EventSystem.current.currentSelectedGameObject.transform.parent;
+    //    panelParent.gameObject.GetComponent<Animation>().Play();
+    //    int currentIndex = panelParent.GetSiblingIndex();
 
-        if (currentIndex > (0))
-        {
-            if (SwapListEntries(currentIndex, currentIndex - 1))
-            {
-                panelParent.SetSiblingIndex(currentIndex - 1);
-            }
-            else
-            {
-                // TODO: Log an error
-                Debug.Log("Error in MoveEntryUp method");
-            }
-        }
-    }
+    //    if (currentIndex > (0))
+    //    {
+    //        if (SwapListEntries(currentIndex, currentIndex - 1))
+    //        {
+    //            panelParent.SetSiblingIndex(currentIndex - 1);
+    //        }
+    //        else
+    //        {
+    //            // TODO: Log an error
+    //            Debug.Log("Error in MoveEntryUp method");
+    //        }
+    //    }
+    //}
 
-    public void MoveEntryDown()
-    {
-        Transform panelParent = EventSystem.current.currentSelectedGameObject.transform.parent;
-        panelParent.gameObject.GetComponent<Animation>().Play();
-        int currentIndex = panelParent.GetSiblingIndex();
+    //public void MoveEntryDown()
+    //{
+    //    Transform panelParent = EventSystem.current.currentSelectedGameObject.transform.parent;
+    //    panelParent.gameObject.GetComponent<Animation>().Play();
+    //    int currentIndex = panelParent.GetSiblingIndex();
 
-        if ((currentIndex - 1) < panelParent.parent.childCount)
-        {
-            if (SwapListEntries(currentIndex, currentIndex + 1))
-            {
-                panelParent.SetSiblingIndex(currentIndex + 1);
-            }
-            else
-            {
-                // TODO: log a db query error
-            }
-        }
-    }
+    //    if ((currentIndex - 1) < panelParent.parent.childCount)
+    //    {
+    //        if (SwapListEntries(currentIndex, currentIndex + 1))
+    //        {
+    //            panelParent.SetSiblingIndex(currentIndex + 1);
+    //        }
+    //        else
+    //        {
+    //            // TODO: log a db query error
+    //        }
+    //    }
+    //}
+
+    // ###### END HERE ###### //
 
 
     /// <summary>
@@ -794,7 +779,7 @@ public class CON_PlayList : MonoBehaviour
 
             t.onValueChanged.AddListener(delegate
             {
-                view.OnToggleChange(t);
+                OnToggleChange(t);
             });
 
             panel.SetActive(true);
@@ -835,7 +820,7 @@ public class CON_PlayList : MonoBehaviour
 
             toggleTag.onValueChanged.AddListener(delegate
             {
-                view.OnTagToggleChange(toggleTag);
+                OnTagToggleChange(toggleTag);
             });
 
             tPanel.SetActive(true);
@@ -856,7 +841,7 @@ public class CON_PlayList : MonoBehaviour
 
                 toggleGame.onValueChanged.AddListener(delegate
                 {
-                    view.OnGameToggleChange(toggleGame);
+                    OnGameToggleChange(toggleGame);
                 });
 
                 sgPanel.SetActive(true);
@@ -948,9 +933,9 @@ public class CON_PlayList : MonoBehaviour
         }
 
         string combindedString = string.Join(", ", rewardStrings.ToArray());
-        view.AutoPlaylistEnabledRewardTimeText.text = rewardTime.ToString();
-        PlayerPrefs.SetString("AutoplaylistRewardTimeKey", rewardTime.ToString());
-        PlayerPrefs.SetInt("AutoplaylistRewardTimeIntKey", rewardTime);
+        view.AutoPlaylistEnabledRewardTimeText.text = m_rewardTime.ToString();
+        PlayerPrefs.SetString("AutoplaylistRewardTimeKey", m_rewardTime.ToString());
+        PlayerPrefs.SetInt("AutoplaylistRewardTimeIntKey", m_rewardTime);
         view.AutoPlaylistEnabledRewardsText.text = combindedString;
         PlayerPrefs.SetString("AutoplaylistRewardsKey", combindedString);
         return list;
@@ -1029,9 +1014,9 @@ public class CON_PlayList : MonoBehaviour
         // Populate the play list scrollview and size it properly
         VerticalLayoutGroup verticalLayout = view.PlayListContent.GetComponent<VerticalLayoutGroup>();
         GameObject tempPanel;
-        playListTransform = view.PlayListContent.GetComponent<RectTransform>();
+        m_playListTransform = view.PlayListContent.GetComponent<RectTransform>();
         float entryNum = 0;
-        yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
+        m_yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
         List<DO_PlayListObject> playList = GetPlayList();
 
         if (playList.Count == 0) { view.PlaylistEmptyPanel.SetActive(true); }
@@ -1058,14 +1043,14 @@ public class CON_PlayList : MonoBehaviour
         }
 
         // Resize the content box on the Y
-        playListTransform.sizeDelta = new Vector2(playListTransform.rect.width, entryNum * yOffSet);
+        m_playListTransform.sizeDelta = new Vector2(m_playListTransform.rect.width, entryNum * m_yOffSet);
 
         // Clear values and populate the add new list scrollview and size it properly
         verticalLayout = view.AddNewContent.GetComponent<VerticalLayoutGroup>();
 
-        addNewTransform = view.AddNewContent.GetComponent<RectTransform>();
+        m_addNewTransform = view.AddNewContent.GetComponent<RectTransform>();
         entryNum = 0;
-        yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
+        m_yOffSet = verticalLayout.preferredHeight + verticalLayout.spacing;
 
         foreach (string typeStr in GetTypeStrings())
         {
@@ -1086,13 +1071,13 @@ public class CON_PlayList : MonoBehaviour
         }
 
         // Resize the content box on the Y
-        addNewTransform.sizeDelta = new Vector2(addNewTransform.rect.width, entryNum * yOffSet);
+        m_addNewTransform.sizeDelta = new Vector2(m_addNewTransform.rect.width, entryNum * m_yOffSet);
     }
 
     public void SetDeleteObjects()
     {
         view.SetDeleteObjectsView();
-        playListTransform.sizeDelta = new Vector2(playListTransform.rect.width, playListTransform.rect.height - (yOffSet));
+        m_playListTransform.sizeDelta = new Vector2(m_playListTransform.rect.width, m_playListTransform.rect.height - (m_yOffSet));
     }
     private bool CheckType(string type)
     {
@@ -1115,6 +1100,56 @@ public class CON_PlayList : MonoBehaviour
 
             default:
                 return false;
+        }
+    }
+
+    public void BeginCreateAutoplaylist()
+    {
+        StartCoroutine(BeginCreateAutoplaylistLaunchHelper());
+
+        view.SetLoadingPanelActive(true);
+    }
+    private IEnumerator BeginCreateAutoplaylistLaunchHelper()
+    {
+        yield return new WaitForSeconds(2);
+        CreateAutoPlaylist();
+    }
+    
+    /////////////////////////////// Choose Reward Stuff vvvvvvvvvvvvvvvvvvvvv
+
+    public void OnTagToggleChange(Toggle tagToggleChange)
+    {
+        if (tagToggleChange.isOn)
+        {
+            m_toggleCount++;
+        }
+        else
+        {
+            m_toggleCount--;
+        }
+    }
+
+    public void OnGameToggleChange(Toggle gameToggleChange)
+    {
+        if (gameToggleChange.isOn)
+        {
+            m_gameToggleCount++;
+        }
+        else
+        {
+            m_gameToggleCount--;
+        }
+    }
+
+    public void OnToggleChange(Toggle change)
+    {
+        if (change.isOn)
+        {
+            m_toggleCount++;
+        }
+        else
+        {
+            m_toggleCount--;
         }
     }
 }
